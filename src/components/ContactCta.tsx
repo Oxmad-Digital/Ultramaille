@@ -21,7 +21,7 @@ export default function ContactCta() {
             )}
           </p>
           <a href="mailto:contact@ultramaille.com" className={styles.button}>
-            {t("Nous contacter →", "Contact us →")}
+            {t("Nous contacter", "Contact us")}
           </a>
         </div>
         <div className={styles.infoCard}>

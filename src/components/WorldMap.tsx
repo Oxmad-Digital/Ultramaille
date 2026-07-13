@@ -38,7 +38,7 @@ function dotHTML(type: Marker["type"]) {
   }
   return '<span style="position:relative;width:14px;height:14px;flex:none;"><span class="' +
     styles.pulse +
-    '" style="position:absolute;inset:0;border-radius:50%;background:#E0A338;"></span><span style="position:absolute;inset:2px;border-radius:50%;background:#E0A338;"></span></span>';
+    '" style="position:absolute;inset:0;border-radius:50%;background:#E0A338;"></span><span style="position:absolute;inset:2px;border-radius:50%;background:#E0A338;box-shadow:0 0 0 2px rgba(15,30,48,.6);"></span></span>';
 }
 
 export default function WorldMap() {
@@ -114,8 +114,10 @@ export default function WorldMap() {
       const cen = (id: string) => {
         const el = svg.querySelector("#" + id);
         if (!el) return null;
+        const mainland = el.querySelector("path.mainland");
+        const target = mainland ?? el;
         try {
-          const b = (el as SVGGraphicsElement).getBBox();
+          const b = (target as SVGGraphicsElement).getBBox();
           return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
         } catch {
           return null;

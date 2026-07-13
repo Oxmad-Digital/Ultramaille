@@ -124,101 +124,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="savoir-faire" className={styles.savoirFaire}>
-        <div className={styles.sectionInner}>
-          <div className={styles.sectionHead}>
-            <div>
-              <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>
-                {t("— Savoir-faire", "— Know-how")}
-              </div>
-              <h2 className={styles.sectionHeadTitleLight}>
-                {t("Un savoir-faire complet, du fil à la finition.", "Complete know-how, from yarn to finish.")}
-              </h2>
-            </div>
-            <p className={styles.sectionHeadTextDark}>
-              {t(
-                "Cinq ateliers intégrés, une seule et même exigence d'excellence.",
-                "Five integrated workshops, one shared standard of excellence.",
-              )}
-            </p>
-          </div>
-          <div className={styles.craftGrid}>
-            {CRAFT_CARDS.map((card) => (
-              <div key={card.number} className={styles.craftCard}>
-                <Image src={card.img} alt={card.alt} fill className={styles.craftImg} />
-                <div className={styles.craftShade} />
-                <div className={styles.craftCaption}>
-                  <div className={styles.craftNumber}>{card.number}</div>
-                  <h3 className={styles.craftTitle}>{t(card.titleFr, card.titleEn)}</h3>
-                  <p className={styles.craftText}>{t(card.textFr, card.textEn)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.capacite}>
-        <div className={styles.capaciteGrid}>
-          <div>
-            <div className={`${styles.eyebrow} ${styles.eyebrowGold}`}>
-              {t("— Capacité industrielle", "— Industrial capacity")}
-            </div>
-            <h2 className={styles.capaciteTitle}>
-              {t(
-                "Une chaîne 100% intégrée, du fil au vêtement fini.",
-                "A fully integrated chain, from yarn to finished garment.",
-              )}
-            </h2>
-            <p className={styles.capaciteText}>
-              {t(
-                "Chaque étape de la production est gérée en interne — garantissant la maîtrise de la qualité, des délais et de la traçabilité de vos collections.",
-                "Every stage of production is handled internally — guaranteeing control over quality, lead times and traceability for your collections.",
-              )}
-            </p>
-            <div className={styles.tagRow}>
-              {[
-                "Tricotage",
-                "Remaillage",
-                "Teinture fil",
-                "Teinture plongé",
-                "Broderie",
-                "Impression",
-                "Pressing & finition",
-                "Contrôle qualité",
-              ].map((tag) => (
-                <span key={tag} className={`${styles.tag} ${styles.tagDark}`}>
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className={styles.statGrid}>
-            <div className={styles.statCell}>
-              <div className={styles.statValue}>
-                <CountUp end={400000} />
-              </div>
-              <div className={styles.statLabel}>{t("pièces produites par an", "pieces produced each year")}</div>
-            </div>
-            <div className={styles.statCell}>
-              <div className={styles.statValue}>
-                <CountUp end={800} />
-              </div>
-              <div className={styles.statLabel}>{t("collaborateurs qualifiés", "skilled employees")}</div>
-            </div>
-            <div className={styles.statCell}>
-              <div className={styles.statValue}>
-                <CountUp end={25} />
-              </div>
-              <div className={styles.statLabel}>{t("années d'expérience", "years of experience")}</div>
-            </div>
-            <div className={styles.statCell}>
-              <div className={`${styles.statValue} ${styles.statValueGold}`}>
-                <CountUp end={100} />%
-              </div>
-              <div className={styles.statLabel}>{t("production intégrée", "integrated production")}</div>
-            </div>
-          </div>
+      <section className={styles.videoSection}>
+        <div className={styles.videoWrap}>
+          <video
+            className={styles.video}
+            src="https://www.ultramaille.com/wp-content/uploads/video/video-utm.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls
+          />
         </div>
       </section>
 
@@ -260,14 +176,112 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="savoir-faire" className={styles.savoirFaire}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionHead}>
+            <div>
+              <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>
+                {t("— Notre expertise", "— Our expertise")}
+              </div>
+              <h2 className={styles.sectionHeadTitleLight}>
+                {t("Un savoir-faire complet, du fil à la finition.", "Complete know-how, from yarn to finish.")}
+              </h2>
+            </div>
+            <p className={styles.sectionHeadTextDark}>
+              {t(
+                "Cinq ateliers intégrés, une seule et même exigence d'excellence.",
+                "Five integrated workshops, one shared standard of excellence.",
+              )}
+            </p>
+          </div>
+          <div className={styles.craftGrid}>
+            {CRAFT_CARDS.map((card) => (
+              <div key={card.number} className={styles.craftCard}>
+                <Image src={card.img} alt={card.alt} fill className={styles.craftImg} />
+                <div className={styles.craftShade} />
+                <div className={styles.craftCaption}>
+                  <div className={styles.craftNumber}>{card.number}</div>
+                  <h3 className={styles.craftTitle}>{t(card.titleFr, card.titleEn)}</h3>
+                  <p className={styles.craftText}>{t(card.textFr, card.textEn)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.capacite}>
+        <div className={styles.capaciteGrid}>
+          <div className={styles.statGrid}>
+            <div className={styles.statCell}>
+              <div className={styles.statValue}>
+                <CountUp end={400000} />
+              </div>
+              <div className={styles.statLabel}>{t("pièces produites par an", "pieces produced each year")}</div>
+            </div>
+            <div className={styles.statCell}>
+              <div className={styles.statValue}>
+                <CountUp end={800} />
+              </div>
+              <div className={styles.statLabel}>{t("collaborateurs qualifiés", "skilled employees")}</div>
+            </div>
+            <div className={styles.statCell}>
+              <div className={styles.statValue}>
+                <CountUp end={25} />
+              </div>
+              <div className={styles.statLabel}>{t("années d'expérience", "years of experience")}</div>
+            </div>
+            <div className={styles.statCell}>
+              <div className={`${styles.statValue} ${styles.statValueGold}`}>
+                <CountUp end={100} />%
+              </div>
+              <div className={styles.statLabel}>{t("production intégrée", "integrated production")}</div>
+            </div>
+          </div>
+          <div>
+            <div className={`${styles.eyebrow} ${styles.eyebrowGold}`}>
+              {t("— Capacité industrielle", "— Industrial capacity")}
+            </div>
+            <h2 className={styles.capaciteTitle}>
+              {t(
+                "Une chaîne 100% intégrée, du fil au vêtement fini.",
+                "A fully integrated chain, from yarn to finished garment.",
+              )}
+            </h2>
+            <p className={styles.capaciteText}>
+              {t(
+                "Chaque étape de la production est gérée en interne — garantissant la maîtrise de la qualité, des délais et de la traçabilité de vos collections.",
+                "Every stage of production is handled internally — guaranteeing control over quality, lead times and traceability for your collections.",
+              )}
+            </p>
+            <div className={styles.tagRow}>
+              {[
+                "Tricotage",
+                "Remaillage",
+                "Teinture fil",
+                "Teinture plongé",
+                "Broderie",
+                "Impression",
+                "Pressing & finition",
+                "Contrôle qualité",
+              ].map((tag) => (
+                <span key={tag} className={`${styles.tag} ${styles.tagDark}`}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="durabilite" className={styles.durabilite}>
         <div className={styles.sectionInner}>
           <div className={styles.durabiliteHead}>
             <div className={`${styles.eyebrow} ${styles.eyebrowGold}`}>
-              {t("— Durabilité", "— Sustainability")}
+              {t("— NOTRE ENGAGEMENT", "— Our commitment")}
             </div>
             <h2 className={styles.durabiliteTitle}>
-              {t("Une entreprise responsable, proche des siens.", "A responsible company, close to its people.")}
+              {t("Une entreprise responsable, engagé pour l'humain.", "A responsible company, committed to people.")}
             </h2>
           </div>
           <div className={styles.cardGrid3}>
@@ -298,8 +312,8 @@ export default function Home() {
               <h3 className={styles.iconCardTitle}>{t("Société impliquée", "An engaged company")}</h3>
               <p className={styles.iconCardText}>
                 {t(
-                  "Au-delà de 800 emplois, ULTRAMAILLE participe activement à l'amélioration de la vie sociale de ses concitoyens.",
-                  "Beyond 800 jobs, Ultramaille actively contributes to improving the social life of its community.",
+                  "Avec 800 emplois créés, ULTRAMAILLE participe activement au développement local. Nous investissons continuellement dans l'amélioration du quotidien de nos équipes.",
+                  "With 800 jobs created, Ultramaille actively contributes to local development. We continually invest in improving the daily lives of our teams.",
                 )}
               </p>
             </div>

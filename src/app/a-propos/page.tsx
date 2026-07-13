@@ -118,20 +118,20 @@ export default function AProposPage() {
           <div className={styles.textCol}>
             <p className={styles.paragraph}>
               {t(
-                "Spécialistes de la maille depuis plus de 25 ans, nous sommes des tricoteurs situés à Antananarivo, à Madagascar. Tous nos vêtements sont tricotés sur des machines rectilignes manuelles et électroniques les plus performantes, de la jauge 2.5 à la jauge 16. Nous avons également un département entièrement dédié au savoir-faire main — tricot deux aiguilles, crochet, jusqu'à la plus élaborée technique de broderie, qui fait partie intégrante de la culture malgache.",
-                "Knitwear specialists for over 25 years, we are knitters based in Antananarivo, Madagascar. All our garments are knitted on the most advanced manual and electronic flat-bed machines, from gauge 2.5 to gauge 16. We also run a department entirely dedicated to hand-craft know-how — two-needle knitting, crochet, through to the most elaborate embroidery techniques, an integral part of Malagasy culture.",
+                "Spécialistes de la maille depuis plus de 25 ans, notre manufacture est basée à Antananarivo, à Madagascar. Pour donner vie à vos collections, nous combinons l'efficacité de machines rectilignes de pointe (manuelles et électroniques, de la jauge 2.5 à 16) et l'excellence d'un département entièrement dédié au savoir-faire fait main. Tricot à deux aiguilles, crochet et broderies élaborées : nous valorisons ces techniques artisanales d'exception qui font partie intégrante de la culture malgache.",
+                "Knitwear specialists for over 25 years, our manufacture is based in Antananarivo, Madagascar. To bring your collections to life, we combine the efficiency of state-of-the-art flat-bed machines (manual and electronic, from gauge 2.5 to 16) with the excellence of a department entirely dedicated to hand-craft know-how. Two-needle knitting, crochet and elaborate embroidery: we champion these exceptional artisanal techniques that are an integral part of Malagasy culture.",
               )}
             </p>
             <p className={styles.paragraph}>
               {t(
-                "Tous nos pulls sont remaillés, ce qui garantit une qualité dans la confection. Nous apportons également notre service de teinture, en écheveaux pour développer et teindre vos propres coloris à partir de la gamme Pantone reconnue par l'ensemble du monde du textile, ainsi qu'en plongée sur produit fini. Notre grande diversité de jauges nous permet un très large choix de propositions dans le développement de nos mailles — des plus créatives aux plus originales, sans oublier les intemporelles.",
-                "All our sweaters are remeshed, guaranteeing quality in the making. We also provide our dyeing service, in skeins to develop and dye your own colours from the Pantone range recognised across the textile world, as well as dip dyeing on finished products. Our wide diversity of gauges allows a very broad choice of proposals in developing our knits — from the most creative to the most original, without forgetting the timeless.",
+                "L'exigence de qualité signe chacune de nos pièces : tous nos pulls sont intégralement remaillés, garantissant des finitions et une confection irréprochables. Nous intégrons également un service de teinture sur mesure, qu'il s'agisse de teinture en écheveaux — pour développer vos propres coloris sur la base du référentiel universel Pantone — ou de teinture en plongée sur produit fini. Cette maîtrise technique, alliée à notre grande diversité de jauges, nous permet de façonner une immense variété de mailles, des pièces les plus créatives et originales aux modèles les plus intemporels.",
+                "A demand for quality defines every one of our pieces: all our sweaters are fully remeshed, guaranteeing flawless finishing and construction. We also offer a bespoke dyeing service, whether skein dyeing — to develop your own colours based on the universal Pantone reference — or dip dyeing on finished products. This technical mastery, combined with our wide diversity of gauges, allows us to craft an immense variety of knits, from the most creative and original pieces to the most timeless designs.",
               )}
             </p>
             <p className={styles.paragraph}>
               {t(
-                "Nous utilisons des matières de qualité auprès de filateurs provenant d'Italie, d'Europe, d'Afrique du Sud, d'Asie et de l'océan Indien. Notre volonté est d'accompagner nos clients du développement jusqu'à la production, en mettant en place les meilleures propositions qualitatives et créatives.",
-                "We use quality materials sourced from spinners in Italy, Europe, South Africa, Asia and the Indian Ocean. Our ambition is to support our clients from development through to production, putting forward the best qualitative and creative proposals.",
+                "Nous sélectionnons des matières de premier choix auprès de filateurs rigoureusement choisis en Italie, en Europe, en Afrique du Sud, en Asie et dans l'océan Indien. Notre ambition est d'offrir un accompagnement de bout en bout, du développement initial jusqu'à la production finale, en plaçant toujours la créativité et la haute qualité au cœur de nos propositions.",
+                "We select premium materials from carefully chosen spinners in Italy, Europe, South Africa, Asia and the Indian Ocean. Our ambition is to offer end-to-end support, from initial development through to final production, always placing creativity and high quality at the heart of our proposals.",
               )}
             </p>
           </div>
@@ -149,8 +149,8 @@ export default function AProposPage() {
                 </div>
                 <h3 className={styles.mapTitle}>
                   {t(
-                    "Des collections exportées sur quatre continents.",
-                    "Collections exported across four continents.",
+                    "Des collections exportées sur trois continents.",
+                    "Collections exported across three continents.",
                   )}
                 </h3>
               </div>
