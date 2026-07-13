@@ -1,0 +1,446 @@
+.page {
+  background: var(--utm-cream);
+  color: var(--utm-ink);
+  overflow-x: hidden;
+}
+
+.hero {
+  position: relative;
+  min-height: 38vh;
+  overflow: hidden;
+  background: var(--utm-navy);
+}
+
+.heroImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) brightness(0.45) contrast(1.05);
+  animation: utmKen 10s ease-out both;
+}
+
+.heroGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 30, 48, 0.55) 0%,
+    rgba(15, 30, 48, 0.35) 36%,
+    rgba(12, 18, 28, 0.94) 100%
+  );
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(224, 163, 56, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 163, 56, 0.06) 1px, transparent 1px);
+  background-size: 84px 84px;
+  -webkit-mask-image: radial-gradient(circle at 32% 60%, #000, transparent 72%);
+  mask-image: radial-gradient(circle at 32% 60%, #000, transparent 72%);
+}
+
+.eyebrow {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.eyebrowGold {
+  color: var(--utm-gold);
+}
+
+.eyebrowBlue {
+  color: var(--utm-blue);
+}
+
+.sectionInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.paragraph {
+  margin: 0 0 18px;
+  font-size: 17px;
+  line-height: 1.72;
+}
+
+.paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.paragraphLight {
+  color: var(--utm-text);
+}
+
+.paragraphDark {
+  color: rgba(244, 239, 230, 0.66);
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.tag {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 8px 15px;
+  color: rgba(244, 239, 230, 0.72);
+  border: 1px solid rgba(244, 239, 230, 0.2);
+}
+
+/* ---------- Madagascar context ---------- */
+.contexte {
+  background: var(--utm-cream);
+  padding: clamp(72px, 9vw, 128px) clamp(22px, 5vw, 64px);
+}
+
+.contexteHead {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: clamp(32px, 6vw, 90px);
+  align-items: end;
+  margin-bottom: clamp(44px, 5vw, 68px);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: clamp(28px, 3.8vw, 50px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.titleLight {
+  color: var(--utm-ink);
+}
+
+.titleDark {
+  color: var(--utm-cream-2);
+}
+
+.headText {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.72;
+  color: var(--utm-text);
+}
+
+.statGrid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--utm-navy);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.statCellLight {
+  background: var(--utm-cream);
+  padding: clamp(30px, 3vw, 44px) clamp(24px, 2.5vw, 36px);
+}
+
+.statValueLight {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: clamp(38px, 4.6vw, 60px);
+  line-height: 1;
+  color: var(--utm-ink);
+}
+
+.statValueGold {
+  color: var(--utm-gold);
+}
+
+.statUnit {
+  font-size: 0.5em;
+  color: var(--utm-gold);
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+.statLabelLight {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--utm-text-muted);
+  margin-top: 14px;
+  line-height: 1.5;
+}
+
+/* ---------- Humain d'abord ---------- */
+.humain {
+  background: var(--utm-navy);
+  padding: clamp(72px, 9vw, 128px) clamp(22px, 5vw, 64px);
+}
+
+.humainGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(36px, 6vw, 80px);
+  align-items: center;
+}
+
+.humainImgWrap {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: var(--utm-navy-3);
+}
+
+.humainImg {
+  object-fit: cover;
+  filter: grayscale(1) brightness(0.92) contrast(1.03);
+}
+
+.humainBadge {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  background: rgba(12, 18, 28, 0.78);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(244, 239, 230, 0.14);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.humainBadgeValue {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  color: var(--utm-gold);
+  line-height: 1;
+}
+
+.humainBadgeUnit {
+  font-size: 0.55em;
+  color: rgba(244, 239, 230, 0.6);
+  font-weight: 400;
+  margin-left: 5px;
+}
+
+.humainBadgeLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.62);
+  margin-top: 7px;
+}
+
+/* ---------- RSE ---------- */
+.rse {
+  background: var(--utm-cream);
+  padding: clamp(72px, 9vw, 128px) clamp(22px, 5vw, 64px);
+}
+
+.rseHead {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 6vw, 80px);
+  align-items: end;
+  margin-bottom: clamp(40px, 5vw, 60px);
+}
+
+.rseHeadText {
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--utm-text-muted);
+}
+
+.cardGrid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.rseCard {
+  background: #fff;
+  border: 1px solid rgba(15, 30, 48, 0.1);
+  border-radius: 14px;
+  padding: 38px 32px;
+}
+
+.iconBadge {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(224, 163, 56, 0.14);
+  border: 1px solid rgba(224, 163, 56, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.rseValue {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: clamp(26px, 3vw, 34px);
+  line-height: 1;
+  color: var(--utm-ink);
+  margin-bottom: 10px;
+}
+
+.rseValueUnit {
+  font-size: 0.5em;
+  color: var(--utm-text-muted);
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+.rseCardTitle {
+  margin: 0 0 12px;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--utm-gold);
+}
+
+.rseCardText {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--utm-text-muted);
+}
+
+/* ---------- Environnement ---------- */
+.environnement {
+  background: var(--utm-navy-2);
+  padding: clamp(72px, 9vw, 128px) clamp(22px, 5vw, 64px);
+}
+
+.environnementGrid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: clamp(36px, 6vw, 80px);
+  align-items: center;
+}
+
+.envImgGrid {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  background: rgba(244, 239, 230, 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+}
+
+.envImgCell {
+  position: relative;
+  overflow: hidden;
+}
+
+.envImg {
+  object-fit: cover;
+  filter: grayscale(1) brightness(0.82) contrast(1.03);
+}
+
+/* ---------- Communauté ---------- */
+.communaute {
+  background: var(--utm-cream);
+  padding: clamp(72px, 9vw, 128px) clamp(22px, 5vw, 64px);
+}
+
+.communauteGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(36px, 6vw, 80px);
+  align-items: center;
+}
+
+.communauteImgWrap {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  aspect-ratio: 5 / 4;
+  background: var(--utm-navy);
+}
+
+.communauteImg {
+  object-fit: cover;
+  filter: grayscale(1) brightness(0.95) contrast(1.03);
+}
+
+/* ---------- Éducation ---------- */
+.education {
+  position: relative;
+  overflow: hidden;
+  background: var(--utm-navy);
+  padding: clamp(80px, 10vw, 140px) clamp(22px, 5vw, 64px);
+  text-align: center;
+}
+
+.educationGrid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(224, 163, 56, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 163, 56, 0.05) 1px, transparent 1px);
+  background-size: 80px 80px;
+  -webkit-mask-image: radial-gradient(circle at 70% 40%, #000, transparent 70%);
+  mask-image: radial-gradient(circle at 70% 40%, #000, transparent 70%);
+}
+
+.educationInner {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.quote {
+  margin: 0;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 500;
+  font-size: clamp(30px, 4.6vw, 60px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--utm-cream-2);
+}
+
+.quoteText {
+  margin: 34px auto 0;
+  max-width: 60ch;
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(244, 239, 230, 0.66);
+}
+
+@keyframes utmKen {
+  from {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 900px) {
+  .contexteHead,
+  .humainGrid,
+  .rseHead,
+  .environnementGrid,
+  .communauteGrid {
+    grid-template-columns: 1fr;
+  }
+  .statGrid3,
+  .cardGrid3 {
+    grid-template-columns: 1fr;
+  }
+}

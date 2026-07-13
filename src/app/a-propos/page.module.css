@@ -1,0 +1,472 @@
+.page {
+  background: var(--utm-cream);
+  color: var(--utm-ink);
+  overflow-x: hidden;
+}
+
+.hero {
+  position: relative;
+  min-height: 38vh;
+  overflow: hidden;
+  background: var(--utm-navy);
+}
+
+.heroImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) brightness(0.45) contrast(1.05);
+  animation: utmKen 10s ease-out both;
+}
+
+.heroGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 30, 48, 0.55) 0%,
+    rgba(15, 30, 48, 0.35) 36%,
+    rgba(12, 18, 28, 0.94) 100%
+  );
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(224, 163, 56, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 163, 56, 0.06) 1px, transparent 1px);
+  background-size: 84px 84px;
+  -webkit-mask-image: radial-gradient(circle at 30% 60%, #000, transparent 72%);
+  mask-image: radial-gradient(circle at 30% 60%, #000, transparent 72%);
+}
+
+.eyebrow {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+.eyebrowGold {
+  color: var(--utm-gold);
+}
+
+.eyebrowBlue {
+  color: var(--utm-blue);
+}
+
+.tag {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 8px 15px;
+}
+
+.tagLight {
+  color: rgba(19, 36, 58, 0.72);
+  border: 1px solid rgba(19, 36, 58, 0.2);
+}
+
+.tagDark {
+  color: rgba(244, 239, 230, 0.72);
+  border: 1px solid rgba(244, 239, 230, 0.2);
+}
+
+/* ---------- Entreprise ---------- */
+.entreprise {
+  background: var(--utm-cream);
+  padding: clamp(72px, 9vw, 128px) clamp(22px, 5vw, 64px);
+}
+
+.entrepriseGrid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: clamp(36px, 6vw, 90px);
+  align-items: start;
+}
+
+.sticky {
+  position: sticky;
+  top: 120px;
+}
+
+.entrepriseTitle {
+  margin: 0 0 28px;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: clamp(28px, 3.6vw, 48px);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: var(--utm-ink);
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.textCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.paragraph {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--utm-text);
+}
+
+/* ---------- Marchés / World map ---------- */
+.marches {
+  background: var(--utm-cream);
+  padding: 0 0 clamp(72px, 9vw, 128px);
+}
+
+.mapPanel {
+  position: relative;
+  background: var(--utm-navy);
+  overflow: hidden;
+  padding: clamp(30px, 4vw, 56px) clamp(22px, 5vw, 64px);
+}
+
+.mapPanelGrid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(224, 163, 56, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 163, 56, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+}
+
+.mapPanelInner {
+  position: relative;
+  z-index: 1;
+  max-width: 1760px;
+  margin: 0 auto;
+}
+
+.mapHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 8px;
+}
+
+.mapTitle {
+  margin: 0;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: clamp(22px, 2.6vw, 34px);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--utm-cream-2);
+  max-width: 18ch;
+}
+
+.mapLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.legendDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.legendLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.7);
+}
+
+.sourcingRow {
+  margin-top: clamp(20px, 2.5vw, 32px);
+  padding-top: 24px;
+  border-top: 1px solid rgba(244, 239, 230, 0.12);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.sourcingLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.45);
+  margin-right: 6px;
+}
+
+.marchesTextWrap {
+  max-width: 1280px;
+  margin: clamp(48px, 6vw, 80px) auto 0;
+  padding: 0 clamp(22px, 5vw, 64px);
+}
+
+.marchesGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(36px, 6vw, 80px);
+  align-items: start;
+}
+
+.marchesTitle {
+  margin: 0;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  color: var(--utm-ink);
+  max-width: 16ch;
+}
+
+.marchesTextCol {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ---------- Équipe ---------- */
+.equipe {
+  background: var(--utm-navy);
+  padding: clamp(72px, 9vw, 128px) clamp(22px, 5vw, 64px);
+}
+
+.sectionInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.equipeHead {
+  max-width: 62ch;
+  margin-bottom: clamp(44px, 5vw, 68px);
+}
+
+.equipeTitle {
+  margin: 0;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  color: var(--utm-cream-2);
+}
+
+.ceoCard {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+  background: var(--utm-navy-2);
+  border-radius: 16px;
+  overflow: hidden;
+  padding: clamp(20px, 2.5vw, 28px);
+  margin-bottom: clamp(40px, 5vw, 64px);
+}
+
+.ceoImgWrap {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--utm-navy-3);
+}
+
+.ceoImg {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.03);
+}
+
+.ceoRole {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--utm-gold);
+  margin-bottom: 16px;
+}
+
+.ceoName {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.05;
+  color: var(--utm-cream-2);
+  margin-bottom: 18px;
+}
+
+.ceoText {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(244, 239, 230, 0.64);
+  max-width: 52ch;
+}
+
+.groupLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.5);
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(244, 239, 230, 0.12);
+}
+
+.teamGridLarge {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: rgba(244, 239, 230, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: clamp(44px, 5vw, 64px);
+}
+
+.teamGridSmall {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  background: rgba(244, 239, 230, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.teamGridSmall + .groupLabel {
+  margin-top: clamp(44px, 5vw, 64px);
+}
+
+.teamCard {
+  position: relative;
+  background: var(--utm-navy-2);
+}
+
+.teamImgWrap {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.teamImg {
+  object-fit: cover;
+  filter: grayscale(1) brightness(0.9) contrast(1.02);
+  transition:
+    filter 0.55s ease,
+    transform 0.8s ease;
+}
+
+.teamCard:hover .teamImg {
+  filter: grayscale(0) brightness(1);
+  transform: scale(1.04);
+}
+
+.teamShade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(15, 30, 48, 0) 45%, rgba(12, 18, 28, 0.92) 100%);
+}
+
+.teamCaptionLarge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 22px 22px;
+  pointer-events: none;
+}
+
+.teamCaptionSmall {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16px 16px;
+  pointer-events: none;
+}
+
+.teamNameLarge {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--utm-cream-2);
+  margin-bottom: 6px;
+}
+
+.teamNameSmall {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--utm-cream-2);
+  margin-bottom: 5px;
+  line-height: 1.2;
+}
+
+.teamRoleLarge {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--utm-gold);
+  line-height: 1.4;
+}
+
+.teamRoleSmall {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--utm-gold);
+  line-height: 1.4;
+}
+
+@keyframes utmKen {
+  from {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 900px) {
+  .entrepriseGrid,
+  .marchesGrid {
+    grid-template-columns: 1fr;
+  }
+  .ceoCard {
+    grid-template-columns: 1fr;
+  }
+  .teamGridLarge {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .teamGridSmall {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
