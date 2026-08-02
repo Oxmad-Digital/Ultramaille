@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: "/a-propos", fr: "À propos", en: "About" },
   { href: "/notre-expertise", fr: "Notre expertise", en: "Our expertise" },
   { href: "/notre-engagement", fr: "Notre engagement", en: "Our commitment" },
+  { href: "/blog", fr: "Blog", en: "Blog" },
   { href: "/contact", fr: "Contact", en: "Contact" },
 ];
 
@@ -59,7 +60,12 @@ export default function Footer() {
           <span className={styles.bottomText}>
             © 2026 ULTRAMAILLE S.A — {t("Tous droits réservés", "All rights reserved")}
           </span>
-          <span className={styles.bottomText}>Antananarivo, Madagascar</span>
+          <div className={styles.bottomRight}>
+            <span className={styles.bottomText}>Antananarivo, Madagascar</span>
+            <Link href="/admin/login" className={styles.bottomLink}>
+              {t("Espace admin", "Admin area")}
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

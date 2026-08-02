@@ -97,6 +97,18 @@
   color: rgba(244, 239, 230, 0.3);
 }
 
+.adminLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(244, 239, 230, 0.7);
+  transition: color 0.2s;
+}
+
+.adminLink:hover {
+  color: var(--utm-gold);
+}
+
 .cta {
   font-family: var(--font-hanken-grotesk), sans-serif;
   font-size: 12.5px;
