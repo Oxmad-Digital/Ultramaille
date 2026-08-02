@@ -1,5 +1,5 @@
 .section {
-  background: var(--utm-gold);
+  background: #fff;
   padding: clamp(72px, 9vw, 120px) clamp(22px, 5vw, 64px);
 }
 
@@ -48,8 +48,8 @@
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--utm-cream-2);
-  background: var(--utm-navy);
+  color: var(--utm-navy);
+  background: var(--utm-gold);
   padding: 16px 32px;
   border-radius: 8px;
   text-decoration: none;
@@ -59,7 +59,7 @@
 }
 
 .button:hover {
-  background: var(--utm-navy-2);
+  background: var(--utm-gold-light);
   transform: translateY(-2px);
 }
 

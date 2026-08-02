@@ -81,7 +81,7 @@ export default function AProposPage() {
 
       <section id="top" className={styles.hero}>
         <Image
-          src="/images/broderie1-1024x683.jpg"
+          src="https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/broderie1-1024x683-ultramaille_kaelf8.jpg"
           alt="Broderie Ultramaille"
           fill
           priority
@@ -124,7 +124,7 @@ export default function AProposPage() {
             </p>
             <p className={styles.paragraph}>
               {t(
-                "L'exigence de qualité signe chacune de nos pièces : tous nos pulls sont intégralement remaillés, garantissant des finitions et une confection irréprochables. Nous intégrons également un service de teinture sur mesure, qu'il s'agisse de teinture en écheveaux — pour développer vos propres coloris sur la base du référentiel universel Pantone — ou de teinture en plongée sur produit fini. Cette maîtrise technique, alliée à notre grande diversité de jauges, nous permet de façonner une immense variété de mailles, des pièces les plus créatives et originales aux modèles les plus intemporels.",
+                "L'exigence de qualité signe chacune de nos pièces : tous nos pulls sont intégralement remaillés, garantissant des finitions et une confection irréprochables. Notre service de teinture sur mesure s'adapte à tous vos projets, de la teinture en écheveaux sur base Pantone à la teinture en plongée sur produit fini. Cette maîtrise technique, alliée à notre grande diversité de jauges, nous permet de façonner une immense variété de mailles, des pièces les plus créatives et originales aux modèles les plus intemporels.",
                 "A demand for quality defines every one of our pieces: all our sweaters are fully remeshed, guaranteeing flawless finishing and construction. We also offer a bespoke dyeing service, whether skein dyeing — to develop your own colours based on the universal Pantone reference — or dip dyeing on finished products. This technical mastery, combined with our wide diversity of gauges, allows us to craft an immense variety of knits, from the most creative and original pieces to the most timeless designs.",
               )}
             </p>

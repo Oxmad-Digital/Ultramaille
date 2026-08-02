@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: "www.ultramaille.com",
         pathname: "/wp-content/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/wzetrnif/**",
+      },
     ],
   },
 };

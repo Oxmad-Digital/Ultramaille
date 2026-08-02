@@ -11,7 +11,7 @@ import styles from "./page.module.css";
 const CRAFT_CARDS = [
   {
     number: "01",
-    img: "/images/1-tricotage-ultramaille.jpg",
+    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/1-tricotage-ultramaille_txyxfm.jpg",
     alt: "Tricotage",
     titleFr: "Tricotage & maille fine",
     titleEn: "Knitting & fine gauge",
@@ -20,7 +20,7 @@ const CRAFT_CARDS = [
   },
   {
     number: "02",
-    img: "/images/Broderie-crochet.jpg",
+    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1785696845/Broderie-crochet-ultramaille_qzu0uf.jpg",
     alt: "Crochet",
     titleFr: "Crochet main & macramé",
     titleEn: "Hand crochet & macramé",
@@ -29,7 +29,7 @@ const CRAFT_CARDS = [
   },
   {
     number: "03",
-    img: "/images/4-broderie-ultramaille.jpg",
+    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1785696845/4-broderie-ultramaille_zum4dd.webp",
     alt: "Broderie",
     titleFr: "Broderie d'exception",
     titleEn: "Fine embroidery",
@@ -38,7 +38,7 @@ const CRAFT_CARDS = [
   },
   {
     number: "04",
-    img: "/images/3-pressing-ultramaille-1024x683.jpg",
+    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/3-pressing-ultramaille-1024x683_rajues.jpg",
     alt: "Teinture et finitions",
     titleFr: "Teinture & finitions",
     titleEn: "Dyeing & finishing",
@@ -56,7 +56,7 @@ export default function Home() {
 
       <section id="top" className={styles.hero}>
         <Image
-          src="/images/3-pressing-ultramaille-1024x683.jpg"
+          src="https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/3-pressing-ultramaille-1024x683_rajues.jpg"
           alt="Atelier Ultramaille"
           fill
           priority
@@ -142,7 +142,7 @@ export default function Home() {
         <div className={styles.heritageGrid}>
           <div className={styles.heritageImgWrap}>
             <Image
-              src="/images/3-pressing-ultramaille-1024x683.jpg"
+              src="https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/3-pressing-ultramaille-1024x683_rajues.jpg"
               alt="Atelier Ultramaille"
               fill
               className={styles.heritageImg}

@@ -23,7 +23,7 @@ export default function ContactPage() {
 
       <section id="top" className={styles.hero}>
         <Image
-          src="/images/broderie1-1024x683.jpg"
+          src="https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/broderie1-1024x683-ultramaille_kaelf8.jpg"
           alt="Atelier Ultramaille"
           fill
           priority
@@ -125,7 +125,7 @@ export default function ContactPage() {
                   </span>
                 </label>
                 <button type="submit" className={styles.submitButton}>
-                  {t("Envoyer →", "Send →")}
+                  {t("Envoyer", "Send")}
                 </button>
               </form>
             )}
