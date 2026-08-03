@@ -1,13 +1,12 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import styles from "./AdminBar.module.css";
 
-export default function LogoutButton() {
+export default function LogoutButton({ className }: { className?: string }) {
   return (
     <button
       type="button"
-      className={styles.logoutButton}
+      className={className}
       onClick={() => signOut({ callbackUrl: "/admin/login" })}
     >
       Déconnexion

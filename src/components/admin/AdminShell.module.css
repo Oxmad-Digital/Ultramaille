@@ -1,0 +1,236 @@
+.shell {
+  display: grid;
+  grid-template-columns: 252px minmax(0, 1fr);
+  min-width: 1100px;
+  min-height: 100vh;
+  background: var(--utm-cream-2);
+  color: var(--utm-ink);
+  font-family: var(--font-hanken-grotesk), sans-serif;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  background: var(--utm-navy);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.brand {
+  padding: 26px 24px 24px;
+  border-bottom: 1px solid rgba(244, 239, 230, 0.1);
+}
+
+.logo {
+  height: 24px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.brandTag {
+  margin-top: 12px;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--utm-gold);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 18px 14px;
+  flex: 1;
+}
+
+.navGroupLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.32);
+  padding: 8px 10px 10px;
+}
+
+.navGroupLabel.spaced {
+  padding-top: 22px;
+}
+
+.navItem,
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-hanken-grotesk), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 11px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  color: rgba(244, 239, 230, 0.68);
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s;
+}
+
+.navItem:hover,
+.navButton:hover {
+  background: rgba(244, 239, 230, 0.07);
+}
+
+.navItemActive {
+  background: rgba(224, 163, 56, 0.16);
+  color: var(--utm-gold);
+}
+
+.navBadge {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10.5px;
+  color: rgba(224, 163, 56, 0.7);
+}
+
+.navBadgeMuted {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.28);
+}
+
+.navItemInert {
+  cursor: default;
+  color: rgba(244, 239, 230, 0.32);
+}
+
+.navItemInert:hover {
+  background: transparent;
+}
+
+.profile {
+  padding: 16px 18px 20px;
+  border-top: 1px solid rgba(244, 239, 230, 0.1);
+}
+
+.profileRow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--utm-gold);
+  color: var(--utm-navy);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  flex: none;
+}
+
+.profileText {
+  min-width: 0;
+}
+
+.profileEmail {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--utm-cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profileRole {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.4);
+}
+
+.profileMeta {
+  margin-top: 14px;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: rgba(244, 239, 230, 0.28);
+}
+
+/* ---------- Main ---------- */
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px clamp(20px, 2.6vw, 38px);
+  background: rgba(251, 248, 242, 0.92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(15, 30, 48, 0.1);
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--utm-label);
+}
+
+.crumbSep {
+  color: rgba(19, 36, 58, 0.25);
+}
+
+.crumbCurrent {
+  color: var(--utm-ink);
+}
+
+.newButton {
+  font-family: var(--font-hanken-grotesk), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--utm-navy);
+  background: var(--utm-gold);
+  border: none;
+  padding: 11px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.newButton:hover {
+  background: var(--utm-gold-light);
+  transform: translateY(-1px);
+}
+
+.content {
+  padding: clamp(24px, 3vw, 40px) clamp(20px, 2.6vw, 38px) 60px;
+}

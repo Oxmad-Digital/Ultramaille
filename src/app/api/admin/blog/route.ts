@@ -1,18 +1,8 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
+import { slugify } from "@/lib/blog";
 import Article from "@/models/Article";
-
-const DIACRITICS_RE = new RegExp("[\\u0300-\\u036f]", "g");
-
-function slugify(input: string) {
-  return input
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(DIACRITICS_RE, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
 
 export async function GET() {
   if (!(await requireAdmin())) {
@@ -29,31 +19,52 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { title, excerpt, content, coverImageUrl, coverImagePublicId, status } = body;
+  const {
+    title,
+    excerpt,
+    content,
+    coverImageUrl,
+    coverImagePublicId,
+    coverImageAlt,
+    category,
+    tags,
+    status,
+    featured,
+    publishedAt,
+    metaTitle,
+    metaDescription,
+  } = body;
 
-  if (!title || !content) {
-    return NextResponse.json({ error: "Titre et contenu requis" }, { status: 400 });
+  if (!title?.fr || !content?.fr) {
+    return NextResponse.json({ error: "Titre et contenu (FR) requis" }, { status: 400 });
   }
 
   await connectDB();
 
-  let slug = slugify(body.slug || title);
+  let slug = slugify(body.slug || title.fr);
   const existing = await Article.findOne({ slug });
   if (existing) {
     slug = `${slug}-${Date.now().toString(36)}`;
   }
 
   const isPublished = status === "published";
+  const isScheduled = status === "scheduled";
 
   const article = await Article.create({
-    title,
+    title: { fr: title.fr ?? "", en: title.en ?? "" },
     slug,
-    excerpt: excerpt ?? "",
-    content,
+    excerpt: { fr: excerpt?.fr ?? "", en: excerpt?.en ?? "" },
+    content: { fr: content.fr ?? "", en: content.en ?? "" },
     coverImageUrl: coverImageUrl ?? null,
     coverImagePublicId: coverImagePublicId ?? null,
-    status: isPublished ? "published" : "draft",
-    publishedAt: isPublished ? new Date() : null,
+    coverImageAlt: coverImageAlt ?? "",
+    category: category ?? "",
+    tags: Array.isArray(tags) ? tags : [],
+    status: isPublished ? "published" : isScheduled ? "scheduled" : "draft",
+    featured: Boolean(featured),
+    publishedAt: isPublished ? new Date() : isScheduled && publishedAt ? new Date(publishedAt) : null,
+    metaTitle: { fr: metaTitle?.fr ?? "", en: metaTitle?.en ?? "" },
+    metaDescription: { fr: metaDescription?.fr ?? "", en: metaDescription?.en ?? "" },
   });
 
   return NextResponse.json({ success: true, article }, { status: 201 });

@@ -1,21 +1,26 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
+import { cache } from "react";
 import { notFound } from "next/navigation";
-import ReactMarkdown from "react-markdown";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BlogArticleClient from "@/components/blog/BlogArticleClient";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 
-async function getArticle(slug: string) {
+// cache() dedupes this read within a single request so generateMetadata and
+// the page component share one DB call — the view counter below only runs once.
+const getArticle = cache(async (slug: string) => {
   await connectDB();
-  const article = await Article.findOne({ slug, status: "published" }).lean();
+  const now = new Date();
+  const article = await Article.findOne({
+    slug,
+    $or: [{ status: "published" }, { status: "scheduled", publishedAt: { $lte: now } }],
+  }).lean();
   return article;
-}
+});
 
 export async function generateMetadata({
   params,
@@ -30,8 +35,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${article.title} — Ultramaille`,
-    description: article.excerpt || undefined,
+    title: `${article.metaTitle?.fr || article.title.fr} — Ultramaille`,
+    description: article.metaDescription?.fr || article.excerpt.fr || undefined,
   };
 }
 
@@ -47,39 +52,21 @@ export default async function BlogArticlePage({
     notFound();
   }
 
-  const publishedAt = article.publishedAt
-    ? new Date(article.publishedAt).toLocaleDateString("fr-FR", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })
-    : "";
+  await Article.updateOne({ _id: article._id }, { $inc: { views: 1 } });
 
   return (
     <div className={styles.page}>
       <Header ctaHref="/contact#form" />
-
-      <section className={styles.hero}>
-        <div className={styles.heroInner}>
-          <Link href="/blog" className={styles.back}>
-            ← Retour au blog
-          </Link>
-          {publishedAt && <div className={styles.date}>{publishedAt}</div>}
-          <h1 className={styles.title}>{article.title}</h1>
-          {article.excerpt && <p className={styles.excerpt}>{article.excerpt}</p>}
-        </div>
-      </section>
-
-      {article.coverImageUrl && (
-        <div className={styles.coverWrap}>
-          <Image src={article.coverImageUrl} alt={article.title} fill priority className={styles.cover} />
-        </div>
-      )}
-
-      <article className={styles.content}>
-        <ReactMarkdown>{article.content}</ReactMarkdown>
-      </article>
-
+      <BlogArticleClient
+        article={{
+          title: { fr: article.title?.fr ?? "", en: article.title?.en ?? "" },
+          excerpt: { fr: article.excerpt?.fr ?? "", en: article.excerpt?.en ?? "" },
+          content: { fr: article.content?.fr ?? "", en: article.content?.en ?? "" },
+          coverImageUrl: article.coverImageUrl,
+          coverImageAlt: article.coverImageAlt ?? "",
+          publishedAt: article.publishedAt ? new Date(article.publishedAt).toISOString() : "",
+        }}
+      />
       <Footer />
     </div>
   );

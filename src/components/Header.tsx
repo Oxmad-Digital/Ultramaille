@@ -11,8 +11,8 @@ const NAV_ITEMS = [
   { href: "/a-propos", fr: "À propos", en: "About" },
   { href: "/notre-expertise", fr: "Notre expertise", en: "Our expertise" },
   { href: "/notre-engagement", fr: "Notre engagement", en: "Our commitment" },
-  { href: "/blog", fr: "Blog", en: "Blog" },
   { href: "/contact", fr: "Contact", en: "Contact" },
+  { href: "/blog", fr: "Blog", en: "Blog" },
 ];
 
 export default function Header({ ctaHref = "#contact" }: { ctaHref?: string }) {

@@ -11,6 +11,13 @@
   --utm-gold-dark: #9c7a35;
   --utm-text: #4a453d;
   --utm-text-muted: #6a6256;
+  --utm-label: #8a8378;
+  --utm-success: #2d6a4f;
+  --utm-success-bg: rgba(45, 106, 79, 0.14);
+  --utm-danger: #8e3b2f;
+  --utm-danger-bg: rgba(142, 59, 47, 0.12);
+  --utm-scheduled-fg: #8a6320;
+  --utm-scheduled-bg: rgba(224, 163, 56, 0.24);
 }
 
 * {

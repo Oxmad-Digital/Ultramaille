@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BlogListClient, { type PublicArticle } from "@/components/blog/BlogListClient";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
+import { estimateReadingMinutes } from "@/lib/blog";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -14,54 +14,33 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-type ArticleSummary = {
-  slug: string;
-  title: string;
-  excerpt: string;
-  coverImageUrl: string | null;
-  publishedAt: string;
-  readingMinutes: number;
-};
-
-function estimateReadingMinutes(content: string) {
-  const words = content.trim().split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.round(words / 200));
-}
-
-async function getPublishedArticles(): Promise<ArticleSummary[]> {
+async function getPublishedArticles(): Promise<PublicArticle[]> {
   await connectDB();
-  const articles = await Article.find({ status: "published" })
+  const now = new Date();
+  const articles = await Article.find({
+    $or: [{ status: "published" }, { status: "scheduled", publishedAt: { $lte: now } }],
+  })
     .sort({ publishedAt: -1 })
     .lean();
 
   return articles.map((a) => ({
     slug: a.slug,
-    title: a.title,
-    excerpt: a.excerpt,
+    title: { fr: a.title?.fr ?? "", en: a.title?.en ?? "" },
+    excerpt: { fr: a.excerpt?.fr ?? "", en: a.excerpt?.en ?? "" },
+    category: a.category ?? "",
     coverImageUrl: a.coverImageUrl,
-    publishedAt: a.publishedAt
-      ? new Date(a.publishedAt).toLocaleDateString("fr-FR", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        })
-      : "",
-    readingMinutes: estimateReadingMinutes(a.content),
+    publishedAt: a.publishedAt ? new Date(a.publishedAt).toISOString() : "",
+    readingMinutesFr: estimateReadingMinutes(a.content?.fr ?? ""),
+    readingMinutesEn: estimateReadingMinutes(a.content?.en ?? ""),
+    featured: Boolean(a.featured),
   }));
 }
 
-function CoverPlaceholder({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className={`${styles.placeholder} ${compact ? styles.placeholderCompact : ""}`}>
-      <div className={styles.placeholderGrid} />
-      <img src="/ultramaille-logo.svg" alt="" className={styles.placeholderLogo} />
-    </div>
-  );
-}
-
 export default async function BlogPage() {
-  const articles = await getPublishedArticles();
-  const [featured, ...rest] = articles;
+  const allArticles = await getPublishedArticles();
+  const heroIndex = allArticles.findIndex((a) => a.featured);
+  const hero = allArticles[heroIndex === -1 ? 0 : heroIndex] ?? null;
+  const rest = allArticles.filter((_, i) => i !== (heroIndex === -1 ? 0 : heroIndex));
 
   return (
     <div className={styles.page}>
@@ -79,9 +58,9 @@ export default async function BlogPage() {
         </div>
       </section>
 
-      <section className={styles.section}>
-        <div className={styles.sectionInner}>
-          {articles.length === 0 ? (
+      {allArticles.length === 0 ? (
+        <section className={styles.section}>
+          <div className={styles.sectionInner}>
             <div className={styles.empty}>
               <div className={styles.emptyBadge}>—</div>
               <h2 className={styles.emptyTitle}>Aucun article publié pour le moment</h2>
@@ -89,75 +68,12 @@ export default async function BlogPage() {
                 Nos coulisses d&apos;atelier arrivent bientôt. En attendant, n&apos;hésitez pas à nous
                 contacter directement pour échanger sur votre projet.
               </p>
-              <Link href="/contact" className={styles.emptyLink}>
-                Nous contacter →
-              </Link>
             </div>
-          ) : (
-            <>
-              <Link href={`/blog/${featured.slug}`} className={styles.featured}>
-                <div className={styles.featuredImageWrap}>
-                  {featured.coverImageUrl ? (
-                    <Image
-                      src={featured.coverImageUrl}
-                      alt={featured.title}
-                      fill
-                      priority
-                      sizes="(max-width: 900px) 100vw, 640px"
-                      className={styles.featuredImage}
-                    />
-                  ) : (
-                    <CoverPlaceholder />
-                  )}
-                </div>
-                <div className={styles.featuredBody}>
-                  <span className={styles.featuredEyebrow}>— Dernier article</span>
-                  <h2 className={styles.featuredTitle}>{featured.title}</h2>
-                  {featured.excerpt && <p className={styles.featuredExcerpt}>{featured.excerpt}</p>}
-                  <div className={styles.meta}>
-                    <span>{featured.publishedAt}</span>
-                    <span className={styles.metaDot}>·</span>
-                    <span>{featured.readingMinutes} min de lecture</span>
-                  </div>
-                  <span className={styles.readLink}>Lire l&apos;article →</span>
-                </div>
-              </Link>
-
-              {rest.length > 0 && (
-                <div className={styles.grid}>
-                  {rest.map((article) => (
-                    <Link key={article.slug} href={`/blog/${article.slug}`} className={styles.card}>
-                      <div className={styles.cardImageWrap}>
-                        {article.coverImageUrl ? (
-                          <Image
-                            src={article.coverImageUrl}
-                            alt={article.title}
-                            fill
-                            sizes="(max-width: 700px) 100vw, 380px"
-                            className={styles.cardImage}
-                          />
-                        ) : (
-                          <CoverPlaceholder compact />
-                        )}
-                      </div>
-                      <div className={styles.cardBody}>
-                        <div className={styles.meta}>
-                          <span>{article.publishedAt}</span>
-                          <span className={styles.metaDot}>·</span>
-                          <span>{article.readingMinutes} min de lecture</span>
-                        </div>
-                        <h2 className={styles.cardTitle}>{article.title}</h2>
-                        {article.excerpt && <p className={styles.cardExcerpt}>{article.excerpt}</p>}
-                        <span className={styles.readLink}>Lire l&apos;article →</span>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      ) : (
+        <BlogListClient hero={hero} articles={rest} />
+      )}
 
       <Footer />
     </div>

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import styles from "@/app/admin/blog/ArticleTable.module.css";
+import styles from "./ArticleAdminList.module.css";
 
 export default function DeleteArticleButton({ id, title }: { id: string; title: string }) {
   const router = useRouter();
@@ -17,8 +17,14 @@ export default function DeleteArticleButton({ id, title }: { id: string; title: 
   }
 
   return (
-    <button type="button" className={styles.deleteButton} onClick={handleDelete} disabled={loading}>
-      {loading ? "..." : "Supprimer"}
+    <button
+      type="button"
+      title="Supprimer"
+      className={styles.deleteButton}
+      onClick={handleDelete}
+      disabled={loading}
+    >
+      {loading ? "…" : "✕"}
     </button>
   );
 }
