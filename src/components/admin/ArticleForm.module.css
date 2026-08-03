@@ -225,6 +225,15 @@
   color: var(--utm-label);
 }
 
+.hint a {
+  color: var(--utm-blue);
+  text-decoration: none;
+}
+
+.hint a:hover {
+  color: #c68a2e;
+}
+
 /* ---------- Editor ---------- */
 .editorCard {
   overflow: hidden;

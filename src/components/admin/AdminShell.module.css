@@ -210,6 +210,9 @@
 }
 
 .newButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-hanken-grotesk), sans-serif;
   font-size: 13px;
   font-weight: 700;
@@ -224,6 +227,12 @@
   text-decoration: none;
   transition: background 0.2s, transform 0.2s;
   white-space: nowrap;
+}
+
+.newButtonIcon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
 }
 
 .newButton:hover {

@@ -56,7 +56,13 @@ function toDatetimeLocalValue(iso: string | null) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export default function ArticleForm({ initial }: { initial?: ArticleFormValues }) {
+export default function ArticleForm({
+  initial,
+  categories = [],
+}: {
+  initial?: ArticleFormValues;
+  categories?: string[];
+}) {
   const router = useRouter();
   const isEdit = Boolean(initial?.id);
 
@@ -288,12 +294,23 @@ export default function ArticleForm({ initial }: { initial?: ArticleFormValues }
               </label>
               <label className={styles.field}>
                 <span className={styles.label}>Catégorie</span>
-                <input
-                  className={styles.input}
+                <select
+                  className={styles.select}
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  placeholder="Atelier, Matières…"
-                />
+                >
+                  <option value="">— Aucune —</option>
+                  {(category && !categories.includes(category) ? [category, ...categories] : categories).map(
+                    (c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    )
+                  )}
+                </select>
+                <span className={styles.hint}>
+                  <Link href="/admin/categories">Gérer les catégories →</Link>
+                </span>
               </label>
             </div>
 

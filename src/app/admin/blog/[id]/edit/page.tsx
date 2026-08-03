@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
+import Category from "@/models/Category";
 import AdminShell from "@/components/admin/AdminShell";
 import ArticleForm from "@/components/admin/ArticleForm";
 
@@ -17,9 +18,12 @@ export default async function EditArticlePage({
     notFound();
   }
 
+  const categories = await Category.find({}).sort({ name: 1 }).lean();
+
   return (
     <AdminShell crumb="Éditeur">
       <ArticleForm
+        categories={categories.map((c) => c.name)}
         initial={{
           id: article._id.toString(),
           title: { fr: article.title?.fr ?? "", en: article.title?.en ?? "" },
