@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { connectDB } from "@/lib/db";
+import Admin from "@/models/Admin";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
@@ -14,26 +16,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: {},
       },
       async authorize(credentials) {
-        const adminEmail = process.env.ADMIN_EMAIL;
-        const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
-
-        if (!adminEmail || !adminPasswordHash) {
-          throw new Error("Configuration admin manquante");
+        const email = (credentials?.email as string)?.toLowerCase().trim();
+        if (!email) {
+          throw new Error("Identifiants invalides");
         }
 
-        if (credentials?.email !== adminEmail) {
+        await connectDB();
+        const admin = await Admin.findOne({ email });
+        if (!admin) {
           throw new Error("Identifiants invalides");
         }
 
         const ok = await bcrypt.compare(
           (credentials?.password as string) ?? "",
-          adminPasswordHash
+          admin.passwordHash
         );
         if (!ok) {
           throw new Error("Identifiants invalides");
         }
 
-        return { id: "admin", email: adminEmail, name: "Admin" };
+        return { id: admin._id.toString(), email: admin.email, name: "Admin" };
       },
     }),
   ],

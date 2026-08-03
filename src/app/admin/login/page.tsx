@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import PasswordField from "@/components/admin/PasswordField";
 import styles from "./Login.module.css";
 
 export default function AdminLoginPage() {
@@ -51,13 +53,10 @@ export default function AdminLoginPage() {
         <label className={styles.label} htmlFor="password">
           Mot de passe
         </label>
-        <input
+        <PasswordField
           id="password"
-          type="password"
-          className={styles.input}
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
+          onChange={setPassword}
           autoComplete="current-password"
         />
 
@@ -66,6 +65,10 @@ export default function AdminLoginPage() {
         <button type="submit" className={styles.button} disabled={loading}>
           {loading ? "Connexion..." : "Se connecter"}
         </button>
+
+        <Link href="/admin/forgot-password" className={styles.forgotLink}>
+          Mot de passe oublié ?
+        </Link>
       </form>
     </main>
   );

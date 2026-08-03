@@ -79,3 +79,15 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.forgotLink {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--utm-text-muted);
+  text-decoration: underline;
+}
+
+.forgotLink:hover {
+  color: var(--utm-ink);
+}
