@@ -28,11 +28,17 @@ export default function BlogArticleClient({ article }: { article: PublicArticleD
 
   return (
     <>
-      <section className={styles.hero}>
+      <section className={`${styles.hero} ${article.coverImageUrl ? styles.heroWithCover : ""}`}>
+        <Link href="/blog" className={styles.back}>
+          <span className={styles.backIcon}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5" />
+              <path d="M11 18l-6-6 6-6" />
+            </svg>
+          </span>
+          {t("Retour au blog", "Back to blog")}
+        </Link>
         <div className={styles.heroInner}>
-          <Link href="/blog" className={styles.back}>
-            {t("← Retour au blog", "← Back to blog")}
-          </Link>
           {publishedLabel && <div className={styles.date}>{publishedLabel}</div>}
           <h1 className={styles.title}>{article.title[lang]}</h1>
           {article.excerpt[lang] && <p className={styles.excerpt}>{article.excerpt[lang]}</p>}

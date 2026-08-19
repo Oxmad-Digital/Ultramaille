@@ -42,6 +42,13 @@ function formatDate(iso: string | null) {
   return new Date(iso).toLocaleDateString("fr-FR");
 }
 
+function effectiveStatus(row: AdminArticleRow): AdminArticleRow["status"] {
+  if (row.status === "scheduled" && row.publishedAt && new Date(row.publishedAt) <= new Date()) {
+    return "published";
+  }
+  return row.status;
+}
+
 export default function ArticleAdminList({ initialArticles }: { initialArticles: AdminArticleRow[] }) {
   const router = useRouter();
   const [articles, setArticles] = useState(initialArticles);
@@ -57,9 +64,9 @@ export default function ArticleAdminList({ initialArticles }: { initialArticles:
 
   const counts = useMemo(
     () => ({
-      published: articles.filter((a) => a.status === "published").length,
-      draft: articles.filter((a) => a.status === "draft").length,
-      scheduled: articles.filter((a) => a.status === "scheduled").length,
+      published: articles.filter((a) => effectiveStatus(a) === "published").length,
+      draft: articles.filter((a) => effectiveStatus(a) === "draft").length,
+      scheduled: articles.filter((a) => effectiveStatus(a) === "scheduled").length,
       views: articles.reduce((sum, a) => sum + a.views, 0),
     }),
     [articles]
@@ -68,7 +75,7 @@ export default function ArticleAdminList({ initialArticles }: { initialArticles:
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return articles.filter((a) => {
-      if (filter !== "all" && a.status !== filter) return false;
+      if (filter !== "all" && effectiveStatus(a) !== filter) return false;
       if (!q) return true;
       return (
         a.titleFr.toLowerCase().includes(q) ||
@@ -227,8 +234,8 @@ export default function ArticleAdminList({ initialArticles }: { initialArticles:
                 </div>
               </div>
               <span className={styles.categoryCell}>{row.category || "—"}</span>
-              <span className={`${styles.statusBadge} ${STATUS_BADGE_CLASS[row.status]}`}>
-                {STATUS_LABEL[row.status]}
+              <span className={`${styles.statusBadge} ${STATUS_BADGE_CLASS[effectiveStatus(row)]}`}>
+                {STATUS_LABEL[effectiveStatus(row)]}
               </span>
               <span className={styles.dateCell}>{formatDate(row.publishedAt)}</span>
               <span className={styles.viewsCell}>{row.views}</span>

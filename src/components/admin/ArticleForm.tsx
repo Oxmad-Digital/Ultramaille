@@ -37,9 +37,8 @@ const TOOLBAR: { label: string; before: string; after: string }[] = [
   { label: "H3", before: "\n### ", after: "" },
   { label: "”", before: "\n> ", after: "" },
   { label: "Lien", before: "[", after: "](https://)" },
-  { label: "Image", before: "![", after: "](/uploads/image.jpg)" },
   { label: "Liste", before: "\n- ", after: "" },
-  { label: "Code", before: "`", after: "`" },
+  { label: "{ }", before: "\n```\n", after: "\n```\n" },
 ];
 
 const STATUS_OPTIONS: { key: ArticleStatus; label: string }[] = [
@@ -88,7 +87,9 @@ export default function ArticleForm({
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [contentImageUploading, setContentImageUploading] = useState(false);
   const contentRef = useRef<HTMLTextAreaElement>(null);
+  const contentImageInputRef = useRef<HTMLInputElement>(null);
 
   function handleTitleChange(value: string) {
     setTitle((t) => ({ ...t, [lang]: value }));
@@ -151,14 +152,54 @@ export default function ArticleForm({
     }
   }
 
+  async function handleContentImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    if (!preset) {
+      setError("Upload preset Cloudinary manquant (NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET)");
+      return;
+    }
+
+    setContentImageUploading(true);
+    setError("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", preset);
+      formData.append("folder", "blog");
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (data.secure_url) {
+        const optimizedUrl = data.secure_url.replace("/upload/", "/upload/f_auto,q_auto,w_1600/");
+        insertToolbarSyntax(`![](${optimizedUrl})`, "");
+      } else {
+        setError("Échec de l'upload de l'image");
+      }
+    } catch {
+      setError("Échec de l'upload de l'image");
+    } finally {
+      setContentImageUploading(false);
+    }
+  }
+
   function removeCover() {
     setCoverImageUrl("");
     setCoverImagePublicId("");
   }
 
-  function addTag(e: React.FormEvent<HTMLFormElement>) {
+  function addTag(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key !== "Enter") return;
     e.preventDefault();
-    const input = e.currentTarget.elements.namedItem("tag") as HTMLInputElement;
+    const input = e.currentTarget;
     const value = (input.value || "").trim();
     if (value && !tags.includes(value)) setTags((t) => t.concat(value));
     input.value = "";
@@ -340,6 +381,22 @@ export default function ArticleForm({
               ))}
               <button
                 type="button"
+                className={styles.toolButton}
+                disabled={previewMode || contentImageUploading}
+                title={previewMode ? "Repasse en mode édition pour insérer une image" : undefined}
+                onClick={() => contentImageInputRef.current?.click()}
+              >
+                {contentImageUploading ? "Envoi…" : "Image"}
+              </button>
+              <input
+                ref={contentImageInputRef}
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleContentImageUpload}
+              />
+              <button
+                type="button"
                 className={`${styles.toolButton} ${previewMode ? styles.toolButtonActive : ""}`}
                 onClick={() => setPreviewMode((p) => !p)}
               >
@@ -463,9 +520,9 @@ export default function ArticleForm({
                 </span>
               ))}
             </div>
-            <form className={styles.tagForm} onSubmit={addTag}>
-              <input name="tag" placeholder="Ajouter un tag + Entrée" />
-            </form>
+            <div className={styles.tagForm}>
+              <input name="tag" placeholder="Ajouter un tag + Entrée" onKeyDown={addTag} />
+            </div>
           </div>
 
           <div className={styles.card}>
