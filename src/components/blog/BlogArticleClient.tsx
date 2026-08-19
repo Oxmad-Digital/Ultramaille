@@ -20,6 +20,8 @@ export type PublicArticleDetail = {
 
 export default function BlogArticleClient({ article }: { article: PublicArticleDetail }) {
   const { lang, t } = useLanguage();
+  const bodyContent = article.content[lang] || article.content.fr;
+  const isHtmlContent = /^\s*</.test(bodyContent);
   const publishedLabel = article.publishedAt
     ? new Date(article.publishedAt).toLocaleDateString(lang === "en" ? "en-US" : "fr-FR", {
         day: "numeric",
@@ -60,9 +62,13 @@ export default function BlogArticleClient({ article }: { article: PublicArticleD
       )}
 
       <article className={styles.content}>
-        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-          {article.content[lang] || article.content.fr}
-        </ReactMarkdown>
+        {isHtmlContent ? (
+          <div dangerouslySetInnerHTML={{ __html: bodyContent }} />
+        ) : (
+          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+            {bodyContent}
+          </ReactMarkdown>
+        )}
       </article>
     </>
   );

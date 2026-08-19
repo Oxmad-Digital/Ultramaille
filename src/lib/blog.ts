@@ -15,6 +15,7 @@ export function slugify(input: string) {
 }
 
 export function estimateReadingMinutes(content: string) {
-  const words = content.trim().split(/\s+/).filter(Boolean).length;
+  const text = content.replace(/<[^>]*>/g, " ");
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));
 }

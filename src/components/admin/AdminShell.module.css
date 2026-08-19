@@ -13,9 +13,7 @@
   background: var(--utm-navy);
   display: flex;
   flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  align-self: stretch;
 }
 
 .brand {
@@ -115,6 +113,7 @@
 }
 
 .profile {
+  margin-top: auto;
   padding: 16px 18px 20px;
   border-top: 1px solid rgba(244, 239, 230, 0.1);
 }

@@ -1,11 +1,15 @@
 "use client";
 
-import { useRef, useState, type CSSProperties } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
+import { useEditor, useEditorState, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Highlight from "@tiptap/extension-highlight";
+import { TextStyle, Color } from "@tiptap/extension-text-style";
+import TiptapImage from "@tiptap/extension-image";
+import Youtube, { isValidYoutubeUrl } from "@tiptap/extension-youtube";
+import Placeholder from "@tiptap/extension-placeholder";
 import { slugify, estimateReadingMinutes, type LocalizedText } from "@/lib/blog";
 import styles from "./ArticleForm.module.css";
 
@@ -32,18 +36,13 @@ export type ArticleFormValues = {
   metaDescription: LocalizedText;
 };
 
-const TOOLBAR: { label: string; title: string; before: string; after: string; style?: CSSProperties }[] = [
-  { label: "B", title: "Gras", before: "**", after: "**", style: { fontWeight: 700 } },
-  { label: "I", title: "Italique", before: "*", after: "*", style: { fontStyle: "italic" } },
-  { label: "U", title: "Souligné", before: "<u>", after: "</u>", style: { textDecoration: "underline" } },
-  { label: "S", title: "Barré", before: "~~", after: "~~", style: { textDecoration: "line-through" } },
-  { label: "Surligner", title: "Surligner", before: "<mark>", after: "</mark>", style: { background: "rgba(224, 163, 56, 0.28)" } },
-  { label: "H2", title: "Titre H2", before: "\n## ", after: "" },
-  { label: "H3", title: "Titre H3", before: "\n### ", after: "" },
-  { label: "”", title: "Citation", before: "\n> ", after: "" },
-  { label: "Lien", title: "Lien", before: "[", after: "](https://)" },
-  { label: "Liste", title: "Liste à puces", before: "\n- ", after: "" },
-  { label: "{ }", title: "Bloc de code", before: "\n```\n", after: "\n```\n" },
+const COLOR_PALETTE: { label: string; hex: string }[] = [
+  { label: "Marine", hex: "#0f1e30" },
+  { label: "Bleu", hex: "#1d4670" },
+  { label: "Or", hex: "#e0a338" },
+  { label: "Vert", hex: "#2d6a4f" },
+  { label: "Rouge", hex: "#8e3b2f" },
+  { label: "Gris", hex: "#6a6256" },
 ];
 
 const STATUS_OPTIONS: { key: ArticleStatus; label: string }[] = [
@@ -51,6 +50,20 @@ const STATUS_OPTIONS: { key: ArticleStatus; label: string }[] = [
   { key: "scheduled", label: "Programmé" },
   { key: "published", label: "Publié" },
 ];
+
+const DEFAULT_ACTIVE_MARKS = {
+  bold: false,
+  italic: false,
+  underline: false,
+  strike: false,
+  highlight: false,
+  h2: false,
+  h3: false,
+  blockquote: false,
+  bulletList: false,
+  codeBlock: false,
+  link: false,
+};
 
 function toDatetimeLocalValue(iso: string | null) {
   if (!iso) return "";
@@ -88,35 +101,67 @@ export default function ArticleForm({
   const [metaDescription, setMetaDescription] = useState<LocalizedText>(
     initial?.metaDescription ?? EMPTY_LOCALIZED
   );
-  const [previewMode, setPreviewMode] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [contentImageUploading, setContentImageUploading] = useState(false);
-  const contentRef = useRef<HTMLTextAreaElement>(null);
+  const [videoBarOpen, setVideoBarOpen] = useState(false);
+  const [videoUrlInput, setVideoUrlInput] = useState("");
+  const [videoError, setVideoError] = useState("");
+  const [colorBarOpen, setColorBarOpen] = useState(false);
+  const [linkBarOpen, setLinkBarOpen] = useState(false);
+  const [linkUrlInput, setLinkUrlInput] = useState("");
+  const [linkTextInput, setLinkTextInput] = useState("");
   const contentImageInputRef = useRef<HTMLInputElement>(null);
+  const videoUrlRef = useRef<HTMLInputElement>(null);
+  const linkTextRef = useRef<HTMLInputElement>(null);
+  const linkUrlRef = useRef<HTMLInputElement>(null);
+
+  const editor = useEditor(
+    {
+      extensions: [
+        StarterKit.configure({ link: { openOnClick: false, autolink: true } }),
+        Highlight,
+        TextStyle,
+        Color,
+        TiptapImage,
+        Youtube.configure({ nocookie: true, width: 640, height: 360 }),
+        Placeholder.configure({ placeholder: "Rédigez votre article…" }),
+      ],
+      content: content[lang] || "",
+      immediatelyRender: false,
+      onUpdate: ({ editor: e }) => {
+        setContent((c) => ({ ...c, [lang]: e.getHTML() }));
+      },
+    },
+    [lang]
+  );
+
+  const active = useEditorState({
+    editor,
+    selector: ({ editor: e }) =>
+      e
+        ? {
+            bold: e.isActive("bold"),
+            italic: e.isActive("italic"),
+            underline: e.isActive("underline"),
+            strike: e.isActive("strike"),
+            highlight: e.isActive("highlight"),
+            h2: e.isActive("heading", { level: 2 }),
+            h3: e.isActive("heading", { level: 3 }),
+            blockquote: e.isActive("blockquote"),
+            bulletList: e.isActive("bulletList"),
+            codeBlock: e.isActive("codeBlock"),
+            link: e.isActive("link"),
+          }
+        : DEFAULT_ACTIVE_MARKS,
+  }) ?? DEFAULT_ACTIVE_MARKS;
 
   function handleTitleChange(value: string) {
     setTitle((t) => ({ ...t, [lang]: value }));
     if (lang === "fr" && !slugTouched) {
       setSlug(slugify(value));
     }
-  }
-
-  function insertToolbarSyntax(before: string, after: string) {
-    const el = contentRef.current;
-    if (!el) return;
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const value = content[lang];
-    const selected = value.slice(start, end);
-    const next = value.slice(0, start) + before + selected + after + value.slice(end);
-    setContent((c) => ({ ...c, [lang]: next }));
-    requestAnimationFrame(() => {
-      el.focus();
-      const cursor = start + before.length + selected.length;
-      el.setSelectionRange(cursor, cursor);
-    });
   }
 
   async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -185,7 +230,7 @@ export default function ArticleForm({
 
       if (data.secure_url) {
         const optimizedUrl = data.secure_url.replace("/upload/", "/upload/f_auto,q_auto,w_1600/");
-        insertToolbarSyntax(`![](${optimizedUrl})`, "");
+        editor?.chain().focus().setImage({ src: optimizedUrl }).run();
       } else {
         setError("Échec de l'upload de l'image");
       }
@@ -194,6 +239,89 @@ export default function ArticleForm({
     } finally {
       setContentImageUploading(false);
     }
+  }
+
+  function closeAllBars() {
+    setVideoBarOpen(false);
+    setColorBarOpen(false);
+    setLinkBarOpen(false);
+  }
+
+  function openVideoBar() {
+    closeAllBars();
+    setVideoError("");
+    setVideoUrlInput("");
+    setVideoBarOpen(true);
+    requestAnimationFrame(() => videoUrlRef.current?.focus());
+  }
+
+  function closeVideoBar() {
+    setVideoBarOpen(false);
+    setVideoError("");
+    setVideoUrlInput("");
+  }
+
+  function handleInsertVideo() {
+    if (!isValidYoutubeUrl(videoUrlInput)) {
+      setVideoError("Lien YouTube invalide");
+      return;
+    }
+
+    editor?.commands.setYoutubeVideo({ src: videoUrlInput });
+    closeVideoBar();
+  }
+
+  function openColorBar() {
+    closeAllBars();
+    setColorBarOpen(true);
+  }
+
+  function applyColor(hex: string) {
+    editor?.chain().focus().setColor(hex).run();
+    setColorBarOpen(false);
+  }
+
+  function clearColor() {
+    editor?.chain().focus().unsetColor().run();
+    setColorBarOpen(false);
+  }
+
+  function openLinkBar() {
+    closeAllBars();
+    const { from, to } = editor?.state.selection ?? { from: 0, to: 0 };
+    const selectedText = editor?.state.doc.textBetween(from, to, " ") ?? "";
+    setLinkTextInput(selectedText);
+    setLinkUrlInput(editor?.getAttributes("link").href ?? "");
+    setLinkBarOpen(true);
+    requestAnimationFrame(() => (selectedText ? linkUrlRef : linkTextRef).current?.focus());
+  }
+
+  function closeLinkBar() {
+    setLinkBarOpen(false);
+    setLinkUrlInput("");
+    setLinkTextInput("");
+  }
+
+  function handleInsertLink() {
+    const url = linkUrlInput.trim();
+
+    if (!url) {
+      editor?.chain().focus().extendMarkRange("link").unsetLink().run();
+      closeLinkBar();
+      return;
+    }
+
+    const label = linkTextInput.trim() || url;
+    const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    const { from, to } = editor?.state.selection ?? { from: 0, to: 0 };
+
+    editor
+      ?.chain()
+      .focus()
+      .insertContentAt({ from, to }, `<a href="${escape(url)}">${escape(label)}</a>`)
+      .run();
+
+    closeLinkBar();
   }
 
   function removeCover() {
@@ -219,13 +347,25 @@ export default function ArticleForm({
     setSaving(true);
     setError("");
 
+    const isContentEmpty = (html: string) => html.replace(/<[^>]*>/g, "").trim() === "";
+    const finalContent: LocalizedText = {
+      fr: isContentEmpty(content.fr) ? "" : content.fr,
+      en: isContentEmpty(content.en) ? "" : content.en,
+    };
+
+    if (!finalContent.fr) {
+      setError("Le contenu de l'article (FR) est requis");
+      setSaving(false);
+      return;
+    }
+
     const finalStatus: ArticleStatus = publishNow ? "published" : status;
 
     const payload = {
       title,
       slug: slug || slugify(title.fr),
       excerpt,
-      content,
+      content: finalContent,
       coverImageUrl: coverImageUrl || null,
       coverImagePublicId: coverImagePublicId || null,
       coverImageAlt,
@@ -261,9 +401,9 @@ export default function ArticleForm({
     }
   }
 
-  const activeContent = content[lang];
-  const wordCount = activeContent.trim() ? activeContent.trim().split(/\s+/).length : 0;
-  const readingMinutes = estimateReadingMinutes(activeContent || "");
+  const plainText = editor?.getText() ?? "";
+  const wordCount = plainText.trim() ? plainText.trim().split(/\s+/).length : 0;
+  const readingMinutes = estimateReadingMinutes(plainText);
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
@@ -380,23 +520,111 @@ export default function ArticleForm({
 
           <div className={`${styles.card} ${styles.editorCard}`}>
             <div className={styles.toolbar}>
-              {TOOLBAR.map((t) => (
-                <button
-                  key={t.label}
-                  type="button"
-                  title={t.title}
-                  className={styles.toolButton}
-                  style={t.style}
-                  onClick={() => insertToolbarSyntax(t.before, t.after)}
-                >
-                  {t.label}
-                </button>
-              ))}
+              <button
+                type="button"
+                title="Gras"
+                className={`${styles.toolButton} ${active.bold ? styles.toolButtonActive : ""}`}
+                style={{ fontWeight: 700 }}
+                onClick={() => editor?.chain().focus().toggleBold().run()}
+              >
+                B
+              </button>
+              <button
+                type="button"
+                title="Italique"
+                className={`${styles.toolButton} ${active.italic ? styles.toolButtonActive : ""}`}
+                style={{ fontStyle: "italic" }}
+                onClick={() => editor?.chain().focus().toggleItalic().run()}
+              >
+                I
+              </button>
+              <button
+                type="button"
+                title="Souligné"
+                className={`${styles.toolButton} ${active.underline ? styles.toolButtonActive : ""}`}
+                style={{ textDecoration: "underline" }}
+                onClick={() => editor?.chain().focus().toggleUnderline().run()}
+              >
+                U
+              </button>
+              <button
+                type="button"
+                title="Barré"
+                className={`${styles.toolButton} ${active.strike ? styles.toolButtonActive : ""}`}
+                style={{ textDecoration: "line-through" }}
+                onClick={() => editor?.chain().focus().toggleStrike().run()}
+              >
+                S
+              </button>
+              <button
+                type="button"
+                title="Surligner"
+                className={`${styles.toolButton} ${active.highlight ? styles.toolButtonActive : ""}`}
+                style={{ background: "rgba(224, 163, 56, 0.28)" }}
+                onClick={() => editor?.chain().focus().toggleHighlight().run()}
+              >
+                Surligner
+              </button>
+              <button
+                type="button"
+                title="Titre H2"
+                className={`${styles.toolButton} ${active.h2 ? styles.toolButtonActive : ""}`}
+                onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+              >
+                H2
+              </button>
+              <button
+                type="button"
+                title="Titre H3"
+                className={`${styles.toolButton} ${active.h3 ? styles.toolButtonActive : ""}`}
+                onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
+              >
+                H3
+              </button>
+              <button
+                type="button"
+                title="Citation"
+                className={`${styles.toolButton} ${active.blockquote ? styles.toolButtonActive : ""}`}
+                onClick={() => editor?.chain().focus().toggleBlockquote().run()}
+              >
+                &rdquo;
+              </button>
+              <button
+                type="button"
+                title="Lien"
+                className={`${styles.toolButton} ${active.link || linkBarOpen ? styles.toolButtonActive : ""}`}
+                onClick={() => (linkBarOpen ? closeLinkBar() : openLinkBar())}
+              >
+                Lien
+              </button>
+              <button
+                type="button"
+                title="Liste à puces"
+                className={`${styles.toolButton} ${active.bulletList ? styles.toolButtonActive : ""}`}
+                onClick={() => editor?.chain().focus().toggleBulletList().run()}
+              >
+                Liste
+              </button>
+              <button
+                type="button"
+                title="Bloc de code"
+                className={`${styles.toolButton} ${active.codeBlock ? styles.toolButtonActive : ""}`}
+                onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
+              >
+                {"{ }"}
+              </button>
+              <button
+                type="button"
+                className={`${styles.toolButton} ${colorBarOpen ? styles.toolButtonActive : ""}`}
+                title="Couleur du texte"
+                onClick={() => (colorBarOpen ? setColorBarOpen(false) : openColorBar())}
+              >
+                Couleur
+              </button>
               <button
                 type="button"
                 className={styles.toolButton}
-                disabled={previewMode || contentImageUploading}
-                title={previewMode ? "Repasse en mode édition pour insérer une image" : undefined}
+                disabled={contentImageUploading}
                 onClick={() => contentImageInputRef.current?.click()}
               >
                 {contentImageUploading ? "Envoi…" : "Image"}
@@ -410,30 +638,114 @@ export default function ArticleForm({
               />
               <button
                 type="button"
-                className={`${styles.toolButton} ${previewMode ? styles.toolButtonActive : ""}`}
-                onClick={() => setPreviewMode((p) => !p)}
+                className={`${styles.toolButton} ${videoBarOpen ? styles.toolButtonActive : ""}`}
+                title="Insérer une vidéo YouTube"
+                onClick={() => (videoBarOpen ? closeVideoBar() : openVideoBar())}
               >
-                {previewMode ? "Éditer" : "Aperçu"}
+                Vidéo
               </button>
-              <span className={styles.toolbarSpacer}>Markdown · body.{lang}</span>
+              <span className={styles.toolbarSpacer}>body.{lang}</span>
             </div>
 
-            {previewMode ? (
-              <div className={styles.editorPreview}>
-                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-                  {activeContent || "*Aperçu du contenu…*"}
-                </ReactMarkdown>
+            {colorBarOpen && (
+              <div className={styles.colorBar}>
+                {COLOR_PALETTE.map((c) => (
+                  <button
+                    key={c.hex}
+                    type="button"
+                    title={c.label}
+                    className={styles.colorSwatch}
+                    style={{ background: c.hex }}
+                    onClick={() => applyColor(c.hex)}
+                  />
+                ))}
+                <label className={styles.colorCustom} title="Couleur personnalisée">
+                  <input
+                    type="color"
+                    className={styles.colorCustomInput}
+                    onChange={(e) => applyColor(e.target.value)}
+                  />
+                </label>
+                <button type="button" className={styles.videoBarCancel} onClick={clearColor}>
+                  Effacer
+                </button>
+                <button type="button" className={styles.videoBarCancel} onClick={() => setColorBarOpen(false)}>
+                  Fermer
+                </button>
               </div>
-            ) : (
-              <textarea
-                ref={contentRef}
-                className={styles.editorTextarea}
-                value={activeContent}
-                onChange={(e) => setContent((c) => ({ ...c, [lang]: e.target.value }))}
-                placeholder="## Titre&#10;&#10;Votre texte en **markdown**…"
-                required={lang === "fr"}
-              />
             )}
+
+            {linkBarOpen && (
+              <div className={styles.videoBar}>
+                <input
+                  ref={linkTextRef}
+                  type="text"
+                  className={styles.videoBarInput}
+                  placeholder="Texte affiché"
+                  value={linkTextInput}
+                  onChange={(e) => setLinkTextInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") closeLinkBar();
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleInsertLink();
+                    }
+                  }}
+                />
+                <input
+                  ref={linkUrlRef}
+                  type="url"
+                  className={styles.videoBarInput}
+                  placeholder="https://…"
+                  value={linkUrlInput}
+                  onChange={(e) => setLinkUrlInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") closeLinkBar();
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleInsertLink();
+                    }
+                  }}
+                />
+                <button type="button" className={styles.videoBarSubmit} onClick={handleInsertLink}>
+                  {linkUrlInput.trim() ? "Insérer" : "Retirer le lien"}
+                </button>
+                <button type="button" className={styles.videoBarCancel} onClick={closeLinkBar}>
+                  Annuler
+                </button>
+              </div>
+            )}
+
+            {videoBarOpen && (
+              <div className={styles.videoBar}>
+                <input
+                  ref={videoUrlRef}
+                  type="url"
+                  className={styles.videoBarInput}
+                  placeholder="https://www.youtube.com/watch?v=…"
+                  value={videoUrlInput}
+                  onChange={(e) => setVideoUrlInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") closeVideoBar();
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleInsertVideo();
+                    }
+                  }}
+                />
+                <button type="button" className={styles.videoBarSubmit} onClick={handleInsertVideo}>
+                  Insérer
+                </button>
+                <button type="button" className={styles.videoBarCancel} onClick={closeVideoBar}>
+                  Annuler
+                </button>
+                {videoError && <span className={styles.videoBarError}>{videoError}</span>}
+              </div>
+            )}
+
+            <div className={styles.editorPreview}>
+              <EditorContent editor={editor} />
+            </div>
 
             <div className={styles.editorFooter}>
               <span>
