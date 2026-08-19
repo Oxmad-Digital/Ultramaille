@@ -4,15 +4,17 @@ import { auth } from "@/auth";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
 import Category from "@/models/Category";
+import Media from "@/models/Media";
+import Author from "@/models/Author";
 import LogoutButton from "./LogoutButton";
 import styles from "./AdminShell.module.css";
 
 const NAV_ITEMS = [
   { label: "Articles", href: "/admin/blog", crumbs: ["Articles", "Éditeur"] },
   { label: "Catégories", href: "/admin/categories", crumbs: ["Catégories"] },
+  { label: "Médias", href: "/admin/media", crumbs: ["Médias"] },
+  { label: "Auteurs", href: "/admin/authors", crumbs: ["Auteurs"] },
 ];
-
-const INERT_NAV_ITEMS = ["Médias", "Newsletter", "Auteurs"];
 
 export default async function AdminShell({
   crumb,
@@ -27,9 +29,13 @@ export default async function AdminShell({
   await connectDB();
   const articleCount = await Article.countDocuments();
   const categoryCount = await Category.countDocuments();
+  const mediaCount = await Media.countDocuments();
+  const authorCount = await Author.countDocuments();
   const navCounts: Record<string, number> = {
     Articles: articleCount,
     Catégories: categoryCount,
+    Médias: mediaCount,
+    Auteurs: authorCount,
   };
 
   const email = session?.user?.email ?? "";
@@ -54,12 +60,6 @@ export default async function AdminShell({
               <span>{item.label}</span>
               <span className={styles.navBadge}>{navCounts[item.label]}</span>
             </Link>
-          ))}
-          {INERT_NAV_ITEMS.map((label) => (
-            <div key={label} className={`${styles.navItem} ${styles.navItemInert}`}>
-              <span>{label}</span>
-              <span className={styles.navBadgeMuted}>Bientôt</span>
-            </div>
           ))}
 
           <div className={`${styles.navGroupLabel} ${styles.spaced}`}>Système</div>

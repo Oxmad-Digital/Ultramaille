@@ -10,7 +10,9 @@ import { TextStyle, Color } from "@tiptap/extension-text-style";
 import TiptapImage from "@tiptap/extension-image";
 import Youtube, { isValidYoutubeUrl } from "@tiptap/extension-youtube";
 import Placeholder from "@tiptap/extension-placeholder";
+import { TableKit } from "@tiptap/extension-table";
 import { slugify, estimateReadingMinutes, type LocalizedText } from "@/lib/blog";
+import MediaLibraryModal, { type MediaSelection } from "./MediaLibraryModal";
 import styles from "./ArticleForm.module.css";
 
 const CLOUD_NAME = "wzetrnif";
@@ -51,6 +53,45 @@ const STATUS_OPTIONS: { key: ArticleStatus; label: string }[] = [
   { key: "published", label: "Publié" },
 ];
 
+function TableInsertIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="4" width="16" height="16" rx="4" />
+      <path d="M12 8v8M8 12h8" />
+    </svg>
+  );
+}
+
+function TableRemoveIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="4" width="16" height="16" rx="4" />
+      <path d="M8 12h8" />
+    </svg>
+  );
+}
+
+function TableHeaderIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <rect x="3.6" y="4.6" width="16.8" height="4.3" rx="1.2" fill="currentColor" fillOpacity="0.28" stroke="none" />
+      <path d="M3 9.5h18" />
+    </svg>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 7h16" />
+      <path d="M9 7V4.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V7" />
+      <path d="M6.5 7l.8 12.2a2 2 0 0 0 2 1.8h5.4a2 2 0 0 0 2-1.8L17.5 7" />
+      <path d="M10 11v6M14 11v6" />
+    </svg>
+  );
+}
+
 const DEFAULT_ACTIVE_MARKS = {
   bold: false,
   italic: false,
@@ -63,6 +104,7 @@ const DEFAULT_ACTIVE_MARKS = {
   bulletList: false,
   codeBlock: false,
   link: false,
+  table: false,
 };
 
 function toDatetimeLocalValue(iso: string | null) {
@@ -112,6 +154,7 @@ export default function ArticleForm({
   const [linkBarOpen, setLinkBarOpen] = useState(false);
   const [linkUrlInput, setLinkUrlInput] = useState("");
   const [linkTextInput, setLinkTextInput] = useState("");
+  const [mediaModalTarget, setMediaModalTarget] = useState<"cover" | "content" | null>(null);
   const contentImageInputRef = useRef<HTMLInputElement>(null);
   const videoUrlRef = useRef<HTMLInputElement>(null);
   const linkTextRef = useRef<HTMLInputElement>(null);
@@ -127,6 +170,7 @@ export default function ArticleForm({
         TiptapImage,
         Youtube.configure({ nocookie: true, width: 640, height: 360 }),
         Placeholder.configure({ placeholder: "Rédigez votre article…" }),
+        TableKit.configure({ table: { resizable: true } }),
       ],
       content: content[lang] || "",
       immediatelyRender: false,
@@ -153,6 +197,7 @@ export default function ArticleForm({
             bulletList: e.isActive("bulletList"),
             codeBlock: e.isActive("codeBlock"),
             link: e.isActive("link"),
+            table: e.isActive("table"),
           }
         : DEFAULT_ACTIVE_MARKS,
   }) ?? DEFAULT_ACTIVE_MARKS;
@@ -241,6 +286,18 @@ export default function ArticleForm({
     }
   }
 
+  function handleMediaSelect(item: MediaSelection) {
+    if (mediaModalTarget === "cover") {
+      setCoverImageUrl(item.url);
+      setCoverImagePublicId(item.publicId);
+      if (item.alt) setCoverImageAlt(item.alt);
+    } else if (mediaModalTarget === "content") {
+      const optimizedUrl = item.url.replace("/upload/", "/upload/f_auto,q_auto,w_1600/");
+      editor?.chain().focus().setImage({ src: optimizedUrl }).run();
+    }
+    setMediaModalTarget(null);
+  }
+
   function closeAllBars() {
     setVideoBarOpen(false);
     setColorBarOpen(false);
@@ -269,6 +326,11 @@ export default function ArticleForm({
 
     editor?.commands.setYoutubeVideo({ src: videoUrlInput });
     closeVideoBar();
+  }
+
+  function insertTable() {
+    closeAllBars();
+    editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
   }
 
   function openColorBar() {
@@ -615,6 +677,15 @@ export default function ArticleForm({
               </button>
               <button
                 type="button"
+                title="Insérer un tableau"
+                className={`${styles.toolButton} ${active.table ? styles.toolButtonActive : ""}`}
+                disabled={active.table}
+                onClick={insertTable}
+              >
+                Tableau
+              </button>
+              <button
+                type="button"
                 className={`${styles.toolButton} ${colorBarOpen ? styles.toolButtonActive : ""}`}
                 title="Couleur du texte"
                 onClick={() => (colorBarOpen ? setColorBarOpen(false) : openColorBar())}
@@ -636,6 +707,14 @@ export default function ArticleForm({
                 hidden
                 onChange={handleContentImageUpload}
               />
+              <button
+                type="button"
+                className={styles.toolButton}
+                title="Choisir depuis la bibliothèque de médias"
+                onClick={() => setMediaModalTarget("content")}
+              >
+                Bibliothèque
+              </button>
               <button
                 type="button"
                 className={`${styles.toolButton} ${videoBarOpen ? styles.toolButtonActive : ""}`}
@@ -743,6 +822,88 @@ export default function ArticleForm({
               </div>
             )}
 
+            {active.table && (
+              <div className={styles.tableBar}>
+                <div className={styles.tableBarGroup}>
+                  <span className={styles.tableBarLabel}>Colonne</span>
+                  <button
+                    type="button"
+                    className={styles.tableBarButton}
+                    title="Insérer une colonne avant"
+                    onClick={() => editor?.chain().focus().addColumnBefore().run()}
+                  >
+                    <TableInsertIcon />
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.tableBarButton}
+                    title="Insérer une colonne après"
+                    onClick={() => editor?.chain().focus().addColumnAfter().run()}
+                  >
+                    <TableInsertIcon />
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.tableBarButton}
+                    title="Supprimer la colonne"
+                    onClick={() => editor?.chain().focus().deleteColumn().run()}
+                  >
+                    <TableRemoveIcon />
+                  </button>
+                </div>
+
+                <span className={styles.tableBarDivider} />
+
+                <div className={styles.tableBarGroup}>
+                  <span className={styles.tableBarLabel}>Ligne</span>
+                  <button
+                    type="button"
+                    className={styles.tableBarButton}
+                    title="Insérer une ligne avant"
+                    onClick={() => editor?.chain().focus().addRowBefore().run()}
+                  >
+                    <TableInsertIcon />
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.tableBarButton}
+                    title="Insérer une ligne après"
+                    onClick={() => editor?.chain().focus().addRowAfter().run()}
+                  >
+                    <TableInsertIcon />
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.tableBarButton}
+                    title="Supprimer la ligne"
+                    onClick={() => editor?.chain().focus().deleteRow().run()}
+                  >
+                    <TableRemoveIcon />
+                  </button>
+                </div>
+
+                <span className={styles.tableBarDivider} />
+
+                <button
+                  type="button"
+                  className={styles.tableBarButton}
+                  title="Basculer la ligne d'en-tête"
+                  onClick={() => editor?.chain().focus().toggleHeaderRow().run()}
+                >
+                  <TableHeaderIcon />
+                </button>
+
+                <button
+                  type="button"
+                  className={styles.tableBarDelete}
+                  onClick={() => editor?.chain().focus().deleteTable().run()}
+                >
+                  <TrashIcon />
+                  Supprimer le tableau
+                </button>
+              </div>
+            )}
+
             <div className={styles.editorPreview}>
               <EditorContent editor={editor} />
             </div>
@@ -817,6 +978,13 @@ export default function ArticleForm({
                 {uploading ? "Envoi…" : coverImageUrl ? "Remplacer" : "Ajouter"}
                 <input type="file" accept="image/*" onChange={handleCoverUpload} disabled={uploading} />
               </label>
+              <button
+                type="button"
+                className={styles.coverLibrary}
+                onClick={() => setMediaModalTarget("cover")}
+              >
+                Bibliothèque
+              </button>
               {coverImageUrl && (
                 <button type="button" className={styles.coverRemove} onClick={removeCover}>
                   Retirer
@@ -878,6 +1046,12 @@ export default function ArticleForm({
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
+
+      <MediaLibraryModal
+        open={mediaModalTarget !== null}
+        onClose={() => setMediaModalTarget(null)}
+        onSelect={handleMediaSelect}
+      />
     </form>
   );
 }
