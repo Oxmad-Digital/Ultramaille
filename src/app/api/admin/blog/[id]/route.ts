@@ -40,6 +40,7 @@ export async function PATCH(
     tags,
     status,
     featured,
+    favorite,
     publishedAt,
     metaTitle,
     metaDescription,
@@ -70,6 +71,7 @@ export async function PATCH(
   if (category !== undefined) article.category = category;
   if (tags !== undefined) article.tags = Array.isArray(tags) ? tags : [];
   if (featured !== undefined) article.featured = Boolean(featured);
+  if (favorite !== undefined) article.favorite = Boolean(favorite);
   if (metaTitle !== undefined) {
     if (metaTitle.fr !== undefined) article.metaTitle.fr = metaTitle.fr;
     if (metaTitle.en !== undefined) article.metaTitle.en = metaTitle.en;

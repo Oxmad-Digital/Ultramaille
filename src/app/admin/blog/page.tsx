@@ -15,6 +15,7 @@ async function getArticles(): Promise<AdminArticleRow[]> {
     slug: a.slug,
     category: a.category ?? "",
     status: a.status,
+    favorite: a.favorite ?? false,
     publishedAt: a.publishedAt ? new Date(a.publishedAt).toISOString() : null,
     views: a.views ?? 0,
     coverImageUrl: a.coverImageUrl,

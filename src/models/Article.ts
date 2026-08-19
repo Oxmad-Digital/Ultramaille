@@ -20,6 +20,7 @@ export interface IArticle {
   tags: string[];
   status: ArticleStatus;
   featured: boolean;
+  favorite: boolean;
   publishedAt: Date | null;
   metaTitle: ILocalizedText;
   metaDescription: ILocalizedText;
@@ -49,6 +50,7 @@ const ArticleSchema = new Schema<IArticle>(
     tags: { type: [String], default: [] },
     status: { type: String, enum: ["draft", "scheduled", "published"], default: "draft" },
     featured: { type: Boolean, default: false },
+    favorite: { type: Boolean, default: false },
     publishedAt: { type: Date, default: null },
     metaTitle: { type: LocalizedTextSchema, default: () => ({ fr: "", en: "" }) },
     metaDescription: { type: LocalizedTextSchema, default: () => ({ fr: "", en: "" }) },

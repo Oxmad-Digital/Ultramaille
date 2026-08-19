@@ -13,6 +13,7 @@ export type AdminArticleRow = {
   slug: string;
   category: string;
   status: "draft" | "scheduled" | "published";
+  favorite: boolean;
   publishedAt: string | null;
   views: number;
   coverImageUrl: string | null;
@@ -30,12 +31,32 @@ const STATUS_BADGE_CLASS: Record<AdminArticleRow["status"], string> = {
   published: styles.statusPublished,
 };
 
-const FILTERS: { key: "all" | AdminArticleRow["status"]; label: string }[] = [
+type FilterKey = "all" | AdminArticleRow["status"] | "favorite";
+
+const FILTERS: { key: FilterKey; label: string }[] = [
   { key: "all", label: "Tous" },
   { key: "published", label: "Publiés" },
   { key: "draft", label: "Brouillons" },
   { key: "scheduled", label: "Programmés" },
+  { key: "favorite", label: "Favoris" },
 ];
+
+function StarIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 3.5l2.6 5.3 5.8.85-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.85z" />
+    </svg>
+  );
+}
 
 function formatDate(iso: string | null) {
   if (!iso) return "—";
@@ -58,9 +79,10 @@ export default function ArticleAdminList({ initialArticles }: { initialArticles:
     setArticles(initialArticles);
   }
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<"all" | AdminArticleRow["status"]>("all");
+  const [filter, setFilter] = useState<FilterKey>("all");
   const [selected, setSelected] = useState<string[]>([]);
   const [bulkLoading, setBulkLoading] = useState(false);
+  const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
 
   const counts = useMemo(
     () => ({
@@ -75,7 +97,11 @@ export default function ArticleAdminList({ initialArticles }: { initialArticles:
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return articles.filter((a) => {
-      if (filter !== "all" && effectiveStatus(a) !== filter) return false;
+      if (filter === "favorite") {
+        if (!a.favorite) return false;
+      } else if (filter !== "all" && effectiveStatus(a) !== filter) {
+        return false;
+      }
       if (!q) return true;
       return (
         a.titleFr.toLowerCase().includes(q) ||
@@ -87,6 +113,25 @@ export default function ArticleAdminList({ initialArticles }: { initialArticles:
 
   function toggleSelect(id: string) {
     setSelected((s) => (s.includes(id) ? s.filter((i) => i !== id) : s.concat(id)));
+  }
+
+  async function toggleFavorite(id: string, next: boolean) {
+    setArticles((list) => list.map((a) => (a.id === id ? { ...a, favorite: next } : a)));
+    await fetch(`/api/admin/blog/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ favorite: next }),
+    });
+    router.refresh();
+  }
+
+  async function duplicateArticle(id: string) {
+    setDuplicatingId(id);
+    const res = await fetch(`/api/admin/blog/${id}/duplicate`, { method: "POST" });
+    setDuplicatingId(null);
+    if (!res.ok) return;
+    const data = await res.json();
+    router.push(`/admin/blog/${data.article._id}/edit`);
   }
 
   async function bulkSetStatus(status: "published" | "draft") {
@@ -220,6 +265,14 @@ export default function ArticleAdminList({ initialArticles }: { initialArticles:
                 {checked ? "✓" : ""}
               </button>
               <div className={styles.titleCell}>
+                <button
+                  type="button"
+                  title={row.favorite ? "Retirer des favoris" : "Marquer comme favori"}
+                  className={`${styles.favoriteButton} ${row.favorite ? styles.favoriteButtonActive : ""}`}
+                  onClick={() => toggleFavorite(row.id, !row.favorite)}
+                >
+                  <StarIcon filled={row.favorite} />
+                </button>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={row.coverImageUrl || "/ultramaille-logo.svg"}
@@ -240,6 +293,14 @@ export default function ArticleAdminList({ initialArticles }: { initialArticles:
               <span className={styles.dateCell}>{formatDate(row.publishedAt)}</span>
               <span className={styles.viewsCell}>{row.views}</span>
               <div className={styles.actionsCell}>
+                <button
+                  type="button"
+                  className={styles.duplicateButton}
+                  disabled={duplicatingId === row.id}
+                  onClick={() => duplicateArticle(row.id)}
+                >
+                  {duplicatingId === row.id ? "…" : "Dupliquer"}
+                </button>
                 <Link href={`/admin/blog/${row.id}/edit`} className={styles.editLink}>
                   Éditer
                 </Link>

@@ -203,7 +203,7 @@
 .tableHead,
 .tableRow {
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr) 130px 120px 110px 80px 140px;
+  grid-template-columns: 40px minmax(0, 1fr) 130px 120px 110px 80px 210px;
   align-items: center;
   gap: 14px;
 }
@@ -350,6 +350,50 @@
   display: flex;
   justify-content: flex-end;
   gap: 6px;
+}
+
+.favoriteButton {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: rgba(15, 30, 48, 0.28);
+  cursor: pointer;
+  transition: color 0.2s, transform 0.15s;
+}
+
+.favoriteButton:hover {
+  color: var(--utm-gold);
+  transform: scale(1.08);
+}
+
+.favoriteButtonActive {
+  color: var(--utm-gold);
+}
+
+.duplicateButton {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--utm-text);
+  background: none;
+  border: 1px solid rgba(15, 30, 48, 0.2);
+  border-radius: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.duplicateButton:hover {
+  background: var(--utm-navy);
+  color: var(--utm-cream);
+  border-color: var(--utm-navy);
 }
 
 .editLink {
