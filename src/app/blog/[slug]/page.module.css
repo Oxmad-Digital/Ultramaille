@@ -187,3 +187,27 @@
   text-decoration-color: var(--utm-gold);
   text-underline-offset: 3px;
 }
+
+.content :global(.tableWrapper) {
+  overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.content :global(table) {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.content :global(th),
+.content :global(td) {
+  border: 1px solid rgba(15, 30, 48, 0.16);
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.content :global(th) {
+  background: rgba(15, 30, 48, 0.06);
+  font-family: var(--font-montserrat), sans-serif;
+  color: var(--utm-navy);
+}
