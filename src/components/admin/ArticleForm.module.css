@@ -8,7 +8,9 @@
 }
 
 .back {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-space-mono), monospace;
   font-size: 11px;
   font-weight: 700;
@@ -24,6 +26,22 @@
 
 .back:hover {
   color: #c68a2e;
+}
+
+.backIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.backIcon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.back:hover .backIcon {
+  transform: translateX(-3px);
 }
 
 .pageTitle {
@@ -345,6 +363,22 @@
   border-radius: 0;
   font-size: 0.9em;
   color: inherit;
+}
+
+.editorPreview mark {
+  background: rgba(224, 163, 56, 0.28);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.editorPreview del {
+  color: var(--utm-text-muted);
+}
+
+.editorPreview u {
+  text-decoration-color: var(--utm-gold);
+  text-underline-offset: 3px;
 }
 
 .editorFooter {

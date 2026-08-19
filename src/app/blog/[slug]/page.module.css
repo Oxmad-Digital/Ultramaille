@@ -151,3 +151,19 @@
   font-size: 0.9em;
   color: inherit;
 }
+
+.content mark {
+  background: rgba(224, 163, 56, 0.28);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+.content del {
+  color: var(--utm-text-muted);
+}
+
+.content u {
+  text-decoration-color: var(--utm-gold);
+  text-underline-offset: 3px;
+}

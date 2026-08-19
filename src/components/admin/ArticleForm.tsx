@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { slugify, estimateReadingMinutes, type LocalizedText } from "@/lib/blog";
 import styles from "./ArticleForm.module.css";
 
@@ -30,15 +32,18 @@ export type ArticleFormValues = {
   metaDescription: LocalizedText;
 };
 
-const TOOLBAR: { label: string; before: string; after: string }[] = [
-  { label: "B", before: "**", after: "**" },
-  { label: "I", before: "*", after: "*" },
-  { label: "H2", before: "\n## ", after: "" },
-  { label: "H3", before: "\n### ", after: "" },
-  { label: "”", before: "\n> ", after: "" },
-  { label: "Lien", before: "[", after: "](https://)" },
-  { label: "Liste", before: "\n- ", after: "" },
-  { label: "{ }", before: "\n```\n", after: "\n```\n" },
+const TOOLBAR: { label: string; title: string; before: string; after: string; style?: CSSProperties }[] = [
+  { label: "B", title: "Gras", before: "**", after: "**", style: { fontWeight: 700 } },
+  { label: "I", title: "Italique", before: "*", after: "*", style: { fontStyle: "italic" } },
+  { label: "U", title: "Souligné", before: "<u>", after: "</u>", style: { textDecoration: "underline" } },
+  { label: "S", title: "Barré", before: "~~", after: "~~", style: { textDecoration: "line-through" } },
+  { label: "Surligner", title: "Surligner", before: "<mark>", after: "</mark>", style: { background: "rgba(224, 163, 56, 0.28)" } },
+  { label: "H2", title: "Titre H2", before: "\n## ", after: "" },
+  { label: "H3", title: "Titre H3", before: "\n### ", after: "" },
+  { label: "”", title: "Citation", before: "\n> ", after: "" },
+  { label: "Lien", title: "Lien", before: "[", after: "](https://)" },
+  { label: "Liste", title: "Liste à puces", before: "\n- ", after: "" },
+  { label: "{ }", title: "Bloc de code", before: "\n```\n", after: "\n```\n" },
 ];
 
 const STATUS_OPTIONS: { key: ArticleStatus; label: string }[] = [
@@ -265,7 +270,13 @@ export default function ArticleForm({
       <div className={styles.header}>
         <div>
           <Link href="/admin/blog" className={styles.back}>
-            ← Tous les articles
+            <span className={styles.backIcon}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5" />
+                <path d="M11 18l-6-6 6-6" />
+              </svg>
+            </span>
+            Tous les articles
           </Link>
           <h1 className={styles.pageTitle}>{title.fr || "Nouvel article"}</h1>
           {isEdit && (
@@ -373,7 +384,9 @@ export default function ArticleForm({
                 <button
                   key={t.label}
                   type="button"
+                  title={t.title}
                   className={styles.toolButton}
+                  style={t.style}
                   onClick={() => insertToolbarSyntax(t.before, t.after)}
                 >
                   {t.label}
@@ -407,7 +420,9 @@ export default function ArticleForm({
 
             {previewMode ? (
               <div className={styles.editorPreview}>
-                <ReactMarkdown>{activeContent || "*Aperçu du contenu…*"}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                  {activeContent || "*Aperçu du contenu…*"}
+                </ReactMarkdown>
               </div>
             ) : (
               <textarea

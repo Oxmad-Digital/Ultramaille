@@ -3,6 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { useLanguage } from "@/lib/language-context";
 import type { LocalizedText } from "@/lib/blog";
 import styles from "@/app/blog/[slug]/page.module.css";
@@ -58,7 +60,9 @@ export default function BlogArticleClient({ article }: { article: PublicArticleD
       )}
 
       <article className={styles.content}>
-        <ReactMarkdown>{article.content[lang] || article.content.fr}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+          {article.content[lang] || article.content.fr}
+        </ReactMarkdown>
       </article>
     </>
   );
