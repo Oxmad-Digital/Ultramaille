@@ -277,173 +277,269 @@
   color: var(--utm-cream-2);
 }
 
-.ceoCard {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: clamp(28px, 4vw, 56px);
-  align-items: center;
-  background: var(--utm-navy-2);
-  border-radius: 16px;
-  overflow: hidden;
-  padding: clamp(20px, 2.5vw, 28px);
-  margin-bottom: clamp(40px, 5vw, 64px);
-}
-
-.ceoImgWrap {
+.orgChart {
   position: relative;
-  aspect-ratio: 3 / 4;
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--utm-navy-3);
 }
 
-.ceoImg {
-  object-fit: cover;
-  filter: grayscale(1) contrast(1.03);
+.orgCeoNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
 }
 
-.ceoRole {
-  font-family: var(--font-space-mono), monospace;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--utm-gold);
-  margin-bottom: 16px;
-}
-
-.ceoName {
-  font-family: var(--font-montserrat), sans-serif;
-  font-weight: 600;
-  font-size: clamp(28px, 3vw, 40px);
-  line-height: 1.05;
-  color: var(--utm-cream-2);
-  margin-bottom: 18px;
-}
-
-.ceoText {
-  margin: 0;
-  font-size: 16px;
+.orgCeoText {
+  margin: 16px 0 0;
+  font-size: 15px;
   line-height: 1.7;
   color: rgba(244, 239, 230, 0.64);
-  max-width: 52ch;
+  max-width: 44ch;
 }
 
-.groupLabel {
-  font-family: var(--font-space-mono), monospace;
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(244, 239, 230, 0.5);
-  padding-bottom: 18px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid rgba(244, 239, 230, 0.12);
+.orgCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
 }
 
-.teamGridLarge {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
-  background: rgba(244, 239, 230, 0.1);
-  border-radius: 14px;
-  overflow: hidden;
-  margin-bottom: clamp(44px, 5vw, 64px);
-}
-
-.teamGridSmall {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 2px;
-  background: rgba(244, 239, 230, 0.1);
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-.teamGridSmall + .groupLabel {
-  margin-top: clamp(44px, 5vw, 64px);
-}
-
-.teamCard {
+.orgAvatarWrap {
   position: relative;
-  background: var(--utm-navy-2);
-}
-
-.teamImgWrap {
-  position: relative;
-  aspect-ratio: 3 / 4;
+  flex: none;
+  border-radius: 50%;
   overflow: hidden;
+  aspect-ratio: 1 / 1;
+  background: var(--utm-navy-3);
+  box-shadow:
+    0 0 0 4px var(--utm-navy),
+    0 0 0 5px rgba(224, 163, 56, 0.45);
 }
 
-.teamImg {
+.orgAvatarLg {
+  width: clamp(120px, 14vw, 168px);
+}
+
+.orgAvatarMd {
+  width: clamp(88px, 9vw, 112px);
+}
+
+.orgAvatarSm {
+  width: clamp(64px, 6vw, 80px);
+}
+
+.orgAvatarImg {
   object-fit: cover;
-  filter: grayscale(1) brightness(0.9) contrast(1.02);
+  filter: grayscale(1) contrast(1.02);
   transition:
-    filter 0.55s ease,
-    transform 0.8s ease;
+    filter 0.45s ease,
+    transform 0.6s ease;
 }
 
-.teamCard:hover .teamImg {
-  filter: grayscale(0) brightness(1);
-  transform: scale(1.04);
+.orgCard:hover .orgAvatarImg,
+.orgCeoNode:hover .orgAvatarImg {
+  filter: grayscale(0);
+  transform: scale(1.06);
 }
 
-.teamShade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(15, 30, 48, 0) 45%, rgba(12, 18, 28, 0.92) 100%);
-}
-
-.teamCaptionLarge {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 22px 22px;
-  pointer-events: none;
-}
-
-.teamCaptionSmall {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 16px 16px;
-  pointer-events: none;
-}
-
-.teamNameLarge {
+.orgName {
   font-family: var(--font-montserrat), sans-serif;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 14px;
   color: var(--utm-cream-2);
-  margin-bottom: 6px;
+  max-width: 16ch;
 }
 
-.teamNameSmall {
-  font-family: var(--font-montserrat), sans-serif;
-  font-weight: 600;
-  font-size: 14.5px;
-  color: var(--utm-cream-2);
-  margin-bottom: 5px;
-  line-height: 1.2;
-}
-
-.teamRoleLarge {
-  font-family: var(--font-space-mono), monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--utm-gold);
-  line-height: 1.4;
-}
-
-.teamRoleSmall {
+.orgRole {
   font-family: var(--font-space-mono), monospace;
   font-size: 9.5px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--utm-gold);
-  line-height: 1.4;
+  line-height: 1.35;
+  max-width: 20ch;
+}
+
+.orgCeoNode .orgName {
+  font-size: clamp(24px, 2.6vw, 32px);
+  max-width: none;
+  margin-top: 22px;
+  margin-bottom: 8px;
+}
+
+.orgCeoNode .orgRole {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  max-width: none;
+}
+
+/* Branching connectors between the CEO and the Directors row */
+.orgTree {
+  list-style: none;
+  margin: 0 0 clamp(44px, 5vw, 64px);
+  padding: 40px 0 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: 40px;
+  position: relative;
+}
+
+.orgTree::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 40px;
+  border-left: 1px solid rgba(224, 163, 56, 0.35);
+}
+
+.orgTreeNode {
+  position: relative;
+  padding: 40px 20px 0;
+}
+
+.orgTreeNode::before,
+.orgTreeNode::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 40px;
+  border-top: 1px solid rgba(224, 163, 56, 0.35);
+}
+
+.orgTreeNode::before {
+  right: 50%;
+}
+
+.orgTreeNode::after {
+  left: 50%;
+  border-left: 1px solid rgba(224, 163, 56, 0.35);
+}
+
+.orgTreeNode:first-child::before {
+  border-top-color: transparent;
+}
+
+.orgTreeNode:last-child::after {
+  border-top-color: transparent;
+}
+
+/* Manager/assistant tiers: each pole and each person branches off the tier's
+   trunk, mirroring the Directors row so the whole chart reads as one
+   continuous gold hierarchy. */
+.orgGroup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(44px, 5vw, 64px);
+}
+
+.orgGroup:last-child {
+  margin-bottom: 0;
+}
+
+.orgTrunk {
+  width: 0;
+  height: 40px;
+  border-left: 1px solid rgba(224, 163, 56, 0.35);
+  margin-bottom: 16px;
+}
+
+.orgBranch {
+  list-style: none;
+  margin: 0;
+  padding: 32px 0 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: 28px;
+  position: relative;
+}
+
+.orgBranch::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 32px;
+  border-left: 1px solid rgba(224, 163, 56, 0.35);
+}
+
+.orgBranchNode {
+  position: relative;
+  padding: 32px 18px 0;
+}
+
+.orgBranchNode::before,
+.orgBranchNode::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 32px;
+  border-top: 1px solid rgba(224, 163, 56, 0.35);
+}
+
+.orgBranchNode::before {
+  right: 50%;
+}
+
+.orgBranchNode::after {
+  left: 50%;
+  border-left: 1px solid rgba(224, 163, 56, 0.35);
+}
+
+.orgBranchNode:first-child::before {
+  border-top-color: transparent;
+}
+
+.orgBranchNode:last-child::after {
+  border-top-color: transparent;
+}
+
+.orgGroupLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.5);
+  margin-bottom: 28px;
+}
+
+.orgPoleStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.orgPole {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(44px, 5vw, 64px);
+}
+
+.orgPole:last-child {
+  margin-bottom: 0;
+}
+
+.orgPoleLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(244, 239, 230, 0.42);
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(244, 239, 230, 0.12);
 }
 
 @keyframes utmKen {
@@ -460,13 +556,32 @@
   .marchesGrid {
     grid-template-columns: 1fr;
   }
-  .ceoCard {
-    grid-template-columns: 1fr;
+  .orgTree {
+    padding-top: 0;
+    row-gap: 28px;
   }
-  .teamGridLarge {
-    grid-template-columns: repeat(2, 1fr);
+  .orgTree::before {
+    display: none;
   }
-  .teamGridSmall {
-    grid-template-columns: repeat(2, 1fr);
+  .orgTreeNode {
+    padding-top: 0;
+  }
+  .orgTreeNode::before,
+  .orgTreeNode::after {
+    display: none;
+  }
+  .orgBranch {
+    padding-top: 0;
+    row-gap: 20px;
+  }
+  .orgBranch::before {
+    display: none;
+  }
+  .orgBranchNode {
+    padding-top: 0;
+  }
+  .orgBranchNode::before,
+  .orgBranchNode::after {
+    display: none;
   }
 }

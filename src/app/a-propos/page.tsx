@@ -19,21 +19,51 @@ const DIRECTEURS = [
   { name: "Mamy RANAIVOSON", roleFr: "Directeur Technique", roleEn: "Technical Director", img: `${IMG_BASE}2022/10/Mamy-RANAIVOSON-1.jpg` },
 ];
 
-const RESPONSABLES = [
-  { name: "Tom WYBO", roleFr: "Chargé du Projet Digital", roleEn: "Digital Project Manager", img: `${IMG_BASE}2022/10/Tom-WYBO.jpg` },
-  { name: "Christophe Ulysse OTONIA", roleFr: "Responsable Informatique et RSE", roleEn: "IT & CSR Manager", img: `${IMG_BASE}2022/10/Christophe-Ulysse-OTONIA.jpg` },
-  { name: "Luce RANAIVO", roleFr: "Merchandiser", roleEn: "Merchandiser", img: `${IMG_BASE}2022/10/Luce-RANAIVO-1.jpg` },
-  { name: "Fitiavana RAMBELOTIANA", roleFr: "Merchandiser", roleEn: "Merchandiser", img: `${IMG_BASE}2022/10/Fitiavana-RAMBELOTIANA.jpg` },
-  { name: "Ranjanirina RABEMASO", roleFr: "Responsable Transit", roleEn: "Transit Manager", img: `${IMG_BASE}2022/10/Ranjanirina-RABEMASO-2023-09-25-ultramaille-NB-23-1.jpg` },
-  { name: "Lantonirina RAKOTOARISOA", roleFr: "Responsable Broderie et Crochet Main", roleEn: "Embroidery & Hand Crochet Manager", img: `${IMG_BASE}2022/10/Lantonirina-RAKOTOARISOA.jpg` },
-  { name: "Gilbert RAJOELISON", roleFr: "Responsable Machine Électronique", roleEn: "Electronic Machine Manager", img: `${IMG_BASE}2022/10/Gilbert-RAJOELISON.jpg` },
-  { name: "Fanjaniaina RASOAZANANAIVO", roleFr: "Responsable Tricotage Manuel", roleEn: "Manual Knitting Manager", img: `${IMG_BASE}2022/10/Fanjaniaina-RASOAZANANAIVO-1.jpg` },
-  { name: "Hasinavalona RAZAFINJATOVO", roleFr: "Responsable Remaillage et Stitching", roleEn: "Remeshing & Stitching Manager", img: `${IMG_BASE}2022/10/Hasinavalona-RAZAFINJATOVO.jpg` },
-  { name: "Radonirina RASOLOFONIAINA", roleFr: "Responsable Packing", roleEn: "Packing Manager", img: `${IMG_BASE}2022/10/Radonirina-RASOLOFONIAINA.jpg` },
-  { name: "Christian ANDRIAKOTOMALALA", roleFr: "Responsable Approvisionnement", roleEn: "Supply Manager", img: `${IMG_BASE}2022/10/Christian-ANDRIAKOTOMALALA.jpg` },
-  { name: "Miora RANDRIAHAINGO", roleFr: "Responsable de Trésorerie", roleEn: "Treasury Manager", img: `${IMG_BASE}2024/04/Miora-RANDRIAHAINGO-2023-09-25-ultramaille-NB-19.jpg` },
-  { name: "Joelle RASAMIMANANA", roleFr: "Merchandiser", roleEn: "Merchandiser", img: `${IMG_BASE}2024/04/Joelle-RASAMIMANANA-2023-09-25-ultramaille-NB-1.jpg` },
-  { name: "Onitiana RATOVAHOAKA", roleFr: "Responsable Comptabilité", roleEn: "Accounting Manager", img: `${IMG_BASE}2024/04/Onitiana-RATOVAHOAKA-2023-09-25-ultramaille-NB-17-1.jpg` },
+const RESPONSABLE_POLES = [
+  {
+    poleFr: "Confection & Savoir-faire manuel",
+    poleEn: "Craftsmanship & Manual Know-how",
+    members: [
+      { name: "Lantonirina RAKOTOARISOA", roleFr: "Responsable Broderie et Crochet Main", roleEn: "Embroidery & Hand Crochet Manager", img: `${IMG_BASE}2022/10/Lantonirina-RAKOTOARISOA.jpg` },
+      { name: "Fanjaniaina RASOAZANANAIVO", roleFr: "Responsable Tricotage Manuel", roleEn: "Manual Knitting Manager", img: `${IMG_BASE}2022/10/Fanjaniaina-RASOAZANANAIVO-1.jpg` },
+      { name: "Hasinavalona RAZAFINJATOVO", roleFr: "Responsable Remaillage et Stitching", roleEn: "Remeshing & Stitching Manager", img: `${IMG_BASE}2022/10/Hasinavalona-RAZAFINJATOVO.jpg` },
+      { name: "Radonirina RASOLOFONIAINA", roleFr: "Responsable Packing", roleEn: "Packing Manager", img: `${IMG_BASE}2022/10/Radonirina-RASOLOFONIAINA.jpg` },
+    ],
+  },
+  {
+    poleFr: "Style & Merchandising",
+    poleEn: "Style & Merchandising",
+    members: [
+      { name: "Luce RANAIVO", roleFr: "Merchandiser", roleEn: "Merchandiser", img: `${IMG_BASE}2022/10/Luce-RANAIVO-1.jpg` },
+      { name: "Fitiavana RAMBELOTIANA", roleFr: "Merchandiser", roleEn: "Merchandiser", img: `${IMG_BASE}2022/10/Fitiavana-RAMBELOTIANA.jpg` },
+      { name: "Joelle RASAMIMANANA", roleFr: "Merchandiser", roleEn: "Merchandiser", img: `${IMG_BASE}2024/04/Joelle-RASAMIMANANA-2023-09-25-ultramaille-NB-1.jpg` },
+    ],
+  },
+  {
+    poleFr: "Administration, Finance & Logistique",
+    poleEn: "Administration, Finance & Logistics",
+    members: [
+      { name: "Miora RANDRIAHAINGO", roleFr: "Responsable de Trésorerie", roleEn: "Treasury Manager", img: `${IMG_BASE}2024/04/Miora-RANDRIAHAINGO-2023-09-25-ultramaille-NB-19.jpg` },
+      { name: "Onitiana RATOVAHOAKA", roleFr: "Responsable Comptabilité", roleEn: "Accounting Manager", img: `${IMG_BASE}2024/04/Onitiana-RATOVAHOAKA-2023-09-25-ultramaille-NB-17-1.jpg` },
+      { name: "Christian ANDRIAKOTOMALALA", roleFr: "Responsable Approvisionnement", roleEn: "Supply Manager", img: `${IMG_BASE}2022/10/Christian-ANDRIAKOTOMALALA.jpg` },
+      { name: "Ranjanirina RABEMASO", roleFr: "Responsable Transit", roleEn: "Transit Manager", img: `${IMG_BASE}2022/10/Ranjanirina-RABEMASO-2023-09-25-ultramaille-NB-23-1.jpg` },
+    ],
+  },
+  {
+    poleFr: "Digital & IT",
+    poleEn: "Digital & IT",
+    members: [
+      { name: "Tom WYBO", roleFr: "Chargé du Projet Digital", roleEn: "Digital Project Manager", img: `${IMG_BASE}2022/10/Tom-WYBO.jpg` },
+      { name: "Christophe Ulysse OTONIA", roleFr: "Responsable Informatique et RSE", roleEn: "IT & CSR Manager", img: `${IMG_BASE}2022/10/Christophe-Ulysse-OTONIA.jpg` },
+    ],
+  },
+  {
+    poleFr: "Industriel & Technique",
+    poleEn: "Industrial & Technical",
+    members: [
+      { name: "Gilbert RAJOELISON", roleFr: "Responsable Machine Électronique", roleEn: "Electronic Machine Manager", img: `${IMG_BASE}2022/10/Gilbert-RAJOELISON.jpg` },
+    ],
+  },
 ];
 
 const ASSISTANTS = [
@@ -43,7 +73,12 @@ const ASSISTANTS = [
 
 const YARN_TAGS = ["Italie", { fr: "Europe", en: "Europe" }, { fr: "Asie", en: "Asia" }, { fr: "Afrique du Sud", en: "South Africa" }, { fr: "Océan Indien", en: "Indian Ocean" }];
 
-function TeamCard({
+const ORG_AVATAR_SIZE = {
+  md: "112px",
+  sm: "80px",
+};
+
+function OrgAvatar({
   name,
   roleFr,
   roleEn,
@@ -54,20 +89,16 @@ function TeamCard({
   roleFr: string;
   roleEn: string;
   img: string;
-  size: "large" | "small";
+  size: "md" | "sm";
 }) {
   const { t } = useLanguage();
-  const isLarge = size === "large";
   return (
-    <div className={styles.teamCard}>
-      <div className={styles.teamImgWrap}>
-        <Image src={img} alt={name} fill sizes="20vw" className={styles.teamImg} />
-        <div className={styles.teamShade} />
-        <div className={isLarge ? styles.teamCaptionLarge : styles.teamCaptionSmall}>
-          <div className={isLarge ? styles.teamNameLarge : styles.teamNameSmall}>{name}</div>
-          <div className={isLarge ? styles.teamRoleLarge : styles.teamRoleSmall}>{t(roleFr, roleEn)}</div>
-        </div>
+    <div className={styles.orgCard}>
+      <div className={`${styles.orgAvatarWrap} ${size === "md" ? styles.orgAvatarMd : styles.orgAvatarSm}`}>
+        <Image src={img} alt={name} fill sizes={ORG_AVATAR_SIZE[size]} className={styles.orgAvatarImg} />
       </div>
+      <div className={styles.orgName}>{name}</div>
+      <div className={styles.orgRole}>{t(roleFr, roleEn)}</div>
     </div>
   );
 }
@@ -231,47 +262,66 @@ export default function AProposPage() {
             </h2>
           </div>
 
-          <div className={styles.ceoCard}>
-            <div className={styles.ceoImgWrap}>
-              <Image
-                src={`${IMG_BASE}2022/10/President-Directeur-General.jpg`}
-                alt="Frédéric WYBO"
-                fill
-                sizes="300px"
-                className={styles.ceoImg}
-              />
-            </div>
-            <div>
-              <div className={styles.ceoRole}>{t("Président Directeur Général", "Chairman & CEO")}</div>
-              <div className={styles.ceoName}>Frédéric WYBO</div>
-              <p className={styles.ceoText}>
+          <div className={styles.orgChart}>
+            <div className={styles.orgCeoNode}>
+              <div className={`${styles.orgAvatarWrap} ${styles.orgAvatarLg}`}>
+                <Image
+                  src={`${IMG_BASE}2022/10/President-Directeur-General.jpg`}
+                  alt="Frédéric WYBO"
+                  fill
+                  sizes="168px"
+                  className={styles.orgAvatarImg}
+                />
+              </div>
+              <div className={styles.orgName}>Frédéric WYBO</div>
+              <div className={styles.orgRole}>{t("Président Directeur Général", "Chairman & CEO")}</div>
+              <p className={styles.orgCeoText}>
                 {t(
                   "À la tête d'Ultramaille, porteur d'un héritage familial et d'une exigence constante d'excellence textile depuis plus de 25 ans.",
                   "At the helm of Ultramaille, carrying a family heritage and a constant pursuit of textile excellence for over 25 years.",
                 )}
               </p>
             </div>
-          </div>
 
-          <div className={styles.groupLabel}>{t("Directeurs", "Directors")}</div>
-          <div className={styles.teamGridLarge}>
-            {DIRECTEURS.map((m) => (
-              <TeamCard key={m.name} {...m} size="large" />
-            ))}
-          </div>
+            <ul className={styles.orgTree}>
+              {DIRECTEURS.map((m) => (
+                <li key={m.name} className={styles.orgTreeNode}>
+                  <OrgAvatar {...m} size="md" />
+                </li>
+              ))}
+            </ul>
 
-          <div className={styles.groupLabel}>{t("Responsables", "Managers")}</div>
-          <div className={styles.teamGridSmall}>
-            {RESPONSABLES.map((m) => (
-              <TeamCard key={m.name} {...m} size="small" />
-            ))}
-          </div>
+            <div className={styles.orgGroup}>
+              <div className={styles.orgTrunk} />
+              <div className={styles.orgGroupLabel}>{t("Responsables", "Managers")}</div>
+              <div className={styles.orgPoleStack}>
+                {RESPONSABLE_POLES.map((pole) => (
+                  <div key={pole.poleFr} className={styles.orgPole}>
+                    <div className={styles.orgTrunk} />
+                    <div className={styles.orgPoleLabel}>{t(pole.poleFr, pole.poleEn)}</div>
+                    <ul className={styles.orgBranch}>
+                      {pole.members.map((m) => (
+                        <li key={m.name} className={styles.orgBranchNode}>
+                          <OrgAvatar {...m} size="sm" />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          <div className={styles.groupLabel}>{t("Assistants", "Assistants")}</div>
-          <div className={styles.teamGridSmall}>
-            {ASSISTANTS.map((m) => (
-              <TeamCard key={m.name} {...m} size="small" />
-            ))}
+            <div className={styles.orgGroup}>
+              <div className={styles.orgTrunk} />
+              <div className={styles.orgGroupLabel}>{t("Assistants", "Assistants")}</div>
+              <ul className={styles.orgBranch}>
+                {ASSISTANTS.map((m) => (
+                  <li key={m.name} className={styles.orgBranchNode}>
+                    <OrgAvatar {...m} size="sm" />
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
