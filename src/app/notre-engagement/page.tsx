@@ -4,6 +4,8 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContactCta from "@/components/ContactCta";
+import CountUp from "@/components/CountUp";
+import RevealOnScroll from "@/components/RevealOnScroll";
 import { useLanguage } from "@/lib/language-context";
 import styles from "./page.module.css";
 
@@ -36,35 +38,62 @@ export default function NotreEngagementPage() {
               <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>{t("— Madagascar", "— Madagascar")}</div>
               <h2 className={`${styles.title} ${styles.titleLight}`}>
                 {t(
-                  "Faire travailler les Malgaches, c'est investir dans le pays.",
-                  "Giving work to Malagasy people means investing in the country.",
+                  "Madagascar : Investir dans l'emploi stable et déclaré",
+                  "Madagascar: Investing in stable, declared employment",
                 )}
               </h2>
             </div>
-            <p className={styles.headText}>
-              {t(
-                "Madagascar est une île aussi grande que la France et le Benelux réunis, peuplée de 18,7 millions d'habitants, et fait partie des dix pays les plus pauvres de la planète. En favorisant l'échange Nord-Sud, vous nous aidez à améliorer le niveau de vie des ouvriers qui façonnent pour vous.",
-                "Madagascar is an island as large as France and Benelux combined, home to 18.7 million people, and one of the ten poorest countries on the planet. By favouring North–South exchange, you help us raise the standard of living of the workers who craft for you.",
-              )}
-            </p>
+            <div className={styles.headText}>
+              <p>
+                {t(
+                  "Sur une île de 31 millions d'habitants où 500 000 jeunes intègrent le marché du travail chaque année, le véritable enjeu n'est pas seulement de travailler, mais de travailler dignement.",
+                  "On an island of 31 million people where 500,000 young people enter the job market every year, the real challenge isn't just finding work, but working with dignity.",
+                )}
+              </p>
+              <p>
+                {t(
+                  "Aujourd'hui, plus de 90 % des Malgaches évoluent dans l'économie informelle, sans contrat, sans salaire garanti ni protection en cas d'accident ou de maladie.",
+                  "Today, more than 90% of Malagasy people work in the informal economy, without a contract, without a guaranteed salary, and without protection in case of accident or illness.",
+                )}
+              </p>
+              <p>
+                {t(
+                  "En confiant votre production à Ultramaille, vous faites un choix engagé : celui d'un partenariat Nord-Sud équitable qui transforme l'artisanat et l'industrie en emplois formels, pérennes et déclarés. Vous contribuez directement à offrir à nos ouvriers et artisans une vraie sécurité de vie et un avenir constructif.",
+                  "By entrusting your production to Ultramaille, you're making a committed choice: a fair North–South partnership that turns craftsmanship and industry into formal, lasting, declared jobs. You directly help give our workers and artisans real security and a constructive future.",
+                )}
+              </p>
+            </div>
           </div>
           <div className={styles.statGrid3}>
             <div className={styles.statCellLight}>
               <div className={styles.statValueLight}>
-                18,7<span className={styles.statUnit}>M</span>
+                <CountUp end={31} />
+                <span className={styles.statUnit}>M</span>
               </div>
-              <div className={styles.statLabelLight}>{t("habitants à Madagascar", "people living in Madagascar")}</div>
+              <div className={styles.statLabelLight}>{t("d'habitants", "people")}</div>
             </div>
             <div className={styles.statCellLight}>
-              <div className={styles.statValueLight}>600&#8239;000</div>
+              <div className={styles.statValueLight}>
+                &gt;<CountUp end={90} />
+                <span className={styles.statUnit}>%</span>
+              </div>
               <div className={styles.statLabelLight}>
-                {t("emplois salariés, dont 200 000 publics", "salaried jobs in the country, 200,000 of them public")}
+                {t(
+                  "d'emplois informels à Madagascar (absence de protection sociale)",
+                  "informal jobs in Madagascar (no social protection)",
+                )}
               </div>
             </div>
             <div className={styles.statCellLight}>
-              <div className={`${styles.statValueLight} ${styles.statValueGold}`}>700&#8239;000</div>
+              <div className={`${styles.statValueLight} ${styles.statValueGold}`}>
+                <CountUp end={100} />
+                <span className={styles.statUnit}>%</span>
+              </div>
               <div className={styles.statLabelLight}>
-                {t("jeunes sur le marché du travail / an", "young people entering the job market every year")}
+                {t(
+                  "d'emplois stables, déclarés et accompagnés chez Ultramaille",
+                  "stable, declared and supported jobs at Ultramaille",
+                )}
               </div>
             </div>
           </div>
@@ -77,31 +106,34 @@ export default function NotreEngagementPage() {
             <div>
               <div className={`${styles.eyebrow} ${styles.eyebrowGold}`}>{t("— L'humain d'abord", "— People first")}</div>
               <h2 className={`${styles.title} ${styles.titleDark}`}>
-                {t("Toute notre équipe dirigeante vit à Madagascar.", "Our entire management team lives in Madagascar.")}
+                {t(
+                  "La santé et la sécurité au cœur de notre atelier.",
+                  "Health and safety at the heart of our workshop.",
+                )}
               </h2>
               <p className={`${styles.paragraph} ${styles.paragraphDark}`}>
                 {t(
-                  "Nous partageons tous la même passion pour ce pays magnifique. Chaque employé bénéficie d'un contrat de travail donnant accès à une couverture sociale complète : accident du travail, assurance maladie, congé de maternité, congés payés et retraite — et un accès facilité aux hôpitaux.",
-                  "We all share the same passion for this magnificent country. Every employee has an employment contract granting full social coverage: workplace accident, health insurance, maternity leave, paid holidays and pension — and easier access to hospitals.",
+                  "Garantir des conditions de travail dignes, c'est veiller activement sur la santé de nos équipes. En plus des contrats déclarés et de la couverture sociale, nous avons fait le choix d'intégrer la médecine directement au sein de notre usine.",
+                  "Guaranteeing decent working conditions means actively watching over the health of our teams. In addition to declared contracts and social coverage, we chose to bring medical care directly into our factory.",
                 )}
               </p>
               <p className={`${styles.paragraph} ${styles.paragraphDark}`}>
                 {t(
-                  "Un médecin est à disposition du personnel chaque jour, huit heures durant, dans l'infirmerie d'Ultramaille, où il est assisté d'Émilie, notre infirmière.",
-                  "A doctor is available to staff every day, eight hours a day, in the Ultramaille infirmary, assisted by Émilie, our nurse.",
+                  "Notre infirmerie accueille nos équipes 8 heures par jour pour des consultations gratuites, un suivi régulier et des soins immédiats assurés par notre médecin et notre infirmière.",
+                  "Our infirmary welcomes our teams 8 hours a day for free consultations, regular check-ups and immediate care provided by our doctor and our nurse.",
                 )}
               </p>
             </div>
             <div className={styles.humainImgWrap}>
               <Image src={MEDECIN_IMG} alt="Cabinet médical Ultramaille" fill className={styles.humainImg} />
-              <div className={styles.humainBadge}>
+              <RevealOnScroll className={styles.humainBadge}>
                 <div className={styles.humainBadgeValue}>
                   8h<span className={styles.humainBadgeUnit}>/jour</span>
                 </div>
                 <div className={styles.humainBadgeLabel}>
                   {t("médecin & infirmerie sur site", "on-site doctor & infirmary")}
                 </div>
-              </div>
+              </RevealOnScroll>
             </div>
           </div>
         </div>
@@ -126,7 +158,7 @@ export default function NotreEngagementPage() {
             </p>
           </div>
           <div className={styles.cardGrid3}>
-            <div className={styles.rseCard}>
+            <RevealOnScroll className={styles.rseCard}>
               <div className={styles.iconBadge}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C68A2E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
@@ -142,8 +174,8 @@ export default function NotreEngagementPage() {
                   "Ultramaille provides a midday meal to all its staff, every single day.",
                 )}
               </p>
-            </div>
-            <div className={styles.rseCard}>
+            </RevealOnScroll>
+            <RevealOnScroll className={styles.rseCard} delay={150}>
               <div className={styles.iconBadge}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C68A2E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M11 12H3" />
@@ -162,8 +194,8 @@ export default function NotreEngagementPage() {
                   "Prepared by an external caterer, with a choice between two different menus each day.",
                 )}
               </p>
-            </div>
-            <div className={styles.rseCard}>
+            </RevealOnScroll>
+            <RevealOnScroll className={styles.rseCard} delay={300}>
               <div className={styles.iconBadge}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C68A2E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
@@ -178,7 +210,7 @@ export default function NotreEngagementPage() {
                   "Ultramaille regularly runs internal training for both its workers and its managers.",
                 )}
               </p>
-            </div>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
@@ -193,7 +225,7 @@ export default function NotreEngagementPage() {
               </h2>
               <p className={`${styles.paragraph} ${styles.paragraphDark}`}>
                 {t(
-                  "Très attaché au développement durable, Ultramaille aime tricoter les fibres naturelles et privilégie les producteurs locaux pour éviter les transports polluants. Pour produire la vapeur nécessaire à la teinture et au repassage, nous brûlons des déchets de bois issus de l'industrie locale du meuble et des branches d'eucalyptus — un arbre qui pousse abondamment à Madagascar.",
+                  "Très attaché au développement durable, Ultramaille aime tricoter les fibres naturelles et privilégie les producteurs locaux pour éviter les transports polluants. Pour produire la vapeur nécessaire à la teinture et au repassage, nous brûlons des déchets de bois issus de l'industrie locale du meuble et des branches d'eucalyptus, un arbre qui pousse abondamment à Madagascar.",
                   "Deeply committed to sustainable development, Ultramaille loves knitting natural fibres and favours local producers to avoid polluting transport. To produce the steam needed for dyeing and pressing, we burn wood waste from the local furniture industry and eucalyptus branches — a tree that grows abundantly in Madagascar.",
                 )}
               </p>
@@ -207,7 +239,6 @@ export default function NotreEngagementPage() {
                 {[
                   { fr: "Fibres naturelles", en: "Natural fibres" },
                   { fr: "Producteurs locaux", en: "Local producers" },
-                  { fr: "Vapeur renouvelable", en: "Renewable steam" },
                   { fr: "Station d'épuration", en: "Purification plant" },
                   { fr: "CO₂ réduit", en: "Reduced CO₂" },
                 ].map((tag) => (
@@ -261,12 +292,18 @@ export default function NotreEngagementPage() {
                 {t("— Soutenir notre communauté", "— Supporting our community")}
               </div>
               <h2 className={`${styles.title} ${styles.titleLight}`}>
-                {t("Tisser des liens forts avec la communauté.", "Weaving strong ties with the community.")}
+                {t("Derrière chaque emploi, une famille et un avenir.", "Behind every job, a family and a future.")}
               </h2>
-              <p className={styles.paragraphLight}>
+              <p className={`${styles.paragraph} ${styles.paragraphLight}`}>
                 {t(
-                  "Née de la volonté de valoriser les compétences locales, Ultramaille a, dès l'origine, intégré le développement durable à son modèle économique. Au-delà de plus de 800 emplois, l'entreprise participe activement à l'amélioration de la vie sociale de ses concitoyens.",
-                  "Born from a desire to develop local skills, Ultramaille has integrated sustainable development into its business model from the very start. Beyond providing more than 800 jobs, the company actively contributes to improving the social life of its fellow citizens.",
+                  "Chez Ultramaille, nous savons que notre impact ne s'arrête pas aux portes de l'usine. Derrière chacun de nos 800 collaborateurs, il y a une famille, des enfants et tout un tissu local qui dépend de la stabilité de leur revenu.",
+                  "At Ultramaille, we know our impact doesn't stop at the factory doors. Behind each of our 800 employees, there is a family, children and a whole local fabric that depends on the stability of their income.",
+                )}
+              </p>
+              <p className={`${styles.paragraph} ${styles.paragraphLight}`}>
+                {t(
+                  "Soutenir notre communauté, c'est s'engager concrètement au quotidien : en garantissant des salaires réguliers, mais aussi en accompagnant les familles et en finançant des actions locales, notamment dans l'éducation.",
+                  "Supporting our community means taking concrete action every day: guaranteeing regular salaries, but also supporting families and funding local initiatives, particularly in education.",
                 )}
               </p>
             </div>
@@ -277,19 +314,12 @@ export default function NotreEngagementPage() {
       <section className={styles.education}>
         <div className={styles.educationGrid} />
         <div className={styles.educationInner}>
-          <div className={`${styles.eyebrow} ${styles.eyebrowGold}`}>{t("— L'éducation", "— Education")}</div>
           <blockquote className={styles.quote}>
             {t(
               "« La plus petite des graines peut contenir le plus grand des arbres. »",
               "“The smallest of seeds can hold the tallest of trees.”",
             )}
           </blockquote>
-          <p className={styles.quoteText}>
-            {t(
-              "L'éducation est le socle de l'Homme — une lumière qui guide chacun dans sa vie, personnelle comme professionnelle. Elle demeure un défi permanent pour Madagascar, et un engagement de tous les instants pour Ultramaille.",
-              "Education is the foundation of every person — a light that guides each of us through life, both personal and professional. It remains an ongoing challenge for Madagascar, and a constant commitment for Ultramaille.",
-            )}
-          </p>
         </div>
       </section>
 

@@ -74,7 +74,12 @@
 }
 
 .paragraphLight {
+  margin: 0;
   color: var(--utm-text);
+}
+
+.paragraphLight + .paragraphLight {
+  margin-top: 14px;
 }
 
 .paragraphDark {
@@ -108,7 +113,7 @@
   display: grid;
   grid-template-columns: 1fr 1.1fr;
   gap: clamp(32px, 6vw, 90px);
-  align-items: end;
+  align-items: start;
   margin-bottom: clamp(44px, 5vw, 68px);
 }
 
@@ -129,11 +134,22 @@
   color: var(--utm-cream-2);
 }
 
+.title + .paragraph {
+  margin-top: 24px;
+}
+
 .headText {
-  margin: 0;
   font-size: 17px;
   line-height: 1.72;
   color: var(--utm-text);
+}
+
+.headText p {
+  margin: 0;
+}
+
+.headText p + p {
+  margin-top: 14px;
 }
 
 .statGrid3 {

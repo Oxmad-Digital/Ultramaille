@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLanguage } from "@/lib/language-context";
 import styles from "./ContactCta.module.css";
 
@@ -20,9 +21,9 @@ export default function ContactCta() {
               "Tell us about your project — our team replies within 24h with a proposal tailored to your needs.",
             )}
           </p>
-          <a href="mailto:contact@ultramaille.com" className={styles.button}>
+          <Link href="/contact#form" className={styles.button}>
             {t("Nous contacter", "Contact us")}
-          </a>
+          </Link>
         </div>
         <div className={styles.infoCard}>
           <div className={styles.infoItem}>
