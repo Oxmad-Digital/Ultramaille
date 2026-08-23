@@ -28,3 +28,67 @@
 .pulse {
   animation: utmPulse 2.6s ease-out infinite;
 }
+
+@keyframes utmFlow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.flowLine {
+  animation: utmFlow 1.4s linear infinite;
+}
+
+.label {
+  transition: opacity 0.12s ease;
+}
+
+.labelHidden {
+  opacity: 0;
+}
+
+.tooltip {
+  z-index: 5;
+  min-width: 150px;
+  background: rgba(10, 16, 26, 0.94);
+  border: 1px solid rgba(224, 163, 56, 0.35);
+  border-radius: 8px;
+  padding: 9px 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transform-origin: bottom center;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+
+.tooltipVisible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tooltipRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  padding: 3px 0;
+  white-space: nowrap;
+}
+
+.tooltipRow + .tooltipRow {
+  border-top: 1px solid rgba(244, 239, 230, 0.1);
+}
+
+.tooltipLabel {
+  color: rgba(244, 239, 230, 0.55);
+  text-transform: uppercase;
+}
+
+.tooltipValue {
+  color: #f4efe6;
+  font-weight: 700;
+}

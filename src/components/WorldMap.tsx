@@ -11,6 +11,8 @@ const EUROPE_IDS = [
 ];
 const SECONDARY_IDS = ["us", "za", "mu"];
 
+type Stats = { volume: string; volumeEn: string; clients: string; clientsEn: string };
+
 type Marker = {
   id: string;
   label: string;
@@ -18,12 +20,23 @@ type Marker = {
   subEn: string;
   type: "principal" | "sec" | "origin";
   side: "top" | "bottom" | "left" | "right";
+  stats?: Stats;
 };
 
+// TODO: remplacer ces chiffres d'exemple par les valeurs réelles.
 const MARKERS: Marker[] = [
-  { id: "de", label: "EUROPE", sub: "Marché principal", subEn: "Principal market", type: "principal", side: "top" },
-  { id: "us", label: "ÉTATS-UNIS", sub: "Secondaire", subEn: "Secondary", type: "sec", side: "top" },
-  { id: "za", label: "AFRIQUE DU SUD", sub: "Secondaire", subEn: "Secondary", type: "sec", side: "left" },
+  {
+    id: "de", label: "EUROPE", sub: "Marché principal", subEn: "Principal market", type: "principal", side: "top",
+    stats: { volume: "1 200 t / an", volumeEn: "1,200 t / year", clients: "18 marques", clientsEn: "18 brands" },
+  },
+  {
+    id: "us", label: "ÉTATS-UNIS", sub: "Secondaire", subEn: "Secondary", type: "sec", side: "top",
+    stats: { volume: "180 t / an", volumeEn: "180 t / year", clients: "5 marques", clientsEn: "5 brands" },
+  },
+  {
+    id: "za", label: "AFRIQUE DU SUD", sub: "Secondaire", subEn: "Secondary", type: "sec", side: "left",
+    stats: { volume: "95 t / an", volumeEn: "95 t / year", clients: "3 marques", clientsEn: "3 brands" },
+  },
   { id: "mg", label: "ANTANANARIVO", sub: "Origine", subEn: "Origin", type: "origin", side: "right" },
 ];
 
@@ -139,6 +152,7 @@ export default function WorldMap() {
           p.setAttribute("stroke-width", "1");
           p.setAttribute("stroke-opacity", "0.5");
           p.setAttribute("stroke-dasharray", "2.5 3.5");
+          p.setAttribute("class", styles.flowLine);
           svg.appendChild(p);
         });
       }
@@ -155,7 +169,7 @@ export default function WorldMap() {
         const subColor = m.type === "sec" ? "rgba(244,239,230,.5)" : "#E0A338";
         const sub = lang === "en" ? m.subEn : m.sub;
         const lbl =
-          `<span style="font-family:var(--font-space-mono),monospace;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:#F4EFE6;background:rgba(10,16,26,.66);border:1px solid rgba(244,239,230,.14);border-radius:5px;padding:5px 8px;white-space:nowrap;line-height:1.3;text-align:center;flex:none;">` +
+          `<span data-marker-label class="${styles.label}" style="font-family:var(--font-space-mono),monospace;font-size:9.5px;font-weight:700;letter-spacing:.1em;color:#F4EFE6;background:rgba(10,16,26,.66);border:1px solid rgba(244,239,230,.14);border-radius:5px;padding:5px 8px;white-space:nowrap;line-height:1.3;text-align:center;flex:none;">` +
           m.label +
           `<br><span style="font-weight:400;font-size:8px;letter-spacing:.06em;color:${subColor};">` +
           sub +
@@ -179,6 +193,44 @@ export default function WorldMap() {
           wrap.innerHTML = dot + hCon + lbl;
         }
         overlay.appendChild(wrap);
+
+        if (m.stats) {
+          wrap.style.pointerEvents = "auto";
+          wrap.style.cursor = "pointer";
+
+          const labelEl = wrap.querySelector<HTMLElement>("[data-marker-label]");
+
+          const volume = lang === "en" ? m.stats.volumeEn : m.stats.volume;
+          const clients = lang === "en" ? m.stats.clientsEn : m.stats.clients;
+          const volumeLabel = lang === "en" ? "Export volume" : "Volume exporté";
+          const clientsLabel = lang === "en" ? "Clients" : "Clients";
+
+          const tooltip = document.createElement("div");
+          tooltip.className = styles.tooltip;
+          tooltip.innerHTML =
+            `<div class="${styles.tooltipRow}"><span class="${styles.tooltipLabel}">${volumeLabel}</span><span class="${styles.tooltipValue}">${volume}</span></div>` +
+            `<div class="${styles.tooltipRow}"><span class="${styles.tooltipLabel}">${clientsLabel}</span><span class="${styles.tooltipValue}">${clients}</span></div>`;
+          overlay.appendChild(tooltip);
+
+          const positionTooltip = () => {
+            if (!labelEl) return;
+            const hostRect = host.getBoundingClientRect();
+            const labelRect = labelEl.getBoundingClientRect();
+            const tLeft = labelRect.left + labelRect.width / 2 - hostRect.left;
+            const tTop = labelRect.top - hostRect.top;
+            tooltip.style.cssText = `position:absolute;left:${tLeft}px;top:${tTop}px;transform:translate(-50%, calc(-100% - 10px));`;
+          };
+
+          wrap.addEventListener("mouseenter", () => {
+            positionTooltip();
+            tooltip.classList.add(styles.tooltipVisible);
+            labelEl?.classList.add(styles.labelHidden);
+          });
+          wrap.addEventListener("mouseleave", () => {
+            tooltip.classList.remove(styles.tooltipVisible);
+            labelEl?.classList.remove(styles.labelHidden);
+          });
+        }
       });
     })();
 
