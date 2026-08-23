@@ -5,6 +5,7 @@ import BlogListClient, { type PublicArticle } from "@/components/blog/BlogListCl
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
 import { estimateReadingMinutes } from "@/lib/blog";
+import { publishDueArticles } from "@/lib/publishDueArticles";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -16,10 +17,8 @@ export const dynamic = "force-dynamic";
 
 async function getPublishedArticles(): Promise<PublicArticle[]> {
   await connectDB();
-  const now = new Date();
-  const articles = await Article.find({
-    $or: [{ status: "published" }, { status: "scheduled", publishedAt: { $lte: now } }],
-  })
+  await publishDueArticles();
+  const articles = await Article.find({ status: "published" })
     .sort({ publishedAt: -1 })
     .lean();
 

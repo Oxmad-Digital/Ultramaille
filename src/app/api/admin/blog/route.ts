@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
 import { slugify } from "@/lib/blog";
+import { publishDueArticles } from "@/lib/publishDueArticles";
 import Article from "@/models/Article";
 
 export async function GET() {
@@ -9,6 +10,7 @@ export async function GET() {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
   await connectDB();
+  await publishDueArticles();
   const articles = await Article.find({}).sort({ createdAt: -1 }).lean();
   return NextResponse.json({ success: true, articles });
 }

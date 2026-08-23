@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import BlogArticleClient from "@/components/blog/BlogArticleClient";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
+import { publishDueArticles } from "@/lib/publishDueArticles";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -14,11 +15,8 @@ export const dynamic = "force-dynamic";
 // the page component share one DB call — the view counter below only runs once.
 const getArticle = cache(async (slug: string) => {
   await connectDB();
-  const now = new Date();
-  const article = await Article.findOne({
-    slug,
-    $or: [{ status: "published" }, { status: "scheduled", publishedAt: { $lte: now } }],
-  }).lean();
+  await publishDueArticles();
+  const article = await Article.findOne({ slug, status: "published" }).lean();
   return article;
 });
 
