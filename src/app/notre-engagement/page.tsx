@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ContactCta from "@/components/ContactCta";
 import CountUp from "@/components/CountUp";
 import RevealOnScroll from "@/components/RevealOnScroll";
+import StitchedQuote from "@/components/StitchedQuote";
 import { useLanguage } from "@/lib/language-context";
 import styles from "./page.module.css";
 
@@ -13,7 +14,7 @@ const IMG_BASE = "https://www.ultramaille.com/wp-content/uploads/";
 const MEDECIN_IMG = `${IMG_BASE}2022/10/ultramaille-medecin.jpg`;
 
 export default function NotreEngagementPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   return (
     <div className={styles.page}>
@@ -315,10 +316,13 @@ export default function NotreEngagementPage() {
         <div className={styles.educationGrid} />
         <div className={styles.educationInner}>
           <blockquote className={styles.quote}>
-            {t(
-              "« La plus petite des graines peut contenir le plus grand des arbres. »",
-              "“The smallest of seeds can hold the tallest of trees.”",
-            )}
+            <StitchedQuote
+              lang={lang}
+              label={t(
+                "« La plus petite des graines peut contenir le plus grand des arbres. »",
+                "“The smallest of seeds can hold the tallest of trees.”",
+              )}
+            />
           </blockquote>
         </div>
       </section>
