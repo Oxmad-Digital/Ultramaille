@@ -47,6 +47,58 @@ const COLOR_PALETTE: { label: string; hex: string }[] = [
   { label: "Gris", hex: "#6a6256" },
 ];
 
+function clamp01(n: number) {
+  return Math.min(1, Math.max(0, n));
+}
+
+function hsvToRgb(h: number, s: number, v: number): [number, number, number] {
+  const c = v * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = v - c;
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  if (h < 60) [r, g, b] = [c, x, 0];
+  else if (h < 120) [r, g, b] = [x, c, 0];
+  else if (h < 180) [r, g, b] = [0, c, x];
+  else if (h < 240) [r, g, b] = [0, x, c];
+  else if (h < 300) [r, g, b] = [x, 0, c];
+  else [r, g, b] = [c, 0, x];
+  return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255)];
+}
+
+function rgbToHex(r: number, g: number, b: number) {
+  const toHex = (n: number) => n.toString(16).padStart(2, "0");
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function hsvToHex(h: number, s: number, v: number) {
+  const [r, g, b] = hsvToRgb(h, s, v);
+  return rgbToHex(r, g, b);
+}
+
+function hexToHsv(hex: string): { h: number; s: number; v: number } {
+  const match = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+  if (!match) return { h: 0, s: 0, v: 0 };
+  const int = parseInt(match[1], 16);
+  const r = ((int >> 16) & 255) / 255;
+  const g = ((int >> 8) & 255) / 255;
+  const b = (int & 255) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const delta = max - min;
+  let h = 0;
+  if (delta !== 0) {
+    if (max === r) h = 60 * (((g - b) / delta) % 6);
+    else if (max === g) h = 60 * ((b - r) / delta + 2);
+    else h = 60 * ((r - g) / delta + 4);
+  }
+  if (h < 0) h += 360;
+  const s = max === 0 ? 0 : delta / max;
+  const v = max;
+  return { h, s, v };
+}
+
 const STATUS_OPTIONS: { key: ArticleStatus; label: string }[] = [
   { key: "draft", label: "Brouillon" },
   { key: "scheduled", label: "Programmé" },
@@ -151,6 +203,12 @@ export default function ArticleForm({
   const [videoUrlInput, setVideoUrlInput] = useState("");
   const [videoError, setVideoError] = useState("");
   const [colorBarOpen, setColorBarOpen] = useState(false);
+  const [pickerHue, setPickerHue] = useState(0);
+  const [pickerSat, setPickerSat] = useState(0);
+  const [pickerVal, setPickerVal] = useState(0);
+  const [pickerHexInput, setPickerHexInput] = useState("#000000");
+  const pickerSquareRef = useRef<HTMLDivElement>(null);
+  const pickerHueRef = useRef<HTMLDivElement>(null);
   const [linkBarOpen, setLinkBarOpen] = useState(false);
   const [linkUrlInput, setLinkUrlInput] = useState("");
   const [linkTextInput, setLinkTextInput] = useState("");
@@ -340,12 +398,73 @@ export default function ArticleForm({
 
   function applyColor(hex: string) {
     editor?.chain().focus().setColor(hex).run();
-    setColorBarOpen(false);
+    const hsv = hexToHsv(hex);
+    setPickerHue(hsv.h);
+    setPickerSat(hsv.s * 100);
+    setPickerVal(hsv.v * 100);
+    setPickerHexInput(hex);
   }
 
   function clearColor() {
     editor?.chain().focus().unsetColor().run();
-    setColorBarOpen(false);
+  }
+
+  function commitPickerColor(h: number, s: number, v: number) {
+    setPickerHue(h);
+    setPickerSat(s);
+    setPickerVal(v);
+    const hex = hsvToHex(h, s / 100, v / 100);
+    setPickerHexInput(hex);
+    editor?.chain().focus().setColor(hex).run();
+  }
+
+  function handleSquarePointerDown(e: React.MouseEvent<HTMLDivElement>) {
+    const el = pickerSquareRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const update = (clientX: number, clientY: number) => {
+      const x = clamp01((clientX - rect.left) / rect.width);
+      const y = clamp01((clientY - rect.top) / rect.height);
+      commitPickerColor(pickerHue, x * 100, (1 - y) * 100);
+    };
+    update(e.clientX, e.clientY);
+    const onMove = (ev: MouseEvent) => update(ev.clientX, ev.clientY);
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  }
+
+  function handleHuePointerDown(e: React.MouseEvent<HTMLDivElement>) {
+    const el = pickerHueRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const update = (clientY: number) => {
+      const y = clamp01((clientY - rect.top) / rect.height);
+      commitPickerColor(y * 360, pickerSat, pickerVal);
+    };
+    update(e.clientY);
+    const onMove = (ev: MouseEvent) => update(ev.clientY);
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  }
+
+  function handleHexInputChange(value: string) {
+    setPickerHexInput(value);
+    const hex = value.startsWith("#") ? value : `#${value}`;
+    if (/^#[0-9a-f]{6}$/i.test(hex)) {
+      const hsv = hexToHsv(hex);
+      setPickerHue(hsv.h);
+      setPickerSat(hsv.s * 100);
+      setPickerVal(hsv.v * 100);
+      editor?.chain().focus().setColor(hex).run();
+    }
   }
 
   function openLinkBar() {
@@ -684,14 +803,82 @@ export default function ArticleForm({
               >
                 Tableau
               </button>
-              <button
-                type="button"
-                className={`${styles.toolButton} ${colorBarOpen ? styles.toolButtonActive : ""}`}
-                title="Couleur du texte"
-                onClick={() => (colorBarOpen ? setColorBarOpen(false) : openColorBar())}
-              >
-                Couleur
-              </button>
+              <div className={styles.colorTool}>
+                <button
+                  type="button"
+                  className={`${styles.toolButton} ${colorBarOpen ? styles.toolButtonActive : ""}`}
+                  title="Couleur du texte"
+                  onClick={() => (colorBarOpen ? closeAllBars() : openColorBar())}
+                >
+                  Couleur
+                </button>
+
+                {colorBarOpen && (
+                  <div className={styles.colorPopup}>
+                    <div className={styles.colorPopupHeader}>
+                      <button
+                        type="button"
+                        className={styles.colorBarClose}
+                        title="Fermer"
+                        aria-label="Fermer"
+                        onClick={closeAllBars}
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+                          <path d="M5 5l14 14M19 5L5 19" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <div className={styles.colorPickerMain}>
+                      <div
+                        ref={pickerSquareRef}
+                        className={styles.colorPickerSquare}
+                        style={{ backgroundColor: `hsl(${pickerHue}, 100%, 50%)` }}
+                        onMouseDown={handleSquarePointerDown}
+                      >
+                        <div
+                          className={styles.colorPickerSquareCursor}
+                          style={{ left: `${pickerSat}%`, top: `${100 - pickerVal}%` }}
+                        />
+                      </div>
+                      <div ref={pickerHueRef} className={styles.colorPickerHue} onMouseDown={handleHuePointerDown}>
+                        <div className={styles.colorPickerHueCursor} style={{ top: `${(pickerHue / 360) * 100}%` }} />
+                      </div>
+                    </div>
+
+                    <div className={styles.colorPickerHexRow}>
+                      <span className={styles.colorPickerPreview} style={{ background: pickerHexInput }} />
+                      <div className={styles.colorPickerHexField}>
+                        <span className={styles.colorPickerHexLabel}>HEX</span>
+                        <input
+                          type="text"
+                          className={styles.colorPickerHexInput}
+                          value={pickerHexInput}
+                          onChange={(e) => handleHexInputChange(e.target.value)}
+                          autoComplete="off"
+                          spellCheck={false}
+                        />
+                      </div>
+                    </div>
+
+                    <div className={styles.colorSwatchRow}>
+                      {COLOR_PALETTE.map((c) => (
+                        <button
+                          key={c.hex}
+                          type="button"
+                          title={c.label}
+                          className={styles.colorSwatch}
+                          style={{ background: c.hex }}
+                          onClick={() => applyColor(c.hex)}
+                        />
+                      ))}
+                      <button type="button" className={styles.videoBarCancel} onClick={clearColor}>
+                        Effacer
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
               <button
                 type="button"
                 className={styles.toolButton}
@@ -725,34 +912,6 @@ export default function ArticleForm({
               </button>
               <span className={styles.toolbarSpacer}>body.{lang}</span>
             </div>
-
-            {colorBarOpen && (
-              <div className={styles.colorBar}>
-                {COLOR_PALETTE.map((c) => (
-                  <button
-                    key={c.hex}
-                    type="button"
-                    title={c.label}
-                    className={styles.colorSwatch}
-                    style={{ background: c.hex }}
-                    onClick={() => applyColor(c.hex)}
-                  />
-                ))}
-                <label className={styles.colorCustom} title="Couleur personnalisée">
-                  <input
-                    type="color"
-                    className={styles.colorCustomInput}
-                    onChange={(e) => applyColor(e.target.value)}
-                  />
-                </label>
-                <button type="button" className={styles.videoBarCancel} onClick={clearColor}>
-                  Effacer
-                </button>
-                <button type="button" className={styles.videoBarCancel} onClick={() => setColorBarOpen(false)}>
-                  Fermer
-                </button>
-              </div>
-            )}
 
             {linkBarOpen && (
               <div className={styles.videoBar}>

@@ -305,20 +305,63 @@
   color: var(--utm-label);
 }
 
-.colorBar {
+.colorTool {
+  position: relative;
+  display: inline-flex;
+}
+
+.colorPopup {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 240px;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 14px;
+  background: #fffdf8;
+  border: 1px solid rgba(15, 30, 48, 0.14);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(15, 30, 48, 0.18);
+}
+
+.colorPopupHeader {
+  display: flex;
+  justify-content: flex-end;
+  margin: -6px -6px -4px 0;
+}
+
+.colorBarClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: var(--utm-text);
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.colorBarClose:hover {
+  background: rgba(15, 30, 48, 0.08);
+}
+
+.colorSwatchRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
-  background: rgba(15, 30, 48, 0.03);
-  border-bottom: 1px solid rgba(15, 30, 48, 0.1);
-  flex-shrink: 0;
 }
 
 .colorSwatch {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: 1px solid rgba(15, 30, 48, 0.16);
   cursor: pointer;
@@ -330,23 +373,101 @@
   transform: scale(1.12);
 }
 
-.colorCustom {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1px dashed rgba(15, 30, 48, 0.3);
-  cursor: pointer;
-  overflow: hidden;
-  background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+.colorPickerMain {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
 }
 
-.colorCustomInput {
-  width: 100%;
-  height: 100%;
-  opacity: 0;
+.colorPickerSquare {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+  border-radius: 6px;
+  cursor: crosshair;
+  background-image:
+    linear-gradient(to top, #000, rgba(0, 0, 0, 0)),
+    linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+  user-select: none;
+}
+
+.colorPickerSquareCursor {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(15, 30, 48, 0.4);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.colorPickerHue {
+  position: relative;
+  width: 16px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: linear-gradient(to bottom, red, yellow, lime, cyan, blue, magenta, red);
   cursor: pointer;
-  border: none;
-  padding: 0;
+  user-select: none;
+}
+
+.colorPickerHueCursor {
+  position: absolute;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(15, 30, 48, 0.4);
+  background: transparent;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.colorPickerHexRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.colorPickerPreview {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(15, 30, 48, 0.16);
+  flex-shrink: 0;
+}
+
+.colorPickerHexLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--utm-label);
+}
+
+.colorPickerHexInput {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  color: var(--utm-ink);
+  background: #fffdf8;
+  border: 1px solid rgba(15, 30, 48, 0.16);
+  border-radius: 6px;
+  padding: 7px 10px;
+}
+
+.colorPickerHexInput:focus {
+  outline: none;
+  border-color: var(--utm-navy);
 }
 
 .videoBar {
