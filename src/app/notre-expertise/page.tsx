@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -63,19 +64,40 @@ const ATELIERS = [
   },
 ];
 
-const SWATCHES = [
-  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-1-Swatch-rayee-Paola-1-scaled.jpg`, alt: "Swatch rayé Paola", labelFr: "Rayé · Paola", labelEn: "Striped · Paola" },
-  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-4-Swatch-Tricotin-100p-cotton-scaled.jpg`, alt: "Swatch tricotin coton", labelFr: "Tricotin · Coton", labelEn: "Tricotin · Cotton" },
-  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-18-Swatch-Fleur-Feutre-Husky-Fine-Broderie-scaled.jpg`, alt: "Swatch fleur feutre broderie", labelFr: "Fleur feutre · Broderie", labelEn: "Felt flower · Embroidery" },
-  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-22-Swatch-Bellone-900-Paola-Velvet-crochet-Rayure-Triangle-scaled.jpg`, alt: "Swatch crochet rayure triangle", labelFr: "Crochet · Triangle", labelEn: "Crochet · Triangle" },
-  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-28-Swatch-Ravinda-Perlee-Paola-avec-Perle-Crochet-scaled.jpg`, alt: "Swatch perlé crochet", labelFr: "Perlé · Crochet", labelEn: "Beaded · Crochet" },
-  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-2-Swatch-macrame-100p-coton-scaled.jpg`, alt: "Swatch macramé coton", labelFr: "Macramé · Coton", labelEn: "Macramé · Cotton" },
-  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-15-Swatch-MSV-Husky-50p-WU-50p-PC-scaled.jpg`, alt: "Swatch Husky laine", labelFr: "Husky · Laine", labelEn: "Husky · Wool" },
-  { img: `${IMG_BASE}2023/11/Societe-Ultramaille-30-Swatch-Husky-2200-50p-WV-50p-Pe-Motif-100p-coton-scaled.jpg`, alt: "Swatch Husky motif coton", labelFr: "Motif · Coton", labelEn: "Pattern · Cotton" },
+const GALERIE_FILTERS = [
+  { id: "ajouree", fr: "Maille ajourée", en: "Openwork" },
+  { id: "fantaisie", fr: "Maille fantaisie", en: "Fancy knit" },
+  { id: "main", fr: "Maille main", en: "Hand knit" },
+  { id: "crochet", fr: "Crochet & macramé", en: "Crochet & macramé" },
+] as const;
+
+type GalerieFilterId = (typeof GALERIE_FILTERS)[number]["id"];
+
+const SWATCHES: {
+  img: string;
+  alt: string;
+  labelFr: string;
+  labelEn: string;
+  category: GalerieFilterId;
+}[] = [
+  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-1-Swatch-rayee-Paola-1-scaled.jpg`, alt: "Swatch rayé Paola", labelFr: "Rayé · Paola", labelEn: "Striped · Paola", category: "fantaisie" },
+  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-4-Swatch-Tricotin-100p-cotton-scaled.jpg`, alt: "Swatch tricotin coton", labelFr: "Tricotin · Coton", labelEn: "Tricotin · Cotton", category: "main" },
+  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-18-Swatch-Fleur-Feutre-Husky-Fine-Broderie-scaled.jpg`, alt: "Swatch fleur feutre broderie", labelFr: "Fleur feutre · Broderie", labelEn: "Felt flower · Embroidery", category: "fantaisie" },
+  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-22-Swatch-Bellone-900-Paola-Velvet-crochet-Rayure-Triangle-scaled.jpg`, alt: "Swatch crochet rayure triangle", labelFr: "Crochet · Triangle", labelEn: "Crochet · Triangle", category: "crochet" },
+  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-28-Swatch-Ravinda-Perlee-Paola-avec-Perle-Crochet-scaled.jpg`, alt: "Swatch perlé crochet", labelFr: "Perlé · Crochet", labelEn: "Beaded · Crochet", category: "crochet" },
+  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-2-Swatch-macrame-100p-coton-scaled.jpg`, alt: "Swatch macramé coton", labelFr: "Macramé · Coton", labelEn: "Macramé · Cotton", category: "crochet" },
+  { img: `${IMG_BASE}2022/10/Societe-Ultramaille-15-Swatch-MSV-Husky-50p-WU-50p-PC-scaled.jpg`, alt: "Swatch Husky laine", labelFr: "Husky · Laine", labelEn: "Husky · Wool", category: "ajouree" },
+  { img: `${IMG_BASE}2023/11/Societe-Ultramaille-30-Swatch-Husky-2200-50p-WV-50p-Pe-Motif-100p-coton-scaled.jpg`, alt: "Swatch Husky motif coton", labelFr: "Motif · Coton", labelEn: "Pattern · Cotton", category: "fantaisie" },
 ];
 
 export default function NotreExpertisePage() {
   const { t } = useLanguage();
+  const [activeFilter, setActiveFilter] = useState<GalerieFilterId | null>(null);
+
+  const filteredSwatches = useMemo(
+    () => (activeFilter ? SWATCHES.filter((s) => s.category === activeFilter) : SWATCHES),
+    [activeFilter],
+  );
 
   return (
     <div className={styles.page}>
@@ -263,20 +285,29 @@ export default function NotreExpertisePage() {
               </h2>
             </div>
             <div className={styles.galerieTagRow}>
-              {[
-                { fr: "Maille ajourée", en: "Openwork" },
-                { fr: "Maille fantaisie", en: "Fancy knit" },
-                { fr: "Maille main", en: "Hand knit" },
-                { fr: "Crochet & macramé", en: "Crochet & macramé" },
-              ].map((tag) => (
-                <span key={tag.fr} className={styles.tag}>
+              <button
+                type="button"
+                onClick={() => setActiveFilter(null)}
+                className={`${styles.tag} ${activeFilter === null ? styles.tagActive : ""}`}
+                aria-pressed={activeFilter === null}
+              >
+                {t("Tout", "All")}
+              </button>
+              {GALERIE_FILTERS.map((tag) => (
+                <button
+                  key={tag.id}
+                  type="button"
+                  onClick={() => setActiveFilter((current) => (current === tag.id ? null : tag.id))}
+                  className={`${styles.tag} ${activeFilter === tag.id ? styles.tagActive : ""}`}
+                  aria-pressed={activeFilter === tag.id}
+                >
                   {t(tag.fr, tag.en)}
-                </span>
+                </button>
               ))}
             </div>
           </div>
           <div className={styles.swatchGrid}>
-            {SWATCHES.map((s) => (
+            {filteredSwatches.map((s) => (
               <div key={s.img} className={styles.swatchCard}>
                 <Image src={s.img} alt={s.alt} fill sizes="25vw" className={styles.swatchImg} />
                 <div className={styles.swatchLabel}>{t(s.labelFr, s.labelEn)}</div>
