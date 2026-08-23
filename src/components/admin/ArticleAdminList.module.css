@@ -458,3 +458,81 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+@media (max-width: 880px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search {
+    width: 100%;
+  }
+
+  .filterRow {
+    align-items: flex-start;
+  }
+
+  .bulkBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tableHead {
+    display: none;
+  }
+
+  .tableHead,
+  .tableRow {
+    grid-template-columns: none;
+  }
+
+  .tableRow {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 10px;
+    column-gap: 8px;
+    padding: 16px 46px 16px 16px;
+  }
+
+  .checkbox {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+
+  .titleCell {
+    flex: 0 0 100%;
+  }
+
+  .categoryCell::before {
+    content: "Catégorie : ";
+    color: var(--utm-label);
+  }
+
+  .dateCell::before {
+    content: "Publié le ";
+  }
+
+  .viewsCell::before {
+    content: "Vues : ";
+  }
+
+  .actionsCell {
+    flex: 0 0 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pageTitle {
+    font-size: 26px;
+  }
+}
