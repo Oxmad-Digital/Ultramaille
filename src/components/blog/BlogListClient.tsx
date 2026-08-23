@@ -46,7 +46,6 @@ export default function BlogListClient({
   const { lang, t } = useLanguage();
   const [category, setCategory] = useState("all");
   const [limit, setLimit] = useState(6);
-  const [subscribed, setSubscribed] = useState(false);
 
   const categories = useMemo(() => {
     const set = new Set(articles.map((a) => a.category).filter(Boolean));
@@ -58,11 +57,6 @@ export default function BlogListClient({
     [articles, category]
   );
   const shown = filtered.slice(0, limit);
-
-  function subscribe(e: React.FormEvent) {
-    e.preventDefault();
-    setSubscribed(true);
-  }
 
   return (
     <>
@@ -184,57 +178,6 @@ export default function BlogListClient({
               </button>
             </div>
           )}
-        </div>
-      </section>
-
-      <section className={styles.newsletter}>
-        <div className={styles.newsletterInner}>
-          <div>
-            <div className={styles.newsletterEyebrow}>— Newsletter</div>
-            <h2 className={styles.newsletterTitle}>
-              {t("Une lettre par saison, depuis l'atelier.", "One letter per season, from the workshop.")}
-            </h2>
-            <p className={styles.newsletterText}>
-              {t(
-                "Nouvelles techniques, arrivages de fils, délais de la saison à venir. Sans bruit — quatre emails par an.",
-                "New techniques, yarn arrivals, lead times for the coming season. No noise — four emails a year."
-              )}
-            </p>
-          </div>
-          <div>
-            {subscribed ? (
-              <div className={styles.subscribedBox}>
-                <div className={styles.subscribedEyebrow}>{t("Inscription confirmée", "You're in")}</div>
-                <div className={styles.subscribedText}>
-                  {t(
-                    "Merci — la prochaine lettre arrive en début de saison.",
-                    "Thank you — the next letter arrives at the start of the season."
-                  )}
-                </div>
-              </div>
-            ) : (
-              <form className={styles.subscribeForm} onSubmit={subscribe}>
-                <label className={styles.subscribeLabel}>
-                  <span className={styles.subscribeLabelText}>{t("Votre email", "Your email")}</span>
-                  <input
-                    className={styles.subscribeInput}
-                    type="email"
-                    required
-                    placeholder="jeanne@maison.com"
-                  />
-                </label>
-                <button type="submit" className={styles.subscribeButton}>
-                  {t("S'inscrire →", "Subscribe →")}
-                </button>
-                <span className={styles.subscribeDisclaimer}>
-                  {t(
-                    "Aucune diffusion de votre adresse. Désinscription en un clic.",
-                    "No sharing of your address. Unsubscribe in one click."
-                  )}
-                </span>
-              </form>
-            )}
-          </div>
         </div>
       </section>
     </>
