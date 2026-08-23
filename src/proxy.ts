@@ -16,6 +16,14 @@ const PUBLIC_API_PATHS = [
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  if (pathname === "/admin/login") {
+    const session = await auth();
+    if (session) {
+      return NextResponse.redirect(new URL("/admin/blog", request.url));
+    }
+    return NextResponse.next();
+  }
+
   if (PUBLIC_PATHS.includes(pathname) || PUBLIC_API_PATHS.includes(pathname)) {
     return NextResponse.next();
   }
