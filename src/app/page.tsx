@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContactCta from "@/components/ContactCta";
 import CountUp from "@/components/CountUp";
+import RevealOnScroll from "@/components/RevealOnScroll";
 import { useLanguage } from "@/lib/language-context";
 import styles from "./page.module.css";
 
@@ -147,10 +148,10 @@ export default function Home() {
               fill
               className={styles.heritageImg}
             />
-            <div className={styles.heritageBadge}>
+            <RevealOnScroll className={styles.heritageBadge}>
               <div className={styles.heritageBadgeValue}>1998</div>
               <div className={styles.heritageBadgeLabel}>{t("fondation de l'atelier", "founding of the workshop")}</div>
-            </div>
+            </RevealOnScroll>
           </div>
           <div>
             <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>{t("— Héritage", "— Heritage")}</div>
@@ -285,7 +286,7 @@ export default function Home() {
             </h2>
           </div>
           <div className={styles.cardGrid3}>
-            <div className={styles.iconCard}>
+            <RevealOnScroll className={styles.iconCard}>
               <div className={styles.iconBadge}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E0A338" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
@@ -299,8 +300,8 @@ export default function Home() {
                   "Committed to sustainable development, we knit natural fibres and favour local producers to limit polluting transport.",
                 )}
               </p>
-            </div>
-            <div className={styles.iconCard}>
+            </RevealOnScroll>
+            <RevealOnScroll className={styles.iconCard} delay={150}>
               <div className={styles.iconBadge}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E0A338" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -316,8 +317,8 @@ export default function Home() {
                   "With 800 jobs created, Ultramaille actively contributes to local development. We continually invest in improving the daily lives of our teams.",
                 )}
               </p>
-            </div>
-            <div className={styles.iconCard}>
+            </RevealOnScroll>
+            <RevealOnScroll className={styles.iconCard} delay={300}>
               <div className={styles.iconBadge}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E0A338" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
@@ -331,7 +332,7 @@ export default function Home() {
                   "In partnership with Rotary Club Mahamasina, we fund school classes in Soavimasoandro and Ambolokandrina.",
                 )}
               </p>
-            </div>
+            </RevealOnScroll>
           </div>
         </div>
       </section>

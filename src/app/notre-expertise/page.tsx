@@ -5,6 +5,7 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContactCta from "@/components/ContactCta";
+import CountUp from "@/components/CountUp";
 import { useLanguage } from "@/lib/language-context";
 import styles from "./page.module.css";
 
@@ -17,7 +18,8 @@ const ATELIERS = [
     titleEn: "Automatic knitting",
     textFr: "Métiers rectilignes Stoll, Tong Xiang & Xinlong, des jauges 3 à 16.",
     textEn: "Stoll, Tong Xiang & Xinlong flat-knitting machines across gauges 3 to 16.",
-    stat: "68",
+    statNum: 68,
+    statSuffix: "",
     unitFr: "métiers",
     unitEn: "machines",
   },
@@ -27,7 +29,8 @@ const ATELIERS = [
     titleEn: "Hand knitting",
     textFr: "Machines à tricoter main, des jauges 2,5 à 16 — le cœur de notre métier.",
     textEn: "Hand-operated machines on gauges 2.5 to 16 — the heart of our craft.",
-    stat: "327",
+    statNum: 327,
+    statSuffix: "",
     unitFr: "machines",
     unitEn: "machines",
   },
@@ -37,7 +40,8 @@ const ATELIERS = [
     titleEn: "Remeshing",
     textFr: "Postes Flying Tiger, Golden Eagle & Tong Xiang, des jauges 6 à 20.",
     textEn: "Flying Tiger, Golden Eagle & Tong Xiang stations, gauges 6 to 20.",
-    stat: "190",
+    statNum: 190,
+    statSuffix: "",
     unitFr: "postes",
     unitEn: "stations",
   },
@@ -47,7 +51,8 @@ const ATELIERS = [
     titleEn: "Finishing & making-up",
     textFr: "Boutonnière, surjet, piquage, sérigraphie et pressing intégrés.",
     textEn: "Buttonholing, overlocking, linking, screen printing and pressing.",
-    stat: "90+",
+    statNum: 90,
+    statSuffix: "+",
     unitFr: "machines",
     unitEn: "machines",
   },
@@ -57,7 +62,8 @@ const ATELIERS = [
     titleEn: "Packing & control",
     textFr: "Nettoyage, détection de métaux, soudure plastique et feuillard avant expédition.",
     textEn: "Cleaning, metal detection, plastic sealing and strapping before dispatch.",
-    stat: "100%",
+    statNum: 100,
+    statSuffix: "%",
     unitFr: "contrôlé",
     unitEn: "controlled",
     gold: true,
@@ -146,21 +152,28 @@ export default function NotreExpertisePage() {
           </div>
           <div className={styles.statGrid4}>
             <div className={styles.statCellLight}>
-              <div className={`${styles.statValueLight} ${styles.statValueGold}`}>400&#8239;000</div>
+              <div className={`${styles.statValueLight} ${styles.statValueGold}`}>
+                <CountUp end={400000} />
+              </div>
               <div className={styles.statLabelLight}>{t("pull-overs produits par an", "pullovers produced each year")}</div>
             </div>
             <div className={styles.statCellLight}>
               <div className={styles.statValueLight}>
-                3&#8239;000<span className={styles.statUnit}>m²</span>
+                <CountUp end={3000} />
+                <span className={styles.statUnit}>m²</span>
               </div>
               <div className={styles.statLabelLight}>{t("d'unité de production intégrée", "of integrated production space")}</div>
             </div>
             <div className={styles.statCellLight}>
-              <div className={styles.statValueLight}>930</div>
+              <div className={styles.statValueLight}>
+                <CountUp end={930} />
+              </div>
               <div className={styles.statLabelLight}>{t("salariés qualifiés", "skilled employees")}</div>
             </div>
             <div className={styles.statCellLight}>
-              <div className={styles.statValueLight}>5</div>
+              <div className={styles.statValueLight}>
+                <CountUp end={5} />
+              </div>
               <div className={styles.statLabelLight}>
                 {t("jauges : 2,5 · 5 · 7 · 12 · 16", "gauges: 2.5 · 5 · 7 · 12 · 16")}
               </div>
@@ -194,7 +207,8 @@ export default function NotreExpertisePage() {
                 <h3 className={styles.atelierTitle}>{t(a.titleFr, a.titleEn)}</h3>
                 <p className={styles.atelierText}>{t(a.textFr, a.textEn)}</p>
                 <div className={`${styles.atelierStat} ${a.gold ? styles.atelierStatGold : ""}`}>
-                  {a.stat}
+                  <CountUp end={a.statNum} />
+                  {a.statSuffix}
                   <span className={styles.atelierStatUnit}>{t(a.unitFr, a.unitEn)}</span>
                 </div>
               </div>

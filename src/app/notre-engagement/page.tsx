@@ -280,12 +280,12 @@ export default function NotreEngagementPage() {
                 fill
                 className={styles.communauteImg}
               />
-              <div className={styles.humainBadge}>
+              <RevealOnScroll className={styles.humainBadge}>
                 <div className={styles.humainBadgeValue}>800+</div>
                 <div className={styles.humainBadgeLabel}>
                   {t("emplois au service de la communauté", "jobs supporting the community")}
                 </div>
-              </div>
+              </RevealOnScroll>
             </div>
             <div>
               <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>

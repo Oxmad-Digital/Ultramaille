@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContactCta from "@/components/ContactCta";
@@ -103,8 +104,77 @@ function OrgAvatar({
   );
 }
 
+function addOrgFan(
+  cRect: DOMRect,
+  rowEl: HTMLUListElement | null,
+  nodeEls: (HTMLLIElement | null)[],
+  paths: string[],
+) {
+  if (!rowEl) return;
+  const nodes = nodeEls.filter((el): el is HTMLLIElement => el !== null);
+  if (!nodes.length) return;
+
+  const rowRect = rowEl.getBoundingClientRect();
+  const sx = rowRect.left + rowRect.width / 2 - cRect.left;
+  const sy = rowRect.top - cRect.top;
+  const busY = Math.min(...nodes.map((el) => el.getBoundingClientRect().top - cRect.top));
+
+  nodes.forEach((el) => {
+    const r = el.getBoundingClientRect();
+    const tx = r.left + r.width / 2 - cRect.left;
+    const padTop = parseFloat(getComputedStyle(el).paddingTop) || 0;
+    const ty = r.top - cRect.top + padTop;
+    paths.push(`M ${sx} ${sy} V ${busY} H ${tx} V ${ty}`);
+  });
+}
+
 export default function AProposPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+
+  const orgChartRef = useRef<HTMLDivElement>(null);
+  const treeRef = useRef<HTMLUListElement>(null);
+  const treeNodeRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const branchRowRefs = useRef<Map<string, HTMLUListElement>>(new Map());
+  const branchNodeRefs = useRef<Map<string, (HTMLLIElement | null)[]>>(new Map());
+
+  const [orgPaths, setOrgPaths] = useState<string[]>([]);
+  const [orgViewBox, setOrgViewBox] = useState({ width: 0, height: 0 });
+
+  const computeOrgPaths = useCallback(() => {
+    const container = orgChartRef.current;
+    if (!container) return;
+    const cRect = container.getBoundingClientRect();
+    const paths: string[] = [];
+
+    addOrgFan(cRect, treeRef.current, treeNodeRefs.current, paths);
+    branchRowRefs.current.forEach((rowEl, key) => {
+      addOrgFan(cRect, rowEl, branchNodeRefs.current.get(key) ?? [], paths);
+    });
+
+    setOrgPaths(paths);
+    setOrgViewBox({ width: cRect.width, height: cRect.height });
+  }, []);
+
+  useEffect(() => {
+    const container = orgChartRef.current;
+    if (!container) return;
+
+    let raf = 0;
+    const schedule = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(computeOrgPaths);
+    };
+
+    schedule();
+    const ro = new ResizeObserver(schedule);
+    ro.observe(container);
+    document.fonts?.ready?.then(schedule).catch(() => {});
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
+  }, [computeOrgPaths, lang]);
 
   return (
     <div className={styles.page}>
@@ -262,7 +332,22 @@ export default function AProposPage() {
             </h2>
           </div>
 
-          <div className={styles.orgChart}>
+          <div className={styles.orgChart} ref={orgChartRef}>
+            <svg
+              className={styles.orgConnectors}
+              width={orgViewBox.width}
+              height={orgViewBox.height}
+              viewBox={`0 0 ${orgViewBox.width} ${orgViewBox.height}`}
+              aria-hidden="true"
+            >
+              {orgPaths.map((d, i) => (
+                <g key={i}>
+                  <path d={d} className={styles.orgConnectorBase} />
+                  <path d={d} pathLength={100} className={styles.orgConnectorFlow} />
+                </g>
+              ))}
+            </svg>
+
             <div className={styles.orgCeoNode}>
               <div className={`${styles.orgAvatarWrap} ${styles.orgAvatarLg}`}>
                 <Image
@@ -277,15 +362,21 @@ export default function AProposPage() {
               <div className={styles.orgRole}>{t("Président Directeur Général", "Chairman & CEO")}</div>
               <p className={styles.orgCeoText}>
                 {t(
-                  "À la tête d'Ultramaille, porteur d'un héritage familial et d'une exigence constante d'excellence textile depuis plus de 25 ans.",
+                  "Une direction portée par 25 ans d'héritage familial et un savoir-faire textile d'exception.",
                   "At the helm of Ultramaille, carrying a family heritage and a constant pursuit of textile excellence for over 25 years.",
                 )}
               </p>
             </div>
 
-            <ul className={styles.orgTree}>
-              {DIRECTEURS.map((m) => (
-                <li key={m.name} className={styles.orgTreeNode}>
+            <ul ref={treeRef} className={styles.orgTree}>
+              {DIRECTEURS.map((m, i) => (
+                <li
+                  key={m.name}
+                  ref={(el) => {
+                    treeNodeRefs.current[i] = el;
+                  }}
+                  className={styles.orgTreeNode}
+                >
                   <OrgAvatar {...m} size="md" />
                 </li>
               ))}
@@ -295,28 +386,59 @@ export default function AProposPage() {
               <div className={styles.orgTrunk} />
               <div className={styles.orgGroupLabel}>{t("Responsables", "Managers")}</div>
               <div className={styles.orgPoleStack}>
-                {RESPONSABLE_POLES.map((pole) => (
-                  <div key={pole.poleFr} className={styles.orgPole}>
-                    <div className={styles.orgTrunk} />
-                    <div className={styles.orgPoleLabel}>{t(pole.poleFr, pole.poleEn)}</div>
-                    <ul className={styles.orgBranch}>
-                      {pole.members.map((m) => (
-                        <li key={m.name} className={styles.orgBranchNode}>
-                          <OrgAvatar {...m} size="sm" />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                {RESPONSABLE_POLES.map((pole, pi) => {
+                  const rowKey = `pole-${pi}`;
+                  return (
+                    <div key={pole.poleFr} className={styles.orgPole}>
+                      <div className={styles.orgTrunk} />
+                      <div className={styles.orgPoleLabel}>{t(pole.poleFr, pole.poleEn)}</div>
+                      <ul
+                        ref={(el) => {
+                          if (el) branchRowRefs.current.set(rowKey, el);
+                          else branchRowRefs.current.delete(rowKey);
+                        }}
+                        className={styles.orgBranch}
+                      >
+                        {pole.members.map((m, mi) => (
+                          <li
+                            key={m.name}
+                            ref={(el) => {
+                              const arr = branchNodeRefs.current.get(rowKey) ?? [];
+                              arr[mi] = el;
+                              branchNodeRefs.current.set(rowKey, arr);
+                            }}
+                            className={styles.orgBranchNode}
+                          >
+                            <OrgAvatar {...m} size="sm" />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
             <div className={styles.orgGroup}>
               <div className={styles.orgTrunk} />
               <div className={styles.orgGroupLabel}>{t("Assistants", "Assistants")}</div>
-              <ul className={styles.orgBranch}>
-                {ASSISTANTS.map((m) => (
-                  <li key={m.name} className={styles.orgBranchNode}>
+              <ul
+                ref={(el) => {
+                  if (el) branchRowRefs.current.set("assistants", el);
+                  else branchRowRefs.current.delete("assistants");
+                }}
+                className={styles.orgBranch}
+              >
+                {ASSISTANTS.map((m, mi) => (
+                  <li
+                    key={m.name}
+                    ref={(el) => {
+                      const arr = branchNodeRefs.current.get("assistants") ?? [];
+                      arr[mi] = el;
+                      branchNodeRefs.current.set("assistants", arr);
+                    }}
+                    className={styles.orgBranchNode}
+                  >
                     <OrgAvatar {...m} size="sm" />
                   </li>
                 ))}

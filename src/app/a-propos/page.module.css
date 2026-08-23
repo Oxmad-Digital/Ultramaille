@@ -386,46 +386,9 @@
   position: relative;
 }
 
-.orgTree::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 0;
-  height: 40px;
-  border-left: 1px solid rgba(224, 163, 56, 0.35);
-}
-
 .orgTreeNode {
   position: relative;
   padding: 40px 20px 0;
-}
-
-.orgTreeNode::before,
-.orgTreeNode::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  width: 50%;
-  height: 40px;
-  border-top: 1px solid rgba(224, 163, 56, 0.35);
-}
-
-.orgTreeNode::before {
-  right: 50%;
-}
-
-.orgTreeNode::after {
-  left: 50%;
-  border-left: 1px solid rgba(224, 163, 56, 0.35);
-}
-
-.orgTreeNode:first-child::before {
-  border-top-color: transparent;
-}
-
-.orgTreeNode:last-child::after {
-  border-top-color: transparent;
 }
 
 /* Manager/assistant tiers: each pole and each person branches off the tier's
@@ -444,9 +407,20 @@
 }
 
 .orgTrunk {
-  width: 0;
+  width: 1px;
   height: 40px;
-  border-left: 1px solid rgba(224, 163, 56, 0.35);
+  background-color: rgba(224, 163, 56, 0.35);
+  background-image: linear-gradient(
+    180deg,
+    transparent,
+    rgba(244, 239, 230, 0.95) 45%,
+    rgba(224, 163, 56, 1) 55%,
+    transparent
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 26px;
+  background-position: 0 -30px;
+  animation: orgTubeFlow 2.4s linear infinite;
   margin-bottom: 16px;
 }
 
@@ -461,46 +435,9 @@
   position: relative;
 }
 
-.orgBranch::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 0;
-  height: 32px;
-  border-left: 1px solid rgba(224, 163, 56, 0.35);
-}
-
 .orgBranchNode {
   position: relative;
   padding: 32px 18px 0;
-}
-
-.orgBranchNode::before,
-.orgBranchNode::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  width: 50%;
-  height: 32px;
-  border-top: 1px solid rgba(224, 163, 56, 0.35);
-}
-
-.orgBranchNode::before {
-  right: 50%;
-}
-
-.orgBranchNode::after {
-  left: 50%;
-  border-left: 1px solid rgba(224, 163, 56, 0.35);
-}
-
-.orgBranchNode:first-child::before {
-  border-top-color: transparent;
-}
-
-.orgBranchNode:last-child::after {
-  border-top-color: transparent;
 }
 
 .orgGroupLabel {
@@ -551,6 +488,50 @@
   }
 }
 
+@keyframes orgTubeFlow {
+  to {
+    background-position: 0 70px;
+  }
+}
+
+/* SVG connectors: traced from measured DOM positions (see page.tsx) so the
+   light travels the exact path — down, across, down again into each photo. */
+.orgConnectors {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.orgConnectorBase {
+  fill: none;
+  stroke: rgba(224, 163, 56, 0.35);
+  stroke-width: 1;
+}
+
+.orgConnectorFlow {
+  fill: none;
+  stroke: #f4efe6;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 10 100;
+  filter: drop-shadow(0 0 3px rgba(224, 163, 56, 0.85));
+  animation: orgFlowPulse 2.4s linear infinite;
+}
+
+@keyframes orgFlowPulse {
+  to {
+    stroke-dashoffset: -110;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orgTrunk,
+  .orgConnectorFlow {
+    animation: none;
+  }
+}
+
 @media (max-width: 900px) {
   .entrepriseGrid,
   .marchesGrid {
@@ -560,28 +541,17 @@
     padding-top: 0;
     row-gap: 28px;
   }
-  .orgTree::before {
-    display: none;
-  }
   .orgTreeNode {
     padding-top: 0;
-  }
-  .orgTreeNode::before,
-  .orgTreeNode::after {
-    display: none;
   }
   .orgBranch {
     padding-top: 0;
     row-gap: 20px;
   }
-  .orgBranch::before {
-    display: none;
-  }
   .orgBranchNode {
     padding-top: 0;
   }
-  .orgBranchNode::before,
-  .orgBranchNode::after {
+  .orgConnectors {
     display: none;
   }
 }
