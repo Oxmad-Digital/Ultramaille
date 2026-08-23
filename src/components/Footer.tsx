@@ -62,6 +62,9 @@ export default function Footer() {
           </span>
           <div className={styles.bottomRight}>
             <span className={styles.bottomText}>Antananarivo, Madagascar</span>
+            <Link href="/mentions-legales" className={styles.bottomLink}>
+              {t("Mentions légales", "Legal notice")}
+            </Link>
             <Link href="/admin/login" className={styles.bottomLink}>
               {t("Espace admin", "Admin area")}
             </Link>

@@ -1,0 +1,105 @@
+.page {
+  background: var(--utm-cream);
+}
+
+.hero {
+  position: relative;
+  padding: 170px 32px 60px;
+  background: linear-gradient(160deg, var(--utm-navy-3), var(--utm-navy) 70%);
+}
+
+.heroInner {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--utm-gold);
+  margin-bottom: 16px;
+}
+
+.title {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  color: #fff;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.content {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 64px 32px 120px;
+  color: var(--utm-ink);
+  line-height: 1.75;
+  font-size: 1.02rem;
+}
+
+.section {
+  margin-bottom: 2.6em;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  color: var(--utm-navy);
+  font-size: 1.3rem;
+  margin: 0 0 0.8em;
+}
+
+.section p {
+  margin: 0 0 1em;
+  color: var(--utm-text);
+}
+
+.section p:last-child {
+  margin-bottom: 0;
+}
+
+.section a {
+  color: var(--utm-blue);
+}
+
+.contactLines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.section ul {
+  margin: 0 0 1em;
+  padding-left: 1.2em;
+  color: var(--utm-text);
+}
+
+.section li {
+  margin-bottom: 0.5em;
+}
+
+.section li:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 130px 20px 44px;
+  }
+
+  .content {
+    padding: 48px 20px 80px;
+  }
+}

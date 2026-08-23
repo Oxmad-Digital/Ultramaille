@@ -375,6 +375,24 @@
   }
 }
 
+@media (max-width: 640px) {
+  .hero {
+    padding: 140px 20px 64px;
+  }
+
+  .section {
+    padding: 48px 20px 72px;
+  }
+
+  .filterRow {
+    align-items: flex-start;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- Load more ---------- */
 .loadMoreWrap {
   display: flex;

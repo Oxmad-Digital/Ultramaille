@@ -211,3 +211,17 @@
   font-family: var(--font-montserrat), sans-serif;
   color: var(--utm-navy);
 }
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 130px 20px 40px;
+  }
+
+  .back {
+    top: 96px;
+  }
+
+  .content {
+    padding: 0 20px 80px;
+  }
+}
