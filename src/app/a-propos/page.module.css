@@ -537,8 +537,11 @@
   .marchesGrid {
     grid-template-columns: 1fr;
   }
+  .sticky {
+    position: static;
+  }
   .orgTree {
-    padding-top: 0;
+    padding-top: 36px;
     row-gap: 28px;
   }
   .orgTreeNode {
@@ -553,5 +556,48 @@
   }
   .orgConnectors {
     display: none;
+  }
+  .orgTrunk {
+    height: 24px;
+    margin-bottom: 10px;
+  }
+  .orgGroup,
+  .orgPole {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: 30vh;
+  }
+  .mapHead {
+    align-items: flex-start;
+  }
+  .mapLegend {
+    gap: 8px 14px;
+  }
+  .legendDot {
+    width: 9px;
+    height: 9px;
+  }
+  .legendLabel {
+    font-size: 9.5px;
+  }
+  .sourcingRow {
+    gap: 8px;
+  }
+  .sourcingLabel {
+    font-size: 9.5px;
+  }
+  .sourcingRow .tag {
+    font-size: 10px;
+    padding: 5px 11px;
+  }
+  .marchesGrid {
+    gap: 20px;
+  }
+  .orgAvatarLg {
+    width: clamp(96px, 24vw, 120px);
   }
 }

@@ -409,3 +409,30 @@ textarea.input {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: 30vh;
+  }
+  .submitButton {
+    align-self: stretch;
+    text-align: center;
+  }
+  .mapIframe {
+    height: 320px;
+  }
+  .mapOverlay {
+    background: linear-gradient(180deg, rgba(15, 30, 48, 0.35) 0%, rgba(15, 30, 48, 0.92) 78%);
+  }
+  .mapCard {
+    left: 20px;
+    right: 20px;
+    top: auto;
+    bottom: 20px;
+    transform: none;
+    max-width: none;
+  }
+  .mapCardTitle {
+    font-size: 24px;
+  }
+}

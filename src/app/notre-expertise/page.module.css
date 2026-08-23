@@ -462,3 +462,34 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: 30vh;
+  }
+  .statGrid4,
+  .ateliersGrid {
+    grid-template-columns: 1fr;
+  }
+  .atelierCard {
+    padding: 28px 22px;
+  }
+  .filCard {
+    padding: clamp(26px, 6vw, 34px);
+  }
+  .filCardHead {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .filTag {
+    font-size: 11px;
+    padding: 7px 13px;
+  }
+  .galerieHead {
+    align-items: flex-start;
+  }
+  .swatchGrid {
+    gap: 10px;
+  }
+}

@@ -634,3 +634,64 @@
     transform: scale(1);
   }
 }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 880px) {
+  .metierGrid,
+  .heritageGrid,
+  .capaciteGrid,
+  .certGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .craftGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cardGrid3 {
+    grid-template-columns: 1fr;
+  }
+
+  .certCards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .heroStats {
+    flex-wrap: wrap;
+    row-gap: 20px;
+  }
+
+  .heroStat {
+    flex: 1 1 50%;
+    padding: 0 10px;
+  }
+
+  .heroStat:nth-child(2n),
+  .heroStat:nth-child(3) {
+    border-left: none;
+  }
+
+  .heroStat:nth-child(1),
+  .heroStat:nth-child(2) {
+    border-bottom: 1px solid rgba(244, 239, 230, 0.16);
+    padding-bottom: 18px;
+  }
+
+  .craftGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHead {
+    align-items: flex-start;
+  }
+
+  .sectionHeadTextDark {
+    max-width: none;
+  }
+}

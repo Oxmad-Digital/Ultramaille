@@ -130,3 +130,123 @@
   background: var(--utm-gold-light);
   transform: translateY(-2px);
 }
+
+.menuToggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.menuToggleBar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--utm-cream-2);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.menuOpen .menuToggleBar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menuOpen .menuToggleBar:nth-child(2) {
+  opacity: 0;
+}
+
+.menuOpen .menuToggleBar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.mobileMenu {
+  display: none;
+}
+
+@media (max-width: 880px) {
+  .header {
+    padding: 16px clamp(20px, 5vw, 40px);
+  }
+
+  .nav,
+  .right {
+    display: none;
+  }
+
+  .menuToggle {
+    display: flex;
+  }
+
+  .mobileMenu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    top: 0;
+    padding: 88px 28px 40px;
+    background: rgba(12, 18, 28, 0.98);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    z-index: 50;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    overflow-y: auto;
+  }
+
+  .menuOpen .mobileMenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .mobileNav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobileNavLink {
+    font-family: var(--font-hanken-grotesk), sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--utm-cream-2);
+    text-decoration: none;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(244, 239, 230, 0.1);
+  }
+
+  .mobileFooterRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 28px;
+  }
+
+  .mobileFooterRow .langSwitch {
+    font-size: 14px;
+  }
+
+  .mobileCta {
+    margin-top: 28px;
+    text-align: center;
+    font-family: var(--font-hanken-grotesk), sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--utm-navy);
+    background: var(--utm-gold);
+    padding: 16px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+}
