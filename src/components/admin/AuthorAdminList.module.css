@@ -211,3 +211,37 @@
   font-size: 13.5px;
   color: var(--utm-text);
 }
+
+@media (max-width: 880px) {
+  .formFields {
+    flex-direction: column;
+  }
+
+  .tableHead {
+    display: none;
+  }
+
+  .tableHead,
+  .tableRow {
+    grid-template-columns: none;
+  }
+
+  .tableRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 10px;
+    column-gap: 12px;
+    padding: 16px;
+  }
+
+  .nameCell,
+  .formRow {
+    flex: 0 0 100%;
+  }
+
+  .emailCell::before {
+    content: "Email : ";
+    color: var(--utm-label);
+  }
+}

@@ -156,8 +156,8 @@ export default function CategoryAdminList({
               ) : (
                 <span className={styles.nameCell}>{row.name}</span>
               )}
-              <span className={listStyles.slugLine}>{row.slug}</span>
-              <span className={listStyles.viewsCell}>{row.articleCount}</span>
+              <span className={styles.slugCell}>{row.slug}</span>
+              <span className={styles.countCell}>{row.articleCount}</span>
               <div className={listStyles.actionsCell}>
                 {isEditing ? (
                   <>

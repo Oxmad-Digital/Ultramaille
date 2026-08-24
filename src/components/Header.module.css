@@ -27,8 +27,11 @@
 }
 
 .logoLink {
+  position: relative;
+  z-index: 55;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   text-decoration: none;
 }
 
@@ -132,6 +135,8 @@
 }
 
 .menuToggle {
+  position: relative;
+  z-index: 55;
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -170,7 +175,7 @@
   display: none;
 }
 
-@media (max-width: 880px) {
+@media (max-width: 1200px) {
   .header {
     padding: 16px clamp(20px, 5vw, 40px);
   }
@@ -248,5 +253,28 @@
     padding: 16px 20px;
     border-radius: 8px;
     text-decoration: none;
+  }
+
+  .mobileSecondaryCta {
+    display: block;
+    margin-top: 12px;
+    text-align: center;
+    font-family: var(--font-hanken-grotesk), sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--utm-cream-2);
+    background: transparent;
+    border: 1px solid rgba(244, 239, 230, 0.3);
+    padding: 15px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .mobileSecondaryCta:hover {
+    border-color: var(--utm-gold);
+    color: var(--utm-gold);
   }
 }

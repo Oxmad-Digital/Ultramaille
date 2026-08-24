@@ -319,7 +319,9 @@ export default function AuthorAdminList({ initialAuthors }: { initialAuthors: Ad
                   </div>
                 </div>
               )}
-              <span className={styles.emailCell}>{isEditing ? "" : row.email || "—"}</span>
+              <span className={isEditing ? undefined : styles.emailCell}>
+                {isEditing ? "" : row.email || "—"}
+              </span>
               <div className={listStyles.actionsCell}>
                 {isEditing ? (
                   <>
