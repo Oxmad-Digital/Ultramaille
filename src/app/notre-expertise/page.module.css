@@ -1,7 +1,6 @@
 .page {
   background: var(--utm-cream);
   color: var(--utm-ink);
-  overflow-x: hidden;
 }
 
 .hero {
@@ -447,6 +446,15 @@
   }
 }
 
+@media (max-width: 1240px) {
+  .ateliersGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .atelierCard:nth-child(5) {
+    grid-column: span 2;
+  }
+}
+
 @media (max-width: 900px) {
   .usineIntro,
   .ateliersHead,
@@ -457,6 +465,9 @@
   .statGrid4,
   .ateliersGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .ateliersGrid .atelierCard:nth-child(5) {
+    grid-column: span 2;
   }
   .swatchGrid {
     grid-template-columns: repeat(2, 1fr);

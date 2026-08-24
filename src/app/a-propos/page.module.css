@@ -1,7 +1,6 @@
 .page {
   background: var(--utm-cream);
   color: var(--utm-ink);
-  overflow-x: hidden;
 }
 
 .hero {
@@ -542,7 +541,10 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1180px) {
+  .equipeHead {
+    margin-bottom: clamp(56px, 9vw, 80px);
+  }
   .orgTree {
     padding-top: 36px;
     row-gap: 28px;
@@ -567,6 +569,16 @@
   .orgGroup,
   .orgPole {
     margin-bottom: 32px;
+  }
+}
+
+/* Keep the Directors row wrapping the same way it does on smaller tablets
+   (4 then 2) instead of letting the natural content width leave a single
+   card stranded alone on its own row at larger tablet widths. */
+@media (min-width: 641px) and (max-width: 1180px) {
+  .orgTreeNode {
+    flex: 0 1 25%;
+    max-width: 25%;
   }
 }
 

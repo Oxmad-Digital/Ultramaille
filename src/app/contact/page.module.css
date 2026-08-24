@@ -1,7 +1,6 @@
 .page {
   background: var(--utm-cream);
   color: var(--utm-ink);
-  overflow-x: hidden;
 }
 
 .hero {
