@@ -16,6 +16,7 @@ export interface IArticle {
   coverImageUrl: string | null;
   coverImagePublicId: string | null;
   coverImageAlt: string;
+  authorId: mongoose.Types.ObjectId | null;
   category: string;
   tags: string[];
   status: ArticleStatus;
@@ -46,6 +47,7 @@ const ArticleSchema = new Schema<IArticle>(
     coverImageUrl: { type: String, default: null },
     coverImagePublicId: { type: String, default: null },
     coverImageAlt: { type: String, default: "" },
+    authorId: { type: Schema.Types.ObjectId, ref: "Author", default: null },
     category: { type: String, default: "", trim: true },
     tags: { type: [String], default: [] },
     status: { type: String, enum: ["draft", "scheduled", "published"], default: "draft" },

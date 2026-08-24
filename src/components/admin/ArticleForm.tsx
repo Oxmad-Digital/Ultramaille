@@ -29,6 +29,7 @@ export type ArticleFormValues = {
   coverImageUrl: string | null;
   coverImagePublicId: string | null;
   coverImageAlt: string;
+  authorId: string;
   category: string;
   tags: string[];
   status: ArticleStatus;
@@ -170,9 +171,11 @@ function toDatetimeLocalValue(iso: string | null) {
 export default function ArticleForm({
   initial,
   categories = [],
+  authors = [],
 }: {
   initial?: ArticleFormValues;
   categories?: string[];
+  authors?: { id: string; name: string }[];
 }) {
   const router = useRouter();
   const isEdit = Boolean(initial?.id);
@@ -186,6 +189,7 @@ export default function ArticleForm({
   const [coverImageUrl, setCoverImageUrl] = useState(initial?.coverImageUrl ?? "");
   const [coverImagePublicId, setCoverImagePublicId] = useState(initial?.coverImagePublicId ?? "");
   const [coverImageAlt, setCoverImageAlt] = useState(initial?.coverImageAlt ?? "");
+  const [authorId, setAuthorId] = useState(initial?.authorId ?? "");
   const [category, setCategory] = useState(initial?.category ?? "");
   const [tags, setTags] = useState<string[]>(initial?.tags ?? []);
   const [status, setStatus] = useState<ArticleStatus>(initial?.status ?? "draft");
@@ -207,6 +211,7 @@ export default function ArticleForm({
   const [pickerSat, setPickerSat] = useState(0);
   const [pickerVal, setPickerVal] = useState(0);
   const [pickerHexInput, setPickerHexInput] = useState("#000000");
+  const [colorPopupOffset, setColorPopupOffset] = useState({ x: 0, y: 0 });
   const pickerSquareRef = useRef<HTMLDivElement>(null);
   const pickerHueRef = useRef<HTMLDivElement>(null);
   const [linkBarOpen, setLinkBarOpen] = useState(false);
@@ -394,6 +399,26 @@ export default function ArticleForm({
   function openColorBar() {
     closeAllBars();
     setColorBarOpen(true);
+    setColorPopupOffset({ x: 0, y: 0 });
+  }
+
+  function handleColorPopupDragStart(e: React.MouseEvent<HTMLDivElement>) {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startOffset = colorPopupOffset;
+    const onMove = (ev: MouseEvent) => {
+      setColorPopupOffset({
+        x: startOffset.x + (ev.clientX - startX),
+        y: startOffset.y + (ev.clientY - startY),
+      });
+    };
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
   }
 
   function applyColor(hex: string) {
@@ -550,6 +575,7 @@ export default function ArticleForm({
       coverImageUrl: coverImageUrl || null,
       coverImagePublicId: coverImagePublicId || null,
       coverImageAlt,
+      authorId: authorId || null,
       category,
       tags,
       status: finalStatus,
@@ -641,15 +667,35 @@ export default function ArticleForm({
         {/* ---------- Colonne principale ---------- */}
         <div className={styles.main}>
           <div className={`${styles.card} ${styles.mainCard}`}>
-            <label className={styles.field}>
-              <span className={styles.label}>Titre — title.{lang}</span>
-              <input
-                className={`${styles.input} ${styles.titleInput}`}
-                value={title[lang]}
-                onChange={(e) => handleTitleChange(e.target.value)}
-                required={lang === "fr"}
-              />
-            </label>
+            <div className={styles.titleRow}>
+              <label className={styles.field}>
+                <span className={styles.label}>Titre — title.{lang}</span>
+                <input
+                  className={`${styles.input} ${styles.titleInput}`}
+                  value={title[lang]}
+                  onChange={(e) => handleTitleChange(e.target.value)}
+                  required={lang === "fr"}
+                />
+              </label>
+              <label className={styles.field}>
+                <span className={styles.label}>Auteur</span>
+                <select
+                  className={styles.select}
+                  value={authorId}
+                  onChange={(e) => setAuthorId(e.target.value)}
+                >
+                  <option value="">— Aucun —</option>
+                  {authors.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.name}
+                    </option>
+                  ))}
+                </select>
+                <span className={styles.hint}>
+                  <Link href="/admin/authors">Gérer les auteurs →</Link>
+                </span>
+              </label>
+            </div>
 
             <div className={styles.row}>
               <label className={styles.field}>
@@ -814,13 +860,17 @@ export default function ArticleForm({
                 </button>
 
                 {colorBarOpen && (
-                  <div className={styles.colorPopup}>
-                    <div className={styles.colorPopupHeader}>
+                  <div
+                    className={styles.colorPopup}
+                    style={{ transform: `translate(${colorPopupOffset.x}px, ${colorPopupOffset.y}px)` }}
+                  >
+                    <div className={styles.colorPopupHeader} onMouseDown={handleColorPopupDragStart}>
                       <button
                         type="button"
                         className={styles.colorBarClose}
                         title="Fermer"
                         aria-label="Fermer"
+                        onMouseDown={(e) => e.stopPropagation()}
                         onClick={closeAllBars}
                       >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">

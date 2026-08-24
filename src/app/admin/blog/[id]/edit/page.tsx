@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
 import Category from "@/models/Category";
+import Author from "@/models/Author";
 import AdminShell from "@/components/admin/AdminShell";
 import ArticleForm from "@/components/admin/ArticleForm";
 
@@ -19,11 +20,13 @@ export default async function EditArticlePage({
   }
 
   const categories = await Category.find({}).sort({ name: 1 }).lean();
+  const authors = await Author.find({}).sort({ name: 1 }).lean();
 
   return (
     <AdminShell crumb="Éditeur">
       <ArticleForm
         categories={categories.map((c) => c.name)}
+        authors={authors.map((a) => ({ id: a._id.toString(), name: a.name }))}
         initial={{
           id: article._id.toString(),
           title: { fr: article.title?.fr ?? "", en: article.title?.en ?? "" },
@@ -33,6 +36,7 @@ export default async function EditArticlePage({
           coverImageUrl: article.coverImageUrl,
           coverImagePublicId: article.coverImagePublicId,
           coverImageAlt: article.coverImageAlt ?? "",
+          authorId: article.authorId ? article.authorId.toString() : "",
           category: article.category ?? "",
           tags: article.tags ?? [],
           status: article.status,

@@ -36,6 +36,7 @@ export async function PATCH(
     coverImageUrl,
     coverImagePublicId,
     coverImageAlt,
+    authorId,
     category,
     tags,
     status,
@@ -68,6 +69,7 @@ export async function PATCH(
   if (coverImageUrl !== undefined) article.coverImageUrl = coverImageUrl;
   if (coverImagePublicId !== undefined) article.coverImagePublicId = coverImagePublicId;
   if (coverImageAlt !== undefined) article.coverImageAlt = coverImageAlt;
+  if (authorId !== undefined) article.authorId = authorId || null;
   if (category !== undefined) article.category = category;
   if (tags !== undefined) article.tags = Array.isArray(tags) ? tags : [];
   if (featured !== undefined) article.featured = Boolean(featured);
