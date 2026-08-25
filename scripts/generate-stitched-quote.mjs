@@ -37,31 +37,17 @@ const PADDING = 12;
 const buf = fs.readFileSync(fontPath);
 const font = opentype.parse(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
 
-function splitIntoSubpaths(otPath) {
-  const subpaths = [];
-  let current = null;
-  for (const cmd of otPath.commands) {
-    if (cmd.type === "M") {
-      current = [];
-      subpaths.push(current);
-    }
-    current.push(cmd);
-  }
-  return subpaths.map((commands) => {
-    const p = new opentype.Path();
-    p.commands = commands;
-    return p.toPathData(1);
-  });
-}
-
 function buildVariant(lines) {
   let maxWidth = 0;
   const subpathsD = [];
 
   lines.forEach((line, i) => {
     const y = PADDING + (i + 1) * LINE_HEIGHT;
-    const otPath = font.getPath(line, PADDING, y, FONT_SIZE);
-    const lineSubpaths = splitIntoSubpaths(otPath);
+    // One Path per glyph (each may hold several contours, e.g. the bowl
+    // and counter of an "e"), so it can be filled with its holes intact
+    // instead of tracing every contour as an independent stroke.
+    const glyphPaths = font.getPaths(line, PADDING, y, FONT_SIZE);
+    const lineSubpaths = glyphPaths.map((p) => p.toPathData(1)).filter((d) => d.length > 0);
     if (lineSubpaths.some((d) => d.includes("NaN"))) {
       throw new Error(`NaN detected while shaping line: "${line}"`);
     }

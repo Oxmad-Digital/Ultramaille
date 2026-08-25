@@ -5,6 +5,7 @@ import type { StitchedQuoteVariant } from "@/app/notre-engagement/stitched-quote
 import styles from "./StitchedQuote.module.css";
 
 const STROKE_MS = 600;
+const FILL_MS = 200;
 const STAGGER_MS = 6000;
 
 const VARIANT_LOADERS: Record<"fr" | "en", () => Promise<StitchedQuoteVariant>> = {
@@ -68,18 +69,23 @@ export default function StitchedQuote({
       const length = path.getTotalLength();
       path.style.strokeDasharray = `${length}`;
       path.style.strokeDashoffset = `${length}`;
+      path.style.fillOpacity = "0";
       return { path, length, delay: (i / total) * STAGGER_MS };
     });
 
     if (reducedMotionRef.current) {
       items.forEach(({ path }) => {
         path.style.strokeDashoffset = "0";
+        path.style.fillOpacity = "1";
       });
       return;
     }
 
     // Driven manually with rAF (rather than a CSS transition) so every
-    // path's staggered start/duration stays in sync off one clock.
+    // path's staggered start/duration stays in sync off one clock. Each
+    // path first draws as a thin stroke, then its solid fill fades in —
+    // this keeps the letters legible while drawing and gap-free once
+    // settled, regardless of how the traced font's ink weight varies.
     let rafId: number;
     const start = performance.now();
 
@@ -92,9 +98,12 @@ export default function StitchedQuote({
           continue;
         }
         const clamped = Math.min(t, 1);
-        if (clamped < 1) allDone = false;
         const eased = 1 - (1 - clamped) ** 3;
         path.style.strokeDashoffset = `${length * (1 - eased)}`;
+
+        const fillT = Math.min(Math.max((t - 1) * (STROKE_MS / FILL_MS), 0), 1);
+        if (fillT < 1) allDone = false;
+        path.style.fillOpacity = `${fillT}`;
       }
       if (!allDone) {
         rafId = requestAnimationFrame(tick);

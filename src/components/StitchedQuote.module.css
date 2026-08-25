@@ -10,9 +10,10 @@
 }
 
 .svg path {
-  fill: none;
+  fill: var(--utm-gold-light);
+  fill-rule: evenodd;
   stroke: var(--utm-gold-light);
-  stroke-width: 2.4px;
+  stroke-width: 2.6px;
   stroke-linecap: round;
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
