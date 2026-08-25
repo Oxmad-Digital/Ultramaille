@@ -54,24 +54,6 @@ function splitIntoSubpaths(otPath) {
   });
 }
 
-// The traced font draws "t" (and similar) crossbars as a stroke that
-// overhangs far past the stem on both sides, which reads as a stray line
-// cutting across neighboring letters once stroked. Trim the outline down
-// to just the stem/loop, dropping the crossbar and its end caps.
-function trimCrossbar(d) {
-  const startRe = /L(-?[\d.]+) (-?[\d.]+)L\1 (-?[\d.]+)/;
-  const sm = d.match(startRe);
-  if (!sm) return d;
-  const [full, x, yBar1, yBar2] = sm;
-  const rest = d.slice(sm.index + full.length);
-  const endRe = new RegExp(`L(-?[\\d.]+) ${yBar1.replace(".", "\\.")}(?=Q)`, "g");
-  let lastMatch = null;
-  let m;
-  while ((m = endRe.exec(rest))) lastMatch = m;
-  if (!lastMatch) return d;
-  return `M${x} ${yBar2}${rest.slice(0, lastMatch.index)}`;
-}
-
 function buildVariant(lines) {
   let maxWidth = 0;
   const subpathsD = [];
@@ -79,7 +61,7 @@ function buildVariant(lines) {
   lines.forEach((line, i) => {
     const y = PADDING + (i + 1) * LINE_HEIGHT;
     const otPath = font.getPath(line, PADDING, y, FONT_SIZE);
-    const lineSubpaths = splitIntoSubpaths(otPath).map(trimCrossbar);
+    const lineSubpaths = splitIntoSubpaths(otPath);
     if (lineSubpaths.some((d) => d.includes("NaN"))) {
       throw new Error(`NaN detected while shaping line: "${line}"`);
     }
