@@ -12,7 +12,7 @@
 .svg path {
   fill: none;
   stroke: var(--utm-gold-light);
-  stroke-width: 4.8px;
+  stroke-width: 2.4px;
   stroke-linecap: round;
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
