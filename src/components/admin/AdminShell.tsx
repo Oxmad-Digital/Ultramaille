@@ -39,6 +39,7 @@ export default async function AdminShell({
 
   const email = session?.user?.email ?? "";
   const initials = email ? email.slice(0, 2).toUpperCase() : "?";
+  const role = session?.user?.role ?? "member";
 
   return (
     <AdminShellChrome
@@ -47,6 +48,7 @@ export default async function AdminShell({
       navCounts={navCounts}
       email={email}
       initials={initials}
+      roleLabel={role === "admin" ? "Administrateur" : "Membre"}
       showNewButton={showNewButton}
     >
       {children}

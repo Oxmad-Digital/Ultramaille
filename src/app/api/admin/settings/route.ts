@@ -35,7 +35,7 @@ export async function PATCH(request: Request) {
   const settings = await Settings.findOneAndUpdate(
     { key: SETTINGS_KEY },
     { $set: update, $setOnInsert: { key: SETTINGS_KEY } },
-    { upsert: true, new: true }
+    { upsert: true, returnDocument: "after" }
   ).lean();
 
   return NextResponse.json({

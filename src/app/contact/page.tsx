@@ -210,9 +210,6 @@ export default function ContactPage() {
               className={styles.mapCardLink}
             >
               <span>{t("Ouvrir dans Maps", "Open in Maps")}</span>
-              <span className={styles.mapCardLinkArrow} aria-hidden="true">
-                →
-              </span>
               <svg
                 className={styles.mapCardLinkIcon}
                 aria-hidden="true"

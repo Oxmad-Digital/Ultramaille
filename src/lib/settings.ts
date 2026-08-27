@@ -8,6 +8,6 @@ export async function getSiteSettings() {
   return Settings.findOneAndUpdate(
     { key: SETTINGS_KEY },
     { $setOnInsert: { key: SETTINGS_KEY } },
-    { upsert: true, new: true }
+    { upsert: true, returnDocument: "after" }
   ).lean();
 }

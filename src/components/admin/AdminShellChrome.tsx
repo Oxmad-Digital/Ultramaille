@@ -14,6 +14,7 @@ export default function AdminShellChrome({
   navCounts,
   email,
   initials,
+  roleLabel,
   showNewButton,
   children,
 }: {
@@ -22,6 +23,7 @@ export default function AdminShellChrome({
   navCounts: Record<string, number>;
   email: string;
   initials: string;
+  roleLabel: string;
   showNewButton: boolean;
   children: ReactNode;
 }) {
@@ -76,7 +78,7 @@ export default function AdminShellChrome({
             <div className={styles.avatar}>{initials}</div>
             <div className={styles.profileText}>
               <div className={styles.profileEmail}>{email || "Admin"}</div>
-              <div className={styles.profileRole}>Éditeur</div>
+              <div className={styles.profileRole}>{roleLabel}</div>
             </div>
           </div>
           <div className={styles.profileMeta}>next.js · mongodb atlas</div>

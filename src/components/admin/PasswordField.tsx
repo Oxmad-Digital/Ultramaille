@@ -8,6 +8,8 @@ export default function PasswordField({
   value,
   onChange,
   autoComplete,
+  placeholder,
+  required = true,
   className,
   inputClassName,
 }: {
@@ -15,6 +17,8 @@ export default function PasswordField({
   value: string;
   onChange: (value: string) => void;
   autoComplete?: string;
+  placeholder?: string;
+  required?: boolean;
   className?: string;
   inputClassName?: string;
 }) {
@@ -28,7 +32,8 @@ export default function PasswordField({
         className={`${styles.input} ${inputClassName ?? ""}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        required
+        placeholder={placeholder}
+        required={required}
         autoComplete={autoComplete}
       />
       <button

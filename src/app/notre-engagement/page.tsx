@@ -253,7 +253,7 @@ export default function NotreEngagementPage() {
             <div className={styles.envImgGrid}>
               <div className={styles.envImgCell}>
                 <Image
-                  src={`${IMG_BASE}2017/05/1-purification-lavage-ultramaille-1024x683.jpg`}
+                  src="https://res.cloudinary.com/wzetrnif/image/upload/v1787857484/1-purification-lavage-ultramaille-1024x683_ktvxw4.webp"
                   alt="Station de purification Ultramaille"
                   fill
                   className={styles.envImg}
@@ -261,7 +261,7 @@ export default function NotreEngagementPage() {
               </div>
               <div className={styles.envImgCell}>
                 <Image
-                  src={`${IMG_BASE}2017/05/3-purification-ultramaille-1024x683.jpg`}
+                  src="https://res.cloudinary.com/wzetrnif/image/upload/v1787857485/3-purification-ultramaille-1024x683_wdwmrd.webp"
                   alt="Traitement de l'eau Ultramaille"
                   fill
                   className={styles.envImg}

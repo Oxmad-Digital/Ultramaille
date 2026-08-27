@@ -389,7 +389,7 @@ textarea.input {
 }
 
 .mapCardLinkIcon {
-  display: none;
+  display: block;
   width: 16px;
   height: 16px;
   flex: none;
@@ -413,12 +413,6 @@ textarea.input {
   }
   .formRow {
     grid-template-columns: 1fr;
-  }
-  .mapCardLinkArrow {
-    display: none;
-  }
-  .mapCardLinkIcon {
-    display: block;
   }
 }
 
