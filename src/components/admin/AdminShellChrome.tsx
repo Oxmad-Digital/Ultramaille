@@ -58,7 +58,9 @@ export default function AdminShellChrome({
               className={`${styles.navItem} ${item.crumbs.includes(crumb) ? styles.navItemActive : ""}`}
             >
               <span>{item.label}</span>
-              <span className={styles.navBadge}>{navCounts[item.label]}</span>
+              {navCounts[item.label] !== undefined && (
+                <span className={styles.navBadge}>{navCounts[item.label]}</span>
+              )}
             </Link>
           ))}
 

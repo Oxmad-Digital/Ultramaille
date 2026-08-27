@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { label: "Catégories", href: "/admin/categories", crumbs: ["Catégories"] },
   { label: "Médias", href: "/admin/media", crumbs: ["Médias"] },
   { label: "Auteurs", href: "/admin/authors", crumbs: ["Auteurs"] },
+  { label: "Paramètres", href: "/admin/settings", crumbs: ["Paramètres"] },
 ];
 
 export default async function AdminShell({

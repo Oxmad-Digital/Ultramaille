@@ -1,0 +1,48 @@
+.page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: radial-gradient(circle at 50% 0%, var(--utm-navy-2) 0%, var(--utm-navy-3) 70%);
+}
+
+.card {
+  max-width: 560px;
+  text-align: center;
+}
+
+.logo {
+  height: 34px;
+  width: auto;
+  margin: 0 auto 40px;
+  filter: brightness(0) invert(1);
+}
+
+.eyebrow {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--utm-gold);
+  margin-bottom: 18px;
+}
+
+.title {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 700;
+  font-size: clamp(26px, 4vw, 38px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--utm-cream);
+  margin: 0 0 20px;
+}
+
+.message {
+  font-family: var(--font-hanken-grotesk), sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(244, 239, 230, 0.7);
+  margin: 0;
+  white-space: pre-line;
+}

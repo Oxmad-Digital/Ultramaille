@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { auth } from "@/auth";
+import { getSiteSettings } from "@/lib/settings";
 
 const PUBLIC_PATHS = [
   "/admin/login",
@@ -13,7 +14,7 @@ const PUBLIC_API_PATHS = [
   "/api/admin/reset-password",
 ];
 
-export async function proxy(request: NextRequest) {
+async function handleAdmin(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname === "/admin/login") {
@@ -40,6 +41,30 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
+    return handleAdmin(request);
+  }
+
+  if (pathname === "/maintenance" || pathname.startsWith("/api/auth")) {
+    return NextResponse.next();
+  }
+
+  const settings = await getSiteSettings();
+  if (settings.maintenanceMode) {
+    const session = await auth();
+    if (!session) {
+      return NextResponse.rewrite(new URL("/maintenance", request.url));
+    }
+  }
+
+  return NextResponse.next();
+}
+
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|images/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+  ],
 };
