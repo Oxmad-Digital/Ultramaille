@@ -37,19 +37,19 @@ const MARKERS: Marker[] = [
     id: "za", label: "AFRIQUE DU SUD", sub: "Secondaire", subEn: "Secondary", type: "sec", side: "left",
     stats: { volume: "95 t / an", volumeEn: "95 t / year", clients: "3 marques", clientsEn: "3 brands" },
   },
-  { id: "mg", label: "ANTANANARIVO", sub: "Origine", subEn: "Origin", type: "origin", side: "right" },
+  { id: "mg", label: "MADAGASCAR", sub: "Origine", subEn: "Origin", type: "origin", side: "right" },
 ];
 
 function dotHTML(type: Marker["type"]) {
   if (type === "sec") {
-    return '<span style="width:9px;height:9px;border-radius:50%;background:#9c7a35;box-shadow:0 0 0 3px rgba(15,30,48,.6);flex:none;"></span>';
+    return '<span style="width:var(--dot-size);height:var(--dot-size);border-radius:50%;background:#9c7a35;box-shadow:0 0 0 3px rgba(15,30,48,.6);flex:none;"></span>';
   }
   if (type === "origin") {
-    return '<span style="position:relative;width:14px;height:14px;flex:none;"><span class="' +
+    return '<span style="position:relative;width:var(--dot-size);height:var(--dot-size);flex:none;"><span class="' +
       styles.pulse +
-      '" style="position:absolute;inset:0;border-radius:50%;background:#F4EFE6;"></span><span style="position:absolute;inset:0;border-radius:50%;background:#F4EFE6;border:2px solid #E0A338;box-sizing:border-box;"></span></span>';
+      '" style="position:absolute;inset:0;border-radius:50%;background:#F4EFE6;"></span><span style="position:absolute;inset:0;border-radius:50%;background:transparent;border:2px solid #E0A338;box-sizing:border-box;"></span></span>';
   }
-  return '<span style="position:relative;width:14px;height:14px;flex:none;"><span class="' +
+  return '<span style="position:relative;width:var(--dot-size);height:var(--dot-size);flex:none;"><span class="' +
     styles.pulse +
     '" style="position:absolute;inset:0;border-radius:50%;background:#E0A338;"></span><span style="position:absolute;inset:2px;border-radius:50%;background:#E0A338;box-shadow:0 0 0 2px rgba(15,30,48,.6);"></span></span>';
 }
@@ -177,21 +177,28 @@ export default function WorldMap() {
         const dot = dotHTML(m.type);
         const vCon = '<span style="width:1px;height:9px;background:rgba(244,239,230,.35);flex:none;"></span>';
         const hCon = '<span style="width:11px;height:1px;background:rgba(244,239,230,.35);flex:none;"></span>';
+        const dotSize = m.type === "sec" ? "9px" : "14px";
         const wrap = document.createElement("div");
+        if (m.type === "origin") wrap.classList.add(styles.markerOrigin);
+        // The dot's center, not the container edge, must land on the geo coordinate,
+        // so each transform compensates by half the (var-driven) dot size.
         const base = `position:absolute;left:${left}%;top:${top}%;display:flex;align-items:center;`;
         if (m.side === "top") {
-          wrap.style.cssText = base + "transform:translate(-50%,-100%);flex-direction:column;";
+          wrap.style.cssText = base + "transform:translate(-50%,calc(-100% + var(--dot-size) / 2));flex-direction:column;";
           wrap.innerHTML = lbl + vCon + dot;
         } else if (m.side === "bottom") {
-          wrap.style.cssText = base + "transform:translate(-50%,0);flex-direction:column;";
+          wrap.style.cssText = base + "transform:translate(-50%,calc(var(--dot-size) / -2));flex-direction:column;";
           wrap.innerHTML = dot + vCon + lbl;
         } else if (m.side === "left") {
-          wrap.style.cssText = base + "transform:translate(-100%,-50%);";
+          wrap.style.cssText = base + "transform:translate(calc(-100% + var(--dot-size) / 2),-50%);";
           wrap.innerHTML = lbl + hCon + dot;
         } else {
+          // Kept edge-anchored (not centered) on purpose: a centered dot fully covers
+          // Madagascar's tiny rendered size, so it's offset just beside the island instead.
           wrap.style.cssText = base + "transform:translate(0,-50%);";
           wrap.innerHTML = dot + hCon + lbl;
         }
+        wrap.style.setProperty("--dot-size", dotSize);
         overlay.appendChild(wrap);
 
         if (m.stats) {

@@ -66,6 +66,10 @@ export default function AdminLoginPage() {
           {loading ? "Connexion..." : "Se connecter"}
         </button>
 
+        <Link href="/" className={styles.backButton}>
+          Retour au site
+        </Link>
+
         <Link href="/admin/forgot-password" className={styles.forgotLink}>
           Mot de passe oublié ?
         </Link>

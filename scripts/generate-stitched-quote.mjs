@@ -37,6 +37,31 @@ const PADDING = 12;
 const buf = fs.readFileSync(fontPath);
 const font = opentype.parse(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
 
+// opentype.js's Path#toPathData rounds coordinates by string-concatenating
+// them into exponential notation (`decimalPart + "e+" + places`), which
+// silently yields NaN whenever a coordinate's fractional part is small
+// enough to serialize as e.g. "8e-15" (see decimalRoundingCache in
+// opentype.js's roundDecimal). That hits real glyph coordinates often
+// enough with some fonts (e.g. Caveat) to corrupt whole letters, so we
+// round coordinates ourselves instead of calling path.toPathData().
+function formatCoord(v, places) {
+  const f = 10 ** places;
+  return String(Math.round(v * f) / f);
+}
+function pathToData(pathObj, places) {
+  let d = "";
+  for (const cmd of pathObj.commands) {
+    if (cmd.type === "M") d += `M${formatCoord(cmd.x, places)} ${formatCoord(cmd.y, places)}`;
+    else if (cmd.type === "L") d += `L${formatCoord(cmd.x, places)} ${formatCoord(cmd.y, places)}`;
+    else if (cmd.type === "C")
+      d += `C${formatCoord(cmd.x1, places)} ${formatCoord(cmd.y1, places)} ${formatCoord(cmd.x2, places)} ${formatCoord(cmd.y2, places)} ${formatCoord(cmd.x, places)} ${formatCoord(cmd.y, places)}`;
+    else if (cmd.type === "Q")
+      d += `Q${formatCoord(cmd.x1, places)} ${formatCoord(cmd.y1, places)} ${formatCoord(cmd.x, places)} ${formatCoord(cmd.y, places)}`;
+    else if (cmd.type === "Z") d += "Z";
+  }
+  return d;
+}
+
 function buildVariant(lines) {
   let maxWidth = 0;
   const subpathsD = [];
@@ -47,7 +72,7 @@ function buildVariant(lines) {
     // and counter of an "e"), so it can be filled with its holes intact
     // instead of tracing every contour as an independent stroke.
     const glyphPaths = font.getPaths(line, PADDING, y, FONT_SIZE);
-    const lineSubpaths = glyphPaths.map((p) => p.toPathData(1)).filter((d) => d.length > 0);
+    const lineSubpaths = glyphPaths.map((p) => pathToData(p, 1)).filter((d) => d.length > 0);
     if (lineSubpaths.some((d) => d.includes("NaN"))) {
       throw new Error(`NaN detected while shaping line: "${line}"`);
     }

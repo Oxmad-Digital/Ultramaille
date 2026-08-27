@@ -9,21 +9,41 @@
   justify-content: space-between;
   gap: 24px;
   padding: 20px clamp(22px, 5vw, 64px);
-  border-bottom: 1px solid transparent;
   background: transparent;
+  transition: padding 0.35s ease;
+}
+
+/*
+ * Le fond flouté vit sur ::before plutôt que sur .header directement :
+ * un backdrop-filter posé sur .header transformerait ce dernier en
+ * containing block pour ses descendants position:fixed (dont .mobileMenu),
+ * qui se retrouveraient alors bornés à la hauteur du header au lieu de
+ * couvrir tout le viewport.
+ */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: transparent;
+  border-bottom: 1px solid transparent;
   transition:
     background 0.35s ease,
-    padding 0.35s ease,
-    border-color 0.35s ease;
+    border-color 0.35s ease,
+    backdrop-filter 0.35s ease;
 }
 
 .header.scrolled {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+.header.scrolled::before {
   background: rgba(15, 30, 48, 0.94);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-bottom-color: rgba(244, 239, 230, 0.12);
-  padding-top: 13px;
-  padding-bottom: 13px;
 }
 
 .logoLink {

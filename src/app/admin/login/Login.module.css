@@ -80,6 +80,24 @@
   cursor: not-allowed;
 }
 
+.backButton {
+  margin-top: 10px;
+  background: transparent;
+  color: var(--utm-navy);
+  border: 1px solid var(--utm-cream-2);
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.backButton:hover {
+  background: var(--utm-cream-2);
+}
+
 .forgotLink {
   margin-top: 16px;
   text-align: center;

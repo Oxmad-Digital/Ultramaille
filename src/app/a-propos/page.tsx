@@ -270,7 +270,7 @@ export default function AProposPage() {
                     style={{ background: "#F4EFE6", border: "2px solid #E0A338", boxSizing: "border-box" }}
                   />
                   <span className={styles.legendLabel}>
-                    {t("Origine — Antananarivo", "Origin — Antananarivo")}
+                    {t("Origine — Madagascar", "Origin — Madagascar")}
                   </span>
                 </div>
               </div>

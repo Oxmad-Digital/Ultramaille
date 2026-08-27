@@ -29,6 +29,12 @@
   animation: utmPulse 2.6s ease-out infinite;
 }
 
+@media (max-width: 640px) {
+  .markerOrigin {
+    --dot-size: 10px;
+  }
+}
+
 @keyframes utmFlow {
   to {
     stroke-dashoffset: -24;
