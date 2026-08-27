@@ -12,12 +12,12 @@ import styles from "./page.module.css";
 const IMG_BASE = "https://www.ultramaille.com/wp-content/uploads/";
 
 const DIRECTEURS = [
-  { name: "Patricia WALLE", roleFr: "Directrice de Confection", roleEn: "Clothing Director", img: `${IMG_BASE}2022/10/Patricia-WALLE-1.jpg` },
-  { name: "Zoltan BIRO", roleFr: "Directeur Industriel", roleEn: "Industrial Director", img: `${IMG_BASE}2022/10/Zoltan-BIRO.jpg` },
-  { name: "Pascalle WYBO", roleFr: "Directrice Style & Relations Clients", roleEn: "Style & Client Relations Director", img: `${IMG_BASE}2022/10/Pascalle-WYBO-1.jpg` },
-  { name: "Marc BOULNOIS", roleFr: "Directeur Administratif et Financier", roleEn: "Administrative & Financial Director", img: `${IMG_BASE}2022/10/Marc-BOULNOIS.jpg` },
-  { name: "RAKOTOMALALA Hary", roleFr: "Directeur Administratif et Financier", roleEn: "Administrative & Financial Director", img: `${IMG_BASE}2022/10/RAKOTOMALALA-Hary.jpg` },
-  { name: "Mamy RANAIVOSON", roleFr: "Directeur Technique", roleEn: "Technical Director", img: `${IMG_BASE}2022/10/Mamy-RANAIVOSON-1.jpg` },
+  { name: "Patricia WALLE", roleFr: "Directrice de Confection", roleEn: "Clothing Director", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849622/Patricia-WALLE-1_syxycn.webp" },
+  { name: "Zoltan BIRO", roleFr: "Directeur Industriel", roleEn: "Industrial Director", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849625/Zoltan-BIRO_chilyy.webp" },
+  { name: "Pascalle WYBO", roleFr: "Directrice Style & Relations Clients", roleEn: "Style & Client Relations Director", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849239/ultramaille-pascal-wybo_btnyn1.webp" },
+  { name: "Marc BOULNOIS", roleFr: "Directeur Administratif et Financier", roleEn: "Administrative & Financial Director", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849619/Marc-BOULNOIS_bncc3b.webp" },
+  { name: "RAKOTOMALALA Hary", roleFr: "Directeur Administratif et Financier", roleEn: "Administrative & Financial Director", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849623/RAKOTOMALALA-Hary_bbwdo7.webp" },
+  { name: "Mamy RANAIVOSON", roleFr: "Directeur Technique", roleEn: "Technical Director", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849619/Mamy-RANAIVOSON-1_c3lmv3.webp" },
 ];
 
 const RESPONSABLE_POLES = [
@@ -25,51 +25,51 @@ const RESPONSABLE_POLES = [
     poleFr: "Confection & Savoir-faire manuel",
     poleEn: "Craftsmanship & Manual Know-how",
     members: [
-      { name: "Lantonirina RAKOTOARISOA", roleFr: "Responsable Broderie et Crochet Main", roleEn: "Embroidery & Hand Crochet Manager", img: `${IMG_BASE}2022/10/Lantonirina-RAKOTOARISOA.jpg` },
-      { name: "Fanjaniaina RASOAZANANAIVO", roleFr: "Responsable Tricotage Manuel", roleEn: "Manual Knitting Manager", img: `${IMG_BASE}2022/10/Fanjaniaina-RASOAZANANAIVO-1.jpg` },
-      { name: "Hasinavalona RAZAFINJATOVO", roleFr: "Responsable Remaillage et Stitching", roleEn: "Remeshing & Stitching Manager", img: `${IMG_BASE}2022/10/Hasinavalona-RAZAFINJATOVO.jpg` },
-      { name: "Radonirina RASOLOFONIAINA", roleFr: "Responsable Packing", roleEn: "Packing Manager", img: `${IMG_BASE}2022/10/Radonirina-RASOLOFONIAINA.jpg` },
+      { name: "Lantonirina RAKOTOARISOA", roleFr: "Responsable Broderie et Crochet Main", roleEn: "Embroidery & Hand Crochet Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849617/Lantonirina-RAKOTOARISOA_uwo1sg.webp" },
+      { name: "Fanjaniaina RASOAZANANAIVO", roleFr: "Responsable Tricotage Manuel", roleEn: "Manual Knitting Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849613/Fanjaniaina-RASOAZANANAIVO-1_c0ebkb.webp" },
+      { name: "Hasinavalona RAZAFINJATOVO", roleFr: "Responsable Remaillage et Stitching", roleEn: "Remeshing & Stitching Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849616/Hasinavalona-RAZAFINJATOVO_jfmou6.webp" },
+      { name: "Radonirina RASOLOFONIAINA", roleFr: "Responsable Packing", roleEn: "Packing Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849622/Radonirina-RASOLOFONIAINA_sngdke.webp" },
     ],
   },
   {
     poleFr: "Style & Merchandising",
     poleEn: "Style & Merchandising",
     members: [
-      { name: "Luce RANAIVO", roleFr: "Merchandiser", roleEn: "Merchandiser", img: `${IMG_BASE}2022/10/Luce-RANAIVO-1.jpg` },
-      { name: "Fitiavana RAMBELOTIANA", roleFr: "Merchandiser", roleEn: "Merchandiser", img: `${IMG_BASE}2022/10/Fitiavana-RAMBELOTIANA.jpg` },
-      { name: "Joelle RASAMIMANANA", roleFr: "Merchandiser", roleEn: "Merchandiser", img: `${IMG_BASE}2024/04/Joelle-RASAMIMANANA-2023-09-25-ultramaille-NB-1.jpg` },
+      { name: "Luce RANAIVO", roleFr: "Merchandiser", roleEn: "Merchandiser", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849618/Luce-RANAIVO-1_miozim.webp" },
+      { name: "Fitiavana RAMBELOTIANA", roleFr: "Merchandiser", roleEn: "Merchandiser", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849614/Fitiavana-RAMBELOTIANA_w6jguu.webp" },
+      { name: "Joelle RASAMIMANANA", roleFr: "Merchandiser", roleEn: "Merchandiser", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849616/Joelle-RASAMIMANANA-2023-09-25-ultramaille-NB-1_uhrfvm.webp" },
     ],
   },
   {
     poleFr: "Administration, Finance & Logistique",
     poleEn: "Administration, Finance & Logistics",
     members: [
-      { name: "Miora RANDRIAHAINGO", roleFr: "Responsable de Trésorerie", roleEn: "Treasury Manager", img: `${IMG_BASE}2024/04/Miora-RANDRIAHAINGO-2023-09-25-ultramaille-NB-19.jpg` },
-      { name: "Onitiana RATOVAHOAKA", roleFr: "Responsable Comptabilité", roleEn: "Accounting Manager", img: `${IMG_BASE}2024/04/Onitiana-RATOVAHOAKA-2023-09-25-ultramaille-NB-17-1.jpg` },
-      { name: "Christian ANDRIAKOTOMALALA", roleFr: "Responsable Approvisionnement", roleEn: "Supply Manager", img: `${IMG_BASE}2022/10/Christian-ANDRIAKOTOMALALA.jpg` },
-      { name: "Ranjanirina RABEMASO", roleFr: "Responsable Transit", roleEn: "Transit Manager", img: `${IMG_BASE}2022/10/Ranjanirina-RABEMASO-2023-09-25-ultramaille-NB-23-1.jpg` },
+      { name: "Miora RANDRIAHAINGO", roleFr: "Responsable de Trésorerie", roleEn: "Treasury Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849620/Miora-RANDRIAHAINGO-2023-09-25-ultramaille-NB-19_xfkwq7.webp" },
+      { name: "Onitiana RATOVAHOAKA", roleFr: "Responsable Comptabilité", roleEn: "Accounting Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849621/Onitiana-RATOVAHOAKA-2023-09-25-ultramaille-NB-17-1_asbruk.webp" },
+      { name: "Christian ANDRIAKOTOMALALA", roleFr: "Responsable Approvisionnement", roleEn: "Supply Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849612/Christian-ANDRIAKOTOMALALA_fre0a5.webp" },
+      { name: "Ranjanirina RABEMASO", roleFr: "Responsable Transit", roleEn: "Transit Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849624/Ranjanirina-RABEMASO-2023-09-25-ultramaille-NB-23-1_qzaghq.webp" },
     ],
   },
   {
     poleFr: "Digital & IT",
     poleEn: "Digital & IT",
     members: [
-      { name: "Tom WYBO", roleFr: "Chargé du Projet Digital", roleEn: "Digital Project Manager", img: `${IMG_BASE}2022/10/Tom-WYBO.jpg` },
-      { name: "Christophe Ulysse OTONIA", roleFr: "Responsable Informatique et RSE", roleEn: "IT & CSR Manager", img: `${IMG_BASE}2022/10/Christophe-Ulysse-OTONIA.jpg` },
+      { name: "Tom WYBO", roleFr: "Chargé du Projet Digital", roleEn: "Digital Project Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849239/ultramaille-tom-wybo_lupzbh.webp" },
+      { name: "Christophe Ulysse OTONIA", roleFr: "Responsable Informatique et RSE", roleEn: "IT & CSR Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849612/Christophe-Ulysse-OTONIA_rxmnjp.webp" },
     ],
   },
   {
     poleFr: "Industriel & Technique",
     poleEn: "Industrial & Technical",
     members: [
-      { name: "Gilbert RAJOELISON", roleFr: "Responsable Machine Électronique", roleEn: "Electronic Machine Manager", img: `${IMG_BASE}2022/10/Gilbert-RAJOELISON.jpg` },
+      { name: "Gilbert RAJOELISON", roleFr: "Responsable Machine Électronique", roleEn: "Electronic Machine Manager", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849614/Gilbert-RAJOELISON_nzrzjv.webp" },
     ],
   },
 ];
 
 const ASSISTANTS = [
-  { name: "Harilala RAZAFINDRAKOTO", roleFr: "Coordinatrice", roleEn: "Coordinator", img: `${IMG_BASE}2022/10/Harilala-RAZAFINDRAKOTO.jpg` },
-  { name: "Dina RATSIMBAZAFY", roleFr: "Assistante Directrice de Confection", roleEn: "Assistant to Sewing Director", img: `${IMG_BASE}2022/10/Dina-RATSIMBAZAFY-1.jpg` },
+  { name: "Harilala RAZAFINDRAKOTO", roleFr: "Coordinatrice", roleEn: "Coordinator", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849615/Harilala-RAZAFINDRAKOTO_pxnkzr.webp" },
+  { name: "Dina RATSIMBAZAFY", roleFr: "Assistante Directrice de Confection", roleEn: "Assistant to Sewing Director", img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787849612/Dina-RATSIMBAZAFY-1_urizqk.webp" },
 ];
 
 const YARN_TAGS = ["Italie", { fr: "Europe", en: "Europe" }, { fr: "Asie", en: "Asia" }, { fr: "Afrique du Sud", en: "South Africa" }, { fr: "Océan Indien", en: "Indian Ocean" }];
@@ -351,7 +351,7 @@ export default function AProposPage() {
             <div className={styles.orgCeoNode}>
               <div className={`${styles.orgAvatarWrap} ${styles.orgAvatarLg}`}>
                 <Image
-                  src={`${IMG_BASE}2022/10/President-Directeur-General.jpg`}
+                  src="https://res.cloudinary.com/wzetrnif/image/upload/v1787849239/ultramaille-frederic-wybo_jyxtbb.webp"
                   alt="Frédéric WYBO"
                   fill
                   sizes="168px"

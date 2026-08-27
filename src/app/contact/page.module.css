@@ -18,7 +18,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(1) brightness(0.42) contrast(1.05);
+  filter: grayscale(1) brightness(0.75) contrast(1.05);
   animation: utmKen 10s ease-out both;
 }
 
@@ -28,8 +28,8 @@
   background: linear-gradient(
     180deg,
     rgba(15, 30, 48, 0.55) 0%,
-    rgba(15, 30, 48, 0.35) 36%,
-    rgba(12, 18, 28, 0.95) 100%
+    rgba(15, 30, 48, 0.35) 40%,
+    rgba(12, 18, 28, 0.9) 100%
   );
 }
 

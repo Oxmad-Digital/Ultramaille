@@ -11,7 +11,8 @@ import { useLanguage } from "@/lib/language-context";
 import styles from "./page.module.css";
 
 const IMG_BASE = "https://www.ultramaille.com/wp-content/uploads/";
-const MEDECIN_IMG = `${IMG_BASE}2022/10/ultramaille-medecin.jpg`;
+const MEDECIN_IMG = "https://res.cloudinary.com/wzetrnif/image/upload/v1787855681/ultramaille-medecin_di2ymt.webp";
+const HERO_IMG = "https://res.cloudinary.com/wzetrnif/image/upload/v1787855471/ultramaille-cabinet-medical_mgffws.webp";
 
 export default function NotreEngagementPage() {
   const { t, lang } = useLanguage();
@@ -22,7 +23,7 @@ export default function NotreEngagementPage() {
 
       <section id="top" className={styles.hero}>
         <Image
-          src={MEDECIN_IMG}
+          src={HERO_IMG}
           alt="Cabinet médical Ultramaille"
           fill
           priority
@@ -276,7 +277,7 @@ export default function NotreEngagementPage() {
           <div className={styles.communauteGrid}>
             <div className={styles.communauteImgWrap}>
               <Image
-                src={`${IMG_BASE}2022/10/education-tous-droit-reussir-1024x683.jpg`}
+                src="https://res.cloudinary.com/wzetrnif/image/upload/v1787855783/education-tous-droit-reussir-ultramaille_utlb30.webp"
                 alt="Éducation — Ultramaille"
                 fill
                 className={styles.communauteImg}

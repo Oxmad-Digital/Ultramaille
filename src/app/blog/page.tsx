@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogListClient, { type PublicArticle } from "@/components/blog/BlogListClient";
@@ -46,6 +47,14 @@ export default async function BlogPage() {
       <Header ctaHref="/contact#form" />
 
       <section className={styles.hero}>
+        <Image
+          src="https://res.cloudinary.com/wzetrnif/image/upload/v1787856491/background-pull-ultramaille_oi1dox.webp"
+          alt="Atelier Ultramaille"
+          fill
+          priority
+          className={styles.heroImg}
+        />
+        <div className={styles.heroGradient} />
         <div className={styles.heroGrid} />
         <div className={styles.heroInner}>
           <div className={styles.eyebrow}>— Blog</div>
