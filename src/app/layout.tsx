@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import { LanguageProvider } from "@/lib/language-context";
+import Tracker from "@/components/Tracker";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -38,6 +39,7 @@ export default function RootLayout({
       className={`${montserrat.variable} ${hankenGrotesk.variable} ${spaceMono.variable}`}
     >
       <body>
+        <Tracker />
         <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
