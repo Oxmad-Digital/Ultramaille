@@ -54,6 +54,7 @@ export async function PATCH(
       );
     }
     user.passwordHash = await bcrypt.hash(body.password, 12);
+    user.invitePending = false;
   }
 
   await user.save();

@@ -33,6 +33,7 @@ export async function POST(request: Request) {
   admin.passwordHash = await bcrypt.hash(password as string, 12);
   admin.resetTokenHash = null;
   admin.resetTokenExpiry = null;
+  admin.invitePending = false;
   await admin.save();
 
   return NextResponse.json({ success: true });

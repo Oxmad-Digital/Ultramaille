@@ -21,3 +21,24 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
     `,
   });
 }
+
+export async function sendInvitationEmail(to: string, inviteUrl: string, role: "admin" | "member") {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY manquant dans les variables d'environnement");
+  }
+
+  const resend = new Resend(apiKey);
+  const roleLabel = role === "admin" ? "administrateur" : "membre";
+
+  await resend.emails.send({
+    from: `Ultramaille <${FROM_ADDRESS}>`,
+    to,
+    subject: "Invitation à rejoindre l'administration Ultramaille",
+    html: `
+      <p>Vous avez été invité(e) à rejoindre l'administration Ultramaille en tant que <strong>${roleLabel}</strong>.</p>
+      <p><a href="${inviteUrl}">Cliquez ici pour choisir votre mot de passe et activer votre compte</a></p>
+      <p>Ce lien expire dans 7 jours. Si vous ne vous attendiez pas à cette invitation, ignorez cet email.</p>
+    `,
+  });
+}

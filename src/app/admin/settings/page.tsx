@@ -15,6 +15,7 @@ async function getUsers(): Promise<AdminUserRow[]> {
     id: u._id.toString(),
     email: u.email,
     role: u.role || "admin",
+    invitePending: !!u.invitePending,
   }));
 }
 

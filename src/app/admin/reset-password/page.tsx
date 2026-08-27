@@ -22,6 +22,7 @@ function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
+  const isInvite = searchParams.get("invite") === "1";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -56,8 +57,9 @@ function ResetPasswordForm() {
         <div className={styles.card}>
           <h1 className={styles.title}>Lien invalide</h1>
           <p className={styles.subtitle}>
-            Ce lien de réinitialisation est incomplet. Demandez-en un nouveau depuis la page de
-            connexion.
+            {isInvite
+              ? "Ce lien d'invitation est incomplet. Demandez à un administrateur de vous en envoyer un nouveau."
+              : "Ce lien de réinitialisation est incomplet. Demandez-en un nouveau depuis la page de connexion."}
           </p>
         </div>
       </main>
@@ -68,7 +70,7 @@ function ResetPasswordForm() {
     return (
       <main className={styles.wrapper}>
         <div className={styles.card}>
-          <h1 className={styles.title}>Mot de passe modifié</h1>
+          <h1 className={styles.title}>{isInvite ? "Compte activé" : "Mot de passe modifié"}</h1>
           <p className={styles.subtitle}>Redirection vers la connexion...</p>
         </div>
       </main>
@@ -78,8 +80,12 @@ function ResetPasswordForm() {
   return (
     <main className={styles.wrapper}>
       <form className={styles.card} onSubmit={handleSubmit}>
-        <h1 className={styles.title}>Nouveau mot de passe</h1>
-        <p className={styles.subtitle}>Choisissez un nouveau mot de passe admin.</p>
+        <h1 className={styles.title}>{isInvite ? "Bienvenue" : "Nouveau mot de passe"}</h1>
+        <p className={styles.subtitle}>
+          {isInvite
+            ? "Choisissez votre mot de passe pour activer votre compte admin."
+            : "Choisissez un nouveau mot de passe admin."}
+        </p>
 
         <label className={styles.label} htmlFor="password">
           Nouveau mot de passe
@@ -104,7 +110,7 @@ function ResetPasswordForm() {
         {error && <p className={styles.error}>{error}</p>}
 
         <button type="submit" className={styles.button} disabled={loading}>
-          {loading ? "Enregistrement..." : "Réinitialiser le mot de passe"}
+          {loading ? "Enregistrement..." : isInvite ? "Activer mon compte" : "Réinitialiser le mot de passe"}
         </button>
       </form>
     </main>

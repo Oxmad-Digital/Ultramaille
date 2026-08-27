@@ -2,6 +2,27 @@
   margin-top: 40px;
 }
 
+.sectionTitle {
+  margin: 0 0 6px;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--utm-ink);
+}
+
+.sectionDescription {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--utm-text-muted);
+}
+
+.sectionDescription span {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12.5px;
+  color: var(--utm-blue);
+}
+
 .addButton {
   font-family: var(--font-hanken-grotesk), sans-serif;
   font-size: 13px;
@@ -26,6 +47,13 @@
   margin: -8px 0 16px;
   font-size: 13.5px;
   color: var(--utm-danger);
+}
+
+.hint {
+  font-family: var(--font-hanken-grotesk), sans-serif;
+  font-size: 13px;
+  color: var(--utm-text-muted);
+  margin: 0;
 }
 
 .form {
@@ -95,7 +123,7 @@
 .tableHead,
 .tableRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 160px 170px;
+  grid-template-columns: minmax(0, 1fr) 160px 220px;
   align-items: center;
   gap: 14px;
 }
@@ -147,6 +175,19 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--utm-text-muted);
+}
+
+.pendingBadge {
+  margin-left: 8px;
+  display: inline-block;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--utm-gold-dark);
+  background: rgba(224, 163, 56, 0.16);
+  padding: 3px 8px;
+  border-radius: 999px;
 }
 
 .roleBadge {

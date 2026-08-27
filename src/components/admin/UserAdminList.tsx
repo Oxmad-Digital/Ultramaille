@@ -5,14 +5,16 @@ import { useRouter } from "next/navigation";
 import listStyles from "./ArticleAdminList.module.css";
 import styles from "./UserAdminList.module.css";
 import PasswordField from "./PasswordField";
+import ConfirmModal from "./ConfirmModal";
 
 export type AdminUserRow = {
   id: string;
   email: string;
   role: "admin" | "member";
+  invitePending: boolean;
 };
 
-const EMPTY_FORM = { email: "", password: "", role: "member" as "admin" | "member" };
+const EMPTY_FORM = { email: "", role: "member" as "admin" | "member" };
 
 export default function UserAdminList({
   initialUsers,
@@ -38,11 +40,14 @@ export default function UserAdminList({
   const [editPassword, setEditPassword] = useState("");
   const [savingId, setSavingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<AdminUserRow | null>(null);
+  const [resendingId, setResendingId] = useState<string | null>(null);
+  const [resentId, setResentId] = useState<string | null>(null);
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     const email = form.email.trim();
-    if (!email || form.password.length < 8) return;
+    if (!email) return;
 
     setCreating(true);
     setError("");
@@ -50,12 +55,12 @@ export default function UserAdminList({
     const res = await fetch("/api/admin/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password: form.password, role: form.role }),
+      body: JSON.stringify({ email, role: form.role }),
     });
     const data = await res.json().catch(() => ({}));
 
     if (!res.ok) {
-      setError(data.error || "Erreur lors de la création");
+      setError(data.error || "Erreur lors de l'envoi de l'invitation");
       setCreating(false);
       return;
     }
@@ -105,8 +110,6 @@ export default function UserAdminList({
   }
 
   async function handleDelete(row: AdminUserRow) {
-    if (!window.confirm(`Supprimer l'utilisateur "${row.email}" ?`)) return;
-
     setDeletingId(row.id);
     setError("");
     const res = await fetch(`/api/admin/users/${row.id}`, { method: "DELETE" });
@@ -115,15 +118,34 @@ export default function UserAdminList({
       setError(data.error || "Erreur lors de la suppression");
     }
     setDeletingId(null);
+    setPendingDelete(null);
     router.refresh();
+  }
+
+  async function handleResendInvite(row: AdminUserRow) {
+    setResendingId(row.id);
+    setResentId(null);
+    setError("");
+
+    const res = await fetch(`/api/admin/users/${row.id}/resend-invite`, { method: "POST" });
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      setError(data.error || "Erreur lors de l'envoi de l'invitation");
+      setResendingId(null);
+      return;
+    }
+
+    setResendingId(null);
+    setResentId(row.id);
   }
 
   return (
     <div className={styles.section}>
       <div className={listStyles.header}>
         <div>
-          <h2 className={listStyles.pageTitle}>Utilisateurs</h2>
-          <p className={listStyles.pageSubtitle}>
+          <h2 className={styles.sectionTitle}>Utilisateurs</h2>
+          <p className={styles.sectionDescription}>
             Collection <span>admins</span> — les comptes de l&apos;administration.
           </p>
         </div>
@@ -132,7 +154,7 @@ export default function UserAdminList({
           className={styles.addButton}
           onClick={() => setFormOpen((v) => !v)}
         >
-          {formOpen ? "Fermer" : "Ajouter un utilisateur"}
+          {formOpen ? "Fermer" : "Inviter un utilisateur"}
         </button>
       </div>
 
@@ -140,6 +162,10 @@ export default function UserAdminList({
 
       {formOpen && (
         <form className={styles.form} onSubmit={handleCreate}>
+          <p className={styles.hint}>
+            Un email d&apos;invitation est envoyé à cette adresse pour lui permettre de choisir
+            son mot de passe.
+          </p>
           <div className={styles.formFields}>
             <input
               className={styles.input}
@@ -148,14 +174,6 @@ export default function UserAdminList({
               placeholder="Email"
               type="email"
               required
-            />
-            <PasswordField
-              id="new-user-password"
-              value={form.password}
-              onChange={(v) => setForm((f) => ({ ...f, password: v }))}
-              autoComplete="new-password"
-              placeholder="Mot de passe (8 caractères min.)"
-              inputClassName={styles.input}
             />
             <select
               className={styles.select}
@@ -170,9 +188,9 @@ export default function UserAdminList({
             <button
               type="submit"
               className={styles.submitButton}
-              disabled={creating || !form.email.trim() || form.password.length < 8}
+              disabled={creating || !form.email.trim()}
             >
-              {creating ? "…" : "Créer"}
+              {creating ? "Envoi…" : "Envoyer l'invitation"}
             </button>
           </div>
         </form>
@@ -193,6 +211,9 @@ export default function UserAdminList({
               <span className={styles.emailCell}>
                 {row.email}
                 {isSelf && <span className={styles.youBadge}>(vous)</span>}
+                {row.invitePending && (
+                  <span className={styles.pendingBadge}>Invitation en attente</span>
+                )}
               </span>
 
               {isEditing ? (
@@ -232,13 +253,28 @@ export default function UserAdminList({
                   </>
                 ) : (
                   <>
+                    {row.invitePending && (
+                      <button
+                        type="button"
+                        className={listStyles.editLink}
+                        onClick={() => handleResendInvite(row)}
+                        disabled={resendingId === row.id}
+                        title="Renvoyer l'invitation par email"
+                      >
+                        {resendingId === row.id
+                          ? "…"
+                          : resentId === row.id
+                            ? "Envoyée ✓"
+                            : "Renvoyer"}
+                      </button>
+                    )}
                     <button type="button" className={listStyles.editLink} onClick={() => startEdit(row)}>
                       Modifier
                     </button>
                     <button
                       type="button"
                       className={listStyles.deleteButton}
-                      onClick={() => handleDelete(row)}
+                      onClick={() => setPendingDelete(row)}
                       disabled={isSelf || deletingId === row.id}
                       title={isSelf ? "Vous ne pouvez pas supprimer votre propre compte" : undefined}
                     >
@@ -272,6 +308,20 @@ export default function UserAdminList({
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        open={pendingDelete !== null}
+        title="Supprimer l'utilisateur"
+        message={
+          pendingDelete
+            ? `Supprimer l'utilisateur "${pendingDelete.email}" ? Cette action est irréversible.`
+            : ""
+        }
+        confirmLabel="Supprimer"
+        loading={pendingDelete !== null && deletingId === pendingDelete.id}
+        onConfirm={() => pendingDelete && handleDelete(pendingDelete)}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   );
 }

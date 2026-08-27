@@ -1,0 +1,83 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 30, 48, 0.6);
+  display: grid;
+  place-items: center;
+  z-index: 100;
+  padding: 24px;
+}
+
+.modal {
+  width: min(420px, 100%);
+  background: var(--utm-cream);
+  border-radius: 14px;
+  padding: 24px 26px;
+  box-shadow: 0 20px 60px rgba(15, 30, 48, 0.35);
+}
+
+.title {
+  margin: 0 0 10px;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--utm-ink);
+}
+
+.message {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--utm-text-muted);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.cancelButton {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--utm-label);
+  background: none;
+  border: 1px solid rgba(15, 30, 48, 0.16);
+  border-radius: 8px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: rgba(15, 30, 48, 0.06);
+}
+
+.confirmButton {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--utm-cream);
+  background: var(--utm-danger);
+  border: none;
+  border-radius: 8px;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.confirmButton:hover:not(:disabled) {
+  background: #6f2e25;
+}
+
+.cancelButton:disabled,
+.confirmButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

@@ -9,6 +9,7 @@ export interface IAdmin {
   role: AdminRole;
   resetTokenHash: string | null;
   resetTokenExpiry: Date | null;
+  invitePending: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,6 +21,7 @@ const AdminSchema = new Schema<IAdmin>(
     role: { type: String, enum: ["admin", "member"], default: "admin" },
     resetTokenHash: { type: String, default: null },
     resetTokenExpiry: { type: Date, default: null },
+    invitePending: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
