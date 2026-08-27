@@ -23,7 +23,7 @@ export default function ContactPage() {
 
       <section id="top" className={styles.hero}>
         <Image
-          src="https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/broderie1-1024x683-ultramaille_kaelf8.jpg"
+          src="https://res.cloudinary.com/wzetrnif/image/upload/v1787843399/usine/onte1a9f2pvoezmlcx5t.jpg"
           alt="Atelier Ultramaille"
           fill
           priority

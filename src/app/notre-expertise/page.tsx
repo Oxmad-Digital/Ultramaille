@@ -111,8 +111,8 @@ export default function NotreExpertisePage() {
 
       <section id="top" className={styles.hero}>
         <Image
-          src="https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/broderie1-1024x683-ultramaille_kaelf8.jpg"
-          alt="Broderie Ultramaille"
+          src="https://res.cloudinary.com/wzetrnif/image/upload/v1787843393/usine/loxekmhxlt9kdcvb6goi.jpg"
+          alt="Teinture Ultramaille"
           fill
           priority
           className={styles.heroImg}
@@ -213,6 +213,87 @@ export default function NotreExpertisePage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.bee}>
+        <div className={styles.sectionInner}>
+          <div className={styles.beeGrid}>
+            <div className={styles.beeText}>
+              <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>
+                {t("— Conception & prototypage", "— Design & prototyping")}
+              </div>
+              <h2 className={styles.beeTitle}>
+                {t(
+                  "Le bureau d'étude, là où chaque collection prend forme avant l'atelier.",
+                  "The design studio, where every collection takes shape before the workshop.",
+                )}
+              </h2>
+              <p className={styles.paragraph}>
+                {t(
+                  "Nos techniciens digitalisent chaque patronage sur logiciel de tricot avant de le confier à l'atelier échantillon, qui monte le premier prototype à la main — boutons, finitions et coupe compris.",
+                  "Our technicians digitise every pattern on knitting software before handing it to the sample workshop, which builds the first prototype by hand — buttons, finishing and cut included.",
+                )}
+              </p>
+              <p className={styles.paragraph}>
+                {t(
+                  "Cet aller-retour entre écran et table de coupe garantit que chaque modèle validé est déjà industrialisable, sans surprise en production.",
+                  "This back-and-forth between screen and cutting table ensures every approved model is already production-ready, with no surprises on the line.",
+                )}
+              </p>
+            </div>
+            <div className={styles.beePhotos}>
+              <div className={styles.beePhotoMain}>
+                <Image
+                  src="https://res.cloudinary.com/wzetrnif/image/upload/v1787843382/usine/lryaq9sjvjmf4or0mqns.jpg"
+                  alt="Patronage digital sur logiciel de tricot"
+                  fill
+                  sizes="(max-width: 900px) 100vw, 40vw"
+                  className={styles.beePhotoImg}
+                />
+              </div>
+              <div className={styles.beePhotoSecondary}>
+                <Image
+                  src="https://res.cloudinary.com/wzetrnif/image/upload/v1787843385/usine/tta0hul625xwqerzaqtc.jpg"
+                  alt="Montage d'un échantillon à la main"
+                  fill
+                  sizes="(max-width: 900px) 100vw, 24vw"
+                  className={styles.beePhotoImg}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.showroom}>
+        <div className={styles.sectionInner}>
+          <div className={styles.showroomGrid}>
+            <div className={styles.showroomPhoto}>
+              <Image
+                src="https://res.cloudinary.com/wzetrnif/image/upload/v1787843396/usine/xochcttid6shu3nh4mq2.jpg"
+                alt="Show room Ultramaille"
+                fill
+                sizes="(max-width: 900px) 100vw, 48vw"
+                className={styles.showroomPhotoImg}
+              />
+            </div>
+            <div className={styles.showroomText}>
+              <div className={`${styles.eyebrow} ${styles.eyebrowGold}`}>{t("— Show room", "— Show room")}</div>
+              <h2 className={styles.showroomTitle}>
+                {t(
+                  "Un show room sur site pour toucher la matière avant de décider.",
+                  "An on-site show room to feel the fabric before deciding.",
+                )}
+              </h2>
+              <p className={styles.showroomText2}>
+                {t(
+                  "Toutes nos gammes de maille, coloris et finitions sont exposés en un même lieu, à Antananarivo — un point de passage obligé pour nos clients avant validation de collection.",
+                  "All our knit ranges, colourways and finishes are displayed in one place in Antananarivo — an essential stop for our clients before a collection is approved.",
+                )}
+              </p>
+            </div>
           </div>
         </div>
       </section>

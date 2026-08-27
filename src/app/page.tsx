@@ -12,7 +12,7 @@ import styles from "./page.module.css";
 const CRAFT_CARDS = [
   {
     number: "01",
-    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/1-tricotage-ultramaille_txyxfm.jpg",
+    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787846211/tricotage-ultramaille-1_omlcpa.webp",
     alt: "Tricotage",
     titleFr: "Tricotage & maille fine",
     titleEn: "Knitting & fine gauge",
@@ -21,7 +21,7 @@ const CRAFT_CARDS = [
   },
   {
     number: "02",
-    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1785696845/Broderie-crochet-ultramaille_qzu0uf.jpg",
+    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787847770/Broderie-crochet-ultramaille_ah5g5h.webp",
     alt: "Crochet",
     titleFr: "Crochet main & macramé",
     titleEn: "Hand crochet & macramé",
@@ -30,7 +30,7 @@ const CRAFT_CARDS = [
   },
   {
     number: "03",
-    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1785696845/4-broderie-ultramaille_zum4dd.webp",
+    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787846457/broderie1-1024x683-ultramaille_kaelf_vbywpe.webp",
     alt: "Broderie",
     titleFr: "Broderie d'exception",
     titleEn: "Fine embroidery",
@@ -39,7 +39,7 @@ const CRAFT_CARDS = [
   },
   {
     number: "04",
-    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/3-pressing-ultramaille-1024x683_rajues.jpg",
+    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787843400/pressing-ultramaille-3_b127mz.webp",
     alt: "Teinture et finitions",
     titleFr: "Teinture & finitions",
     titleEn: "Dyeing & finishing",
@@ -57,8 +57,8 @@ export default function Home() {
 
       <section id="top" className={styles.hero}>
         <Image
-          src="https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/3-pressing-ultramaille-1024x683_rajues.jpg"
-          alt="Atelier Ultramaille"
+          src="https://res.cloudinary.com/wzetrnif/image/upload/v1787844955/ultramaille-machines-electroniques_vcjn4e.webp"
+          alt="Atelier de tricotage électronique Ultramaille"
           fill
           priority
           className={styles.heroImg}
@@ -143,8 +143,8 @@ export default function Home() {
         <div className={styles.heritageGrid}>
           <div className={styles.heritageImgWrap}>
             <Image
-              src="https://res.cloudinary.com/wzetrnif/image/upload/v1785696846/3-pressing-ultramaille-1024x683_rajues.jpg"
-              alt="Atelier Ultramaille"
+              src="https://res.cloudinary.com/wzetrnif/image/upload/v1787845799/ultramaille-tricotage-mecanique_duofdi.webp"
+              alt="Tricotage manuel Ultramaille"
               fill
               className={styles.heritageImg}
             />
