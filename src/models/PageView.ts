@@ -6,6 +6,8 @@ export interface IPageView {
   path: string;
   referrer: string;
   deviceType: string;
+  country: string;
+  duration?: number;
   visitorHash: string;
   createdAt: Date;
 }
@@ -16,6 +18,8 @@ const PageViewSchema = new Schema<IPageView>(
     path: { type: String, required: true },
     referrer: { type: String, default: "" },
     deviceType: { type: String, default: "desktop" },
+    country: { type: String, default: "" },
+    duration: { type: Number },
     visitorHash: { type: String, required: true },
   },
   { timestamps: { createdAt: true, updatedAt: false } }

@@ -56,14 +56,17 @@ export async function POST(request: NextRequest) {
     .digest("hex")
     .slice(0, 32);
 
+  const country = request.headers.get("x-vercel-ip-country") ?? "";
+
   await connectDB();
-  await PageView.create({
+  const doc = await PageView.create({
     day,
     path,
     referrer,
     deviceType: device.type ?? "desktop",
+    country,
     visitorHash,
   });
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, id: doc._id.toString() });
 }
