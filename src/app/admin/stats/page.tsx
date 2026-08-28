@@ -24,12 +24,18 @@ async function getStats() {
     { $project: { _id: 0, views: 1, visitors: { $size: "$visitors" } } },
   ]);
 
-  const daily = await PageView.aggregate([
+  const dailyRaw = await PageView.aggregate([
     { $match: match },
     { $group: { _id: "$day", views: { $sum: 1 }, visitors: { $addToSet: "$visitorHash" } } },
     { $project: { _id: 0, day: "$_id", views: 1, visitors: { $size: "$visitors" } } },
     { $sort: { day: 1 } },
   ]);
+
+  const dailyByDay = new Map(dailyRaw.map((d) => [d.day, d]));
+  const daily = Array.from({ length: RANGE_DAYS }, (_, i) => {
+    const day = daysAgo(RANGE_DAYS - 1 - i);
+    return dailyByDay.get(day) ?? { day, views: 0, visitors: 0 };
+  });
 
   const topPages = await PageView.aggregate([
     { $match: match },
