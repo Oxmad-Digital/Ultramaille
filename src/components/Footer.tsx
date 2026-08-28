@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/lib/language-context";
 import { CONTACT } from "@/lib/site";
@@ -22,7 +23,7 @@ export default function Footer() {
       <div className={styles.inner}>
         <div className={styles.top}>
           <div>
-            <img src="/ultramaille-logo.svg" alt="Ultramaille" className={styles.logo} />
+            <Image src="/ultramaille-logo-mark.webp" alt="Ultramaille" width={40} height={40} className={styles.logo} />
             <p className={styles.tagline}>
               {t(
                 "Spécialistes de la maille à Antananarivo, Madagascar. Tricot, crochet et broderie pour les plus grandes maisons de mode.",

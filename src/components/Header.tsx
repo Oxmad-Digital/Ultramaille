@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/lib/language-context";
@@ -44,7 +45,7 @@ export default function Header({ ctaHref = "#contact" }: { ctaHref?: string }) {
       className={`${styles.header} ${scrolled ? styles.scrolled : ""} ${menuOpen ? styles.menuOpen : ""}`}
     >
       <Link href="/" className={styles.logoLink}>
-        <img src="/ultramaille-logo.svg" alt="Ultramaille" className={styles.logo} />
+        <Image src="/ultramaille-logo-mark.webp" alt="Ultramaille" width={36} height={36} className={styles.logo} priority />
       </Link>
       <nav className={styles.nav}>
         {NAV_ITEMS.map((item) => (
