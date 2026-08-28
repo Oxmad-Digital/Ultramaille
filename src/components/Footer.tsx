@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/lib/language-context";
+import { CONTACT } from "@/lib/site";
 import styles from "./Footer.module.css";
 
 const NAV_ITEMS = [
@@ -43,15 +44,15 @@ export default function Footer() {
             <div className={styles.colTitle}>{t("Contact", "Contact")}</div>
             <div className={styles.contactCol}>
               <span>
-                Lot II G 55 ter NBA Ambatomaro
+                {CONTACT.streetAddress}
                 <br />
-                Antananarivo, Madagascar
+                {CONTACT.addressLocality}, Madagascar
               </span>
-              <a href="tel:+261341185522" className={styles.link}>
-                +261 34 11 855 22
+              <a href={`tel:${CONTACT.telephone}`} className={styles.link}>
+                {CONTACT.telephoneDisplay}
               </a>
-              <a href="mailto:contact@ultramaille.com" className={styles.link}>
-                contact@ultramaille.com
+              <a href={`mailto:${CONTACT.email}`} className={styles.link}>
+                {CONTACT.email}
               </a>
             </div>
           </div>

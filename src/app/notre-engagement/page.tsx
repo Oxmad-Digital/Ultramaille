@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -17,6 +18,13 @@ const ENV_TAGS = [
   { fr: "Station d'épuration", en: "Purification plant" },
   { fr: "CO₂ réduit", en: "Reduced CO₂" },
 ];
+
+export const metadata: Metadata = {
+  title: "Notre engagement — Ultramaille",
+  description:
+    "Emplois stables et déclarés, médecine du travail sur site, responsabilité sociale et environnementale : l'engagement d'Ultramaille à Madagascar.",
+  alternates: { canonical: "/notre-engagement" },
+};
 
 export default function NotreEngagementPage() {
   return (
@@ -42,12 +50,12 @@ export default function NotreEngagementPage() {
               <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>
                 <T fr="— Madagascar" en="— Madagascar" />
               </div>
-              <h2 className={`${styles.title} ${styles.titleLight}`}>
+              <h1 className={`${styles.title} ${styles.titleLight}`}>
                 <T
                   fr="Madagascar : Investir dans l'emploi stable et déclaré"
                   en="Madagascar: Investing in stable, declared employment"
                 />
-              </h2>
+              </h1>
             </div>
             <div className={styles.headText}>
               <p>
@@ -135,7 +143,13 @@ export default function NotreEngagementPage() {
               </p>
             </div>
             <div className={styles.humainImgWrap}>
-              <Image src={MEDECIN_IMG} alt="Cabinet médical Ultramaille" fill className={styles.humainImg} />
+              <Image
+                src={MEDECIN_IMG}
+                alt="Cabinet médical Ultramaille"
+                fill
+                sizes="(max-width: 1180px) 460px, 50vw"
+                className={styles.humainImg}
+              />
               <RevealOnScroll className={styles.humainBadge}>
                 <div className={styles.humainBadgeValue}>
                   8h<span className={styles.humainBadgeUnit}>/jour</span>

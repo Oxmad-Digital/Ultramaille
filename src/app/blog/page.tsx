@@ -13,6 +13,13 @@ import styles from "./page.module.css";
 export const metadata: Metadata = {
   title: "Blog — Ultramaille",
   description: "Actualités, savoir-faire et coulisses de l'atelier Ultramaille à Madagascar.",
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    title: "Blog — Ultramaille",
+    description: "Actualités, savoir-faire et coulisses de l'atelier Ultramaille à Madagascar.",
+    url: "/blog",
+    type: "website",
+  },
 };
 
 // Public listing is CMS-backed but doesn't need to be dynamic per-request:

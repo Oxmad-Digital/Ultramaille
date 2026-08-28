@@ -8,6 +8,7 @@ import BlogArticleClient from "@/components/blog/BlogArticleClient";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
 import { publishDueArticles } from "@/lib/publishDueArticles";
+import { SITE_URL } from "@/lib/site";
 import styles from "./page.module.css";
 
 // Public article is CMS-backed but doesn't need to be dynamic per-request:
@@ -36,9 +37,21 @@ export async function generateMetadata({
     return { title: "Article introuvable — Ultramaille" };
   }
 
+  const title = `${article.metaTitle?.fr || article.title.fr} — Ultramaille`;
+  const description = article.metaDescription?.fr || article.excerpt.fr || undefined;
+
   return {
-    title: `${article.metaTitle?.fr || article.title.fr} — Ultramaille`,
-    description: article.metaDescription?.fr || article.excerpt.fr || undefined,
+    title,
+    description,
+    alternates: { canonical: `/blog/${slug}` },
+    openGraph: {
+      title,
+      description,
+      url: `/blog/${slug}`,
+      type: "article",
+      publishedTime: article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined,
+      images: article.coverImageUrl ? [article.coverImageUrl] : undefined,
+    },
   };
 }
 
@@ -60,8 +73,31 @@ export default async function BlogArticlePage({
   // revalidation-cadence figure shown in the admin article list.
   after(() => Article.updateOne({ _id: article._id }, { $inc: { views: 1 } }));
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title?.fr,
+    description: article.excerpt?.fr,
+    image: article.coverImageUrl ? [article.coverImageUrl] : undefined,
+    datePublished: article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined,
+    dateModified: article.updatedAt ? new Date(article.updatedAt).toISOString() : undefined,
+    mainEntityOfPage: `${SITE_URL}/blog/${slug}`,
+    publisher: {
+      "@type": "Organization",
+      name: "Ultramaille",
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/ultramaille-logo.svg`,
+      },
+    },
+  };
+
   return (
     <div className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <Header ctaHref="/contact#form" />
       <BlogArticleClient
         article={{

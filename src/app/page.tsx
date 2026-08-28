@@ -64,12 +64,12 @@ export default function Home() {
         <div className={styles.heroContent}>
           <div className={styles.heroCenter}>
             <h1 className={styles.heroTitle}>Ultramaille</h1>
-            <p className={styles.heroSubtitle}>
+            <h2 className={styles.heroSubtitle}>
               <T fr="Une maille d'exception, " en="Exceptional knitwear, " />
               <span className={styles.heroSubtitleAccent}>
                 <T fr="façonnée à Madagascar." en="crafted in Madagascar." />
               </span>
-            </p>
+            </h2>
           </div>
           <div className={styles.heroStats}>
             <div className={styles.heroStat}>
@@ -216,7 +216,13 @@ export default function Home() {
           <div className={styles.craftGrid}>
             {CRAFT_CARDS.map((card) => (
               <div key={card.number} className={styles.craftCard}>
-                <Image src={card.img} alt={card.alt} fill className={styles.craftImg} />
+                <Image
+                  src={card.img}
+                  alt={card.alt}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 880px) 50vw, 25vw"
+                  className={styles.craftImg}
+                />
                 <div className={styles.craftShade} />
                 <div className={styles.craftCaption}>
                   <div className={styles.craftNumber}>{card.number}</div>
@@ -397,12 +403,11 @@ export default function Home() {
             </div>
             <div className={styles.certCard}>
               <div className={styles.certLogoWrap}>
-                <img
+                <Image
                   src="https://www.ultramaille.com/wp-content/uploads/2025/02/QIMA-logo.svg"
                   alt="QIMA"
                   width={160}
                   height={54}
-                  loading="lazy"
                 />
               </div>
               <p className={styles.certCardText}>

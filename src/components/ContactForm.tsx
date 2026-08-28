@@ -17,7 +17,7 @@ export default function ContactForm() {
   return (
     <div id="form">
       <div className={styles.eyebrow}>{t("— Écrivez-nous", "— Send us a message")}</div>
-      <h2 className={styles.title}>{t("Parlez-nous de votre projet.", "Tell us about your project.")}</h2>
+      <h1 className={styles.title}>{t("Parlez-nous de votre projet.", "Tell us about your project.")}</h1>
       <p className={styles.intro}>
         {t(
           "Une équipe dédiée à vos projets de maille, du premier croquis jusqu'à la production finie — basée à Antananarivo, Madagascar.",

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -23,6 +24,13 @@ const YARN_TAGS: (string | { fr: string; en: string })[] = [
   { fr: "Océan Indien", en: "Indian Ocean" },
 ];
 
+export const metadata: Metadata = {
+  title: "À propos — Ultramaille",
+  description:
+    "Manufacture de maille basée à Antananarivo, Madagascar : plus de 25 ans d'expertise en tricot, crochet et broderie au service des plus grandes maisons de mode.",
+  alternates: { canonical: "/a-propos" },
+};
+
 export default function AProposPage() {
   return (
     <div className={styles.page}>
@@ -46,12 +54,12 @@ export default function AProposPage() {
             <div className={`${styles.eyebrow} ${styles.eyebrowGold}`}>
               <T fr="— Notre entreprise" en="— Our company" />
             </div>
-            <h2 className={styles.entrepriseTitle}>
+            <h1 className={styles.entrepriseTitle}>
               <T
                 fr="Une entreprise experte du tricotage d'excellence."
                 en="A company built on excellence in knitting."
               />
-            </h2>
+            </h1>
             <div className={styles.tagRow}>
               {ENTREPRISE_TAGS.map((tag) => (
                 <span key={tag.fr} className={`${styles.tag} ${styles.tagLight}`}>

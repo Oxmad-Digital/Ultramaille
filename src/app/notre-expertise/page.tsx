@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -88,6 +89,13 @@ const FIL_HIVER = [
   { fr: "Cachemire / soie", en: "Cashmere / silk" },
 ];
 
+export const metadata: Metadata = {
+  title: "Notre expertise — Ultramaille",
+  description:
+    "Usine de maille intégrée en zone franche à Antananarivo : tricotage automatique et manuel, remaillage, broderie, teinture et finitions, sous un même toit.",
+  alternates: { canonical: "/notre-expertise" },
+};
+
 export default function NotreExpertisePage() {
   return (
     <div className={styles.page}>
@@ -112,12 +120,12 @@ export default function NotreExpertisePage() {
               <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>
                 <T fr="— Usine en zone franche" en="— Free-trade-zone factory" />
               </div>
-              <h2 className={styles.usineTitle}>
+              <h1 className={styles.usineTitle}>
                 <T
                   fr="Une usine de maille entièrement intégrée, sous un même toit."
                   en="A knitwear factory entirely integrated under one roof."
                 />
-              </h2>
+              </h1>
             </div>
             <div>
               <p className={styles.paragraph}>

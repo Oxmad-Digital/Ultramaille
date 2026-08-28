@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
 import T from "@/components/T";
 import styles from "./page.module.css";
+
+export const metadata: Metadata = {
+  title: "Contact — Ultramaille",
+  description:
+    "Contactez l'équipe Ultramaille à Antananarivo, Madagascar, pour vos projets de maille, du premier croquis à la production finie.",
+  alternates: { canonical: "/contact" },
+};
 
 export default function ContactPage() {
   return (
