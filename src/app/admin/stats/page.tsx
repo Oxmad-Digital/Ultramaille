@@ -55,6 +55,25 @@ async function getStats() {
 
   const directViews = await PageView.countDocuments({ ...match, referrer: "" });
 
+  const deviceTypes = await PageView.aggregate([
+    { $match: match },
+    { $group: { _id: "$deviceType", views: { $sum: 1 } } },
+    { $sort: { views: -1 } },
+    { $project: { _id: 0, deviceType: "$_id", views: 1 } },
+  ]);
+
+  const topCountries = await PageView.aggregate([
+    { $match: { ...match, country: { $nin: ["", null] } } },
+    { $group: { _id: "$country", views: { $sum: 1 } } },
+    { $sort: { views: -1 } },
+    { $project: { _id: 0, country: "$_id", views: 1 } },
+  ]);
+
+  const [durationAgg] = await PageView.aggregate([
+    { $match: { ...match, duration: { $exists: true, $gt: 0 } } },
+    { $group: { _id: null, avgDuration: { $avg: "$duration" } } },
+  ]);
+
   return {
     totalViews: totals?.views ?? 0,
     totalVisitors: totals?.visitors ?? 0,
@@ -62,6 +81,9 @@ async function getStats() {
     topPages,
     topReferrers,
     directViews,
+    deviceTypes,
+    topCountries,
+    avgDurationMs: durationAgg?.avgDuration ?? null,
   };
 }
 

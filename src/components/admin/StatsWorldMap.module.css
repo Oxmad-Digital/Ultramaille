@@ -1,0 +1,48 @@
+.host {
+  position: relative;
+  width: 100%;
+  min-height: 180px;
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--utm-navy);
+  color: #fff;
+  border-radius: 8px;
+  padding: 7px 11px;
+  min-width: 110px;
+  box-shadow: 0 6px 18px rgba(15, 30, 48, 0.22);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, calc(-100% - 10px));
+  transition: opacity 0.1s ease;
+}
+
+.tooltipVisible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tooltipLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.tooltipValue {
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+.empty {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--utm-text-muted);
+}
