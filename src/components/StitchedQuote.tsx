@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { StitchedQuoteVariant } from "@/app/notre-engagement/stitched-quote.fr";
+import { useLanguage } from "@/lib/language-context";
 import styles from "./StitchedQuote.module.css";
 
 const STROKE_MS = 600;
@@ -14,12 +15,14 @@ const VARIANT_LOADERS: Record<"fr" | "en", () => Promise<StitchedQuoteVariant>> 
 };
 
 export default function StitchedQuote({
-  lang,
-  label,
+  labelFr,
+  labelEn,
 }: {
-  lang: "fr" | "en";
-  label: string;
+  labelFr: string;
+  labelEn: string;
 }) {
+  const { lang, t } = useLanguage();
+  const label = t(labelFr, labelEn);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [variant, setVariant] = useState<StitchedQuoteVariant | null>(null);

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import { notFound } from "next/navigation";
+import { after } from "next/server";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogArticleClient from "@/components/blog/BlogArticleClient";
@@ -9,13 +10,16 @@ import Article from "@/models/Article";
 import { publishDueArticles } from "@/lib/publishDueArticles";
 import styles from "./page.module.css";
 
-export const dynamic = "force-dynamic";
+// Public article is CMS-backed but doesn't need to be dynamic per-request:
+// served from cache and refreshed on a short interval, plus revalidated
+// on-demand from the admin article routes.
+export const revalidate = 60;
 
-// cache() dedupes this read within a single request so generateMetadata and
-// the page component share one DB call — the view counter below only runs once.
+// cache() dedupes this read within a single render pass so generateMetadata and
+// the page component share one DB call.
 const getArticle = cache(async (slug: string) => {
   await connectDB();
-  await publishDueArticles();
+  after(() => publishDueArticles());
   const article = await Article.findOne({ slug, status: "published" }).lean();
   return article;
 });
@@ -50,7 +54,11 @@ export default async function BlogArticlePage({
     notFound();
   }
 
-  await Article.updateOne({ _id: article._id }, { $inc: { views: 1 } });
+  // Fire-and-forget, and only runs when the page is actually (re)generated —
+  // not blocking the response. Precise per-visit analytics already live in
+  // the PageView-based stats dashboard; this counter is an approximate,
+  // revalidation-cadence figure shown in the admin article list.
+  after(() => Article.updateOne({ _id: article._id }, { $inc: { views: 1 } }));
 
   return (
     <div className={styles.page}>

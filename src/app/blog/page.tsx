@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { after } from "next/server";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogListClient, { type PublicArticle } from "@/components/blog/BlogListClient";
@@ -14,11 +15,14 @@ export const metadata: Metadata = {
   description: "Actualités, savoir-faire et coulisses de l'atelier Ultramaille à Madagascar.",
 };
 
-export const dynamic = "force-dynamic";
+// Public listing is CMS-backed but doesn't need to be dynamic per-request:
+// served from cache and refreshed on a short interval, plus revalidated
+// on-demand from the admin article routes.
+export const revalidate = 60;
 
 async function getPublishedArticles(): Promise<PublicArticle[]> {
   await connectDB();
-  await publishDueArticles();
+  after(() => publishDueArticles());
   const articles = await Article.find({ status: "published" })
     .sort({ publishedAt: -1 })
     .lean();

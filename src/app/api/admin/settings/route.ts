@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/requireAdmin";
 import { connectDB } from "@/lib/db";
 import Settings from "@/models/Settings";
-import { getSiteSettings, SETTINGS_KEY } from "@/lib/settings";
+import { getSiteSettings, SETTINGS_CACHE_TAG, SETTINGS_KEY } from "@/lib/settings";
 
 export async function GET() {
   if (!(await requireAdmin())) {
@@ -37,6 +38,8 @@ export async function PATCH(request: Request) {
     { $set: update, $setOnInsert: { key: SETTINGS_KEY } },
     { upsert: true, returnDocument: "after" }
   ).lean();
+
+  revalidateTag(SETTINGS_CACHE_TAG, "max");
 
   return NextResponse.json({
     success: true,

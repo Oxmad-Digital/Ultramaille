@@ -1,12 +1,10 @@
-"use client";
-
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContactCta from "@/components/ContactCta";
 import CountUp from "@/components/CountUp";
 import RevealOnScroll from "@/components/RevealOnScroll";
-import { useLanguage } from "@/lib/language-context";
+import T from "@/components/T";
 import styles from "./page.module.css";
 
 const CRAFT_CARDS = [
@@ -49,8 +47,6 @@ const CRAFT_CARDS = [
 ];
 
 export default function Home() {
-  const { t } = useLanguage();
-
   return (
     <div className={styles.page}>
       <Header />
@@ -69,9 +65,9 @@ export default function Home() {
           <div className={styles.heroCenter}>
             <h1 className={styles.heroTitle}>Ultramaille</h1>
             <p className={styles.heroSubtitle}>
-              {t("Une maille d'exception, ", "Exceptional knitwear, ")}
+              <T fr="Une maille d'exception, " en="Exceptional knitwear, " />
               <span className={styles.heroSubtitleAccent}>
-                {t("façonnée à Madagascar.", "crafted in Madagascar.")}
+                <T fr="façonnée à Madagascar." en="crafted in Madagascar." />
               </span>
             </p>
           </div>
@@ -80,25 +76,33 @@ export default function Home() {
               <div className={styles.heroStatValue}>
                 <CountUp end={25} />
               </div>
-              <div className={styles.heroStatLabel}>{t("ans d'expertise", "years of expertise")}</div>
+              <div className={styles.heroStatLabel}>
+                <T fr="ans d'expertise" en="years of expertise" />
+              </div>
             </div>
             <div className={styles.heroStat}>
               <div className={styles.heroStatValue}>
                 <CountUp end={800} />
               </div>
-              <div className={styles.heroStatLabel}>{t("collaborateurs", "team members")}</div>
+              <div className={styles.heroStatLabel}>
+                <T fr="collaborateurs" en="team members" />
+              </div>
             </div>
             <div className={styles.heroStat}>
               <div className={styles.heroStatValue}>
                 <CountUp end={400000} />
               </div>
-              <div className={styles.heroStatLabel}>{t("pièces par an", "pieces per year")}</div>
+              <div className={styles.heroStatLabel}>
+                <T fr="pièces par an" en="pieces per year" />
+              </div>
             </div>
             <div className={styles.heroStat}>
               <div className={`${styles.heroStatValue} ${styles.heroStatValueGold}`}>
                 SMETA<span style={{ color: "rgba(244,239,230,.3)", fontWeight: 400 }}>·</span>QIMA
               </div>
-              <div className={styles.heroStatLabel}>{t("certifié", "certified")}</div>
+              <div className={styles.heroStatLabel}>
+                <T fr="certifié" en="certified" />
+              </div>
             </div>
           </div>
         </div>
@@ -108,18 +112,24 @@ export default function Home() {
         <div className={styles.metierGrid}>
           <div>
             <h2 className={styles.metierTitle}>
-              {t("Une usine textile intégrée où la main de l'artisan ", "An integrated textile factory where the artisan's hand ")}
+              <T
+                fr="Une usine textile intégrée où la main de l'artisan "
+                en="An integrated textile factory where the artisan's hand "
+              />
               <span className={styles.metierTitleDim}>
-                {t("rencontre la précision industrielle.", "meets industrial precision.")}
+                <T
+                  fr="rencontre la précision industrielle."
+                  en="meets industrial precision."
+                />
               </span>
             </h2>
           </div>
           <div>
             <p className={styles.metierText}>
-              {t(
-                "ULTRAMAILLE SA, spécialiste de la maille à Madagascar depuis 25 ans, conjugue passion et expertise pour créer des pièces uniques et sur-mesure en crochet et tricot. Alliant savoir-faire artisanal et mode haut de gamme, nous sublimons chaque création avec un engagement sans compromis envers l'excellence.",
-                "ULTRAMAILLE SA, a knitwear specialist in Madagascar for 25 years, combines passion and expertise to create unique, made-to-measure pieces in crochet and knit. Blending artisanal know-how with high-end fashion, we elevate every creation with an uncompromising commitment to excellence.",
-              )}
+              <T
+                fr="ULTRAMAILLE SA, spécialiste de la maille à Madagascar depuis 25 ans, conjugue passion et expertise pour créer des pièces uniques et sur-mesure en crochet et tricot. Alliant savoir-faire artisanal et mode haut de gamme, nous sublimons chaque création avec un engagement sans compromis envers l'excellence."
+                en="ULTRAMAILLE SA, a knitwear specialist in Madagascar for 25 years, combines passion and expertise to create unique, made-to-measure pieces in crochet and knit. Blending artisanal know-how with high-end fashion, we elevate every creation with an uncompromising commitment to excellence."
+              />
             </p>
           </div>
         </div>
@@ -130,6 +140,7 @@ export default function Home() {
           <video
             className={styles.video}
             src="https://www.ultramaille.com/wp-content/uploads/video/video-utm.mp4"
+            preload="metadata"
             autoPlay
             loop
             muted
@@ -150,28 +161,32 @@ export default function Home() {
             />
             <RevealOnScroll className={styles.heritageBadge}>
               <div className={styles.heritageBadgeValue}>1998</div>
-              <div className={styles.heritageBadgeLabel}>{t("fondation de l'atelier", "founding of the workshop")}</div>
+              <div className={styles.heritageBadgeLabel}>
+                <T fr="fondation de l'atelier" en="founding of the workshop" />
+              </div>
             </RevealOnScroll>
           </div>
           <div>
-            <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>{t("— Héritage", "— Heritage")}</div>
+            <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>
+              <T fr="— Héritage" en="— Heritage" />
+            </div>
             <h2 className={styles.heritageTitle}>
-              {t("De génération en génération.", "From one generation to the next.")}
+              <T fr="De génération en génération." en="From one generation to the next." />
             </h2>
             <p className={styles.heritageText}>
-              {t(
-                "Depuis plus de 25 ans, notre entreprise implantée à Antananarivo conjugue un héritage transmis au fil des familles et la maîtrise technique des machines les plus performantes. C'est ce qui nous permet d'accompagner les maisons de mode les plus exigeantes.",
-                "For more than 25 years, our company in Antananarivo has combined a heritage handed down through families with technical mastery of the most advanced machines. This is what allows us to support the most demanding fashion houses.",
-              )}
+              <T
+                fr="Depuis plus de 25 ans, notre entreprise implantée à Antananarivo conjugue un héritage transmis au fil des familles et la maîtrise technique des machines les plus performantes. C'est ce qui nous permet d'accompagner les maisons de mode les plus exigeantes."
+                en="For more than 25 years, our company in Antananarivo has combined a heritage handed down through families with technical mastery of the most advanced machines. This is what allows us to support the most demanding fashion houses."
+              />
             </p>
             <p className={styles.heritageText}>
-              {t(
-                "Une main-d'œuvre qualifiée et fidèle, véritable richesse d'Ultramaille.",
-                "A qualified, loyal workforce — the true wealth of Ultramaille.",
-              )}
+              <T
+                fr="Une main-d'œuvre qualifiée et fidèle, véritable richesse d'Ultramaille."
+                en="A qualified, loyal workforce — the true wealth of Ultramaille."
+              />
             </p>
             <a href="#contact" className={styles.heritageLink}>
-              {t("Lire notre histoire →", "Read our story →")}
+              <T fr="Lire notre histoire →" en="Read our story →" />
             </a>
           </div>
         </div>
@@ -182,17 +197,20 @@ export default function Home() {
           <div className={styles.sectionHead}>
             <div>
               <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>
-                {t("— Notre expertise", "— Our expertise")}
+                <T fr="— Notre expertise" en="— Our expertise" />
               </div>
               <h2 className={styles.sectionHeadTitleLight}>
-                {t("Un savoir-faire complet, du fil à la finition.", "Complete know-how, from yarn to finish.")}
+                <T
+                  fr="Un savoir-faire complet, du fil à la finition."
+                  en="Complete know-how, from yarn to finish."
+                />
               </h2>
             </div>
             <p className={styles.sectionHeadTextDark}>
-              {t(
-                "Cinq ateliers intégrés, une seule et même exigence d'excellence.",
-                "Five integrated workshops, one shared standard of excellence.",
-              )}
+              <T
+                fr="Cinq ateliers intégrés, une seule et même exigence d'excellence."
+                en="Five integrated workshops, one shared standard of excellence."
+              />
             </p>
           </div>
           <div className={styles.craftGrid}>
@@ -202,8 +220,12 @@ export default function Home() {
                 <div className={styles.craftShade} />
                 <div className={styles.craftCaption}>
                   <div className={styles.craftNumber}>{card.number}</div>
-                  <h3 className={styles.craftTitle}>{t(card.titleFr, card.titleEn)}</h3>
-                  <p className={styles.craftText}>{t(card.textFr, card.textEn)}</p>
+                  <h3 className={styles.craftTitle}>
+                    <T fr={card.titleFr} en={card.titleEn} />
+                  </h3>
+                  <p className={styles.craftText}>
+                    <T fr={card.textFr} en={card.textEn} />
+                  </p>
                 </div>
               </div>
             ))}
@@ -218,42 +240,50 @@ export default function Home() {
               <div className={styles.statValue}>
                 <CountUp end={400000} />
               </div>
-              <div className={styles.statLabel}>{t("pièces produites par an", "pieces produced each year")}</div>
+              <div className={styles.statLabel}>
+                <T fr="pièces produites par an" en="pieces produced each year" />
+              </div>
             </div>
             <div className={styles.statCell}>
               <div className={styles.statValue}>
                 <CountUp end={800} />
               </div>
-              <div className={styles.statLabel}>{t("collaborateurs qualifiés", "skilled employees")}</div>
+              <div className={styles.statLabel}>
+                <T fr="collaborateurs qualifiés" en="skilled employees" />
+              </div>
             </div>
             <div className={styles.statCell}>
               <div className={styles.statValue}>
                 <CountUp end={25} />
               </div>
-              <div className={styles.statLabel}>{t("années d'expérience", "years of experience")}</div>
+              <div className={styles.statLabel}>
+                <T fr="années d'expérience" en="years of experience" />
+              </div>
             </div>
             <div className={styles.statCell}>
               <div className={`${styles.statValue} ${styles.statValueGold}`}>
                 <CountUp end={100} />%
               </div>
-              <div className={styles.statLabel}>{t("production intégrée", "integrated production")}</div>
+              <div className={styles.statLabel}>
+                <T fr="production intégrée" en="integrated production" />
+              </div>
             </div>
           </div>
           <div>
             <div className={`${styles.eyebrow} ${styles.eyebrowGold}`}>
-              {t("— Capacité industrielle", "— Industrial capacity")}
+              <T fr="— Capacité industrielle" en="— Industrial capacity" />
             </div>
             <h2 className={styles.capaciteTitle}>
-              {t(
-                "Une chaîne 100% intégrée, du fil au vêtement fini.",
-                "A fully integrated chain, from yarn to finished garment.",
-              )}
+              <T
+                fr="Une chaîne 100% intégrée, du fil au vêtement fini."
+                en="A fully integrated chain, from yarn to finished garment."
+              />
             </h2>
             <p className={styles.capaciteText}>
-              {t(
-                "Chaque étape de la production est gérée en interne — garantissant la maîtrise de la qualité, des délais et de la traçabilité de vos collections.",
-                "Every stage of production is handled internally — guaranteeing control over quality, lead times and traceability for your collections.",
-              )}
+              <T
+                fr="Chaque étape de la production est gérée en interne — garantissant la maîtrise de la qualité, des délais et de la traçabilité de vos collections."
+                en="Every stage of production is handled internally — guaranteeing control over quality, lead times and traceability for your collections."
+              />
             </p>
             <div className={styles.tagRow}>
               {[
@@ -279,10 +309,13 @@ export default function Home() {
         <div className={styles.sectionInner}>
           <div className={styles.durabiliteHead}>
             <div className={`${styles.eyebrow} ${styles.eyebrowGold}`}>
-              {t("— NOTRE ENGAGEMENT", "— Our commitment")}
+              <T fr="— NOTRE ENGAGEMENT" en="— Our commitment" />
             </div>
             <h2 className={styles.durabiliteTitle}>
-              {t("Une entreprise responsable, engagé pour l'humain.", "A responsible company, committed to people.")}
+              <T
+                fr="Une entreprise responsable, engagé pour l'humain."
+                en="A responsible company, committed to people."
+              />
             </h2>
           </div>
           <div className={styles.cardGrid3}>
@@ -293,12 +326,14 @@ export default function Home() {
                   <path d="M2 21c0-3 1.85-5.36 5.08-6" />
                 </svg>
               </div>
-              <h3 className={styles.iconCardTitle}>{t("Respect de l'environnement", "Environmental respect")}</h3>
+              <h3 className={styles.iconCardTitle}>
+                <T fr="Respect de l'environnement" en="Environmental respect" />
+              </h3>
               <p className={styles.iconCardText}>
-                {t(
-                  "Très attachés au développement durable, nous tricotons des fibres naturelles et privilégions les producteurs locaux pour limiter les transports polluants.",
-                  "Committed to sustainable development, we knit natural fibres and favour local producers to limit polluting transport.",
-                )}
+                <T
+                  fr="Très attachés au développement durable, nous tricotons des fibres naturelles et privilégions les producteurs locaux pour limiter les transports polluants."
+                  en="Committed to sustainable development, we knit natural fibres and favour local producers to limit polluting transport."
+                />
               </p>
             </RevealOnScroll>
             <RevealOnScroll className={styles.iconCard} delay={150}>
@@ -310,12 +345,14 @@ export default function Home() {
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
               </div>
-              <h3 className={styles.iconCardTitle}>{t("Société impliquée", "An engaged company")}</h3>
+              <h3 className={styles.iconCardTitle}>
+                <T fr="Société impliquée" en="An engaged company" />
+              </h3>
               <p className={styles.iconCardText}>
-                {t(
-                  "Avec 800 emplois créés, ULTRAMAILLE participe activement au développement local. Nous investissons continuellement dans l'amélioration du quotidien de nos équipes.",
-                  "With 800 jobs created, Ultramaille actively contributes to local development. We continually invest in improving the daily lives of our teams.",
-                )}
+                <T
+                  fr="Avec 800 emplois créés, ULTRAMAILLE participe activement au développement local. Nous investissons continuellement dans l'amélioration du quotidien de nos équipes."
+                  en="With 800 jobs created, Ultramaille actively contributes to local development. We continually invest in improving the daily lives of our teams."
+                />
               </p>
             </RevealOnScroll>
             <RevealOnScroll className={styles.iconCard} delay={300}>
@@ -325,12 +362,14 @@ export default function Home() {
                   <path d="M6 12v5c3 3 9 3 12 0v-5" />
                 </svg>
               </div>
-              <h3 className={styles.iconCardTitle}>{t("Éducation", "Education")}</h3>
+              <h3 className={styles.iconCardTitle}>
+                <T fr="Éducation" en="Education" />
+              </h3>
               <p className={styles.iconCardText}>
-                {t(
-                  "En partenariat avec le Rotary Club Mahamasina, nous finançons des classes à Soavimasoandro et Ambolokandrina.",
-                  "In partnership with Rotary Club Mahamasina, we fund school classes in Soavimasoandro and Ambolokandrina.",
-                )}
+                <T
+                  fr="En partenariat avec le Rotary Club Mahamasina, nous finançons des classes à Soavimasoandro et Ambolokandrina."
+                  en="In partnership with Rotary Club Mahamasina, we fund school classes in Soavimasoandro and Ambolokandrina."
+                />
               </p>
             </RevealOnScroll>
           </div>
@@ -342,37 +381,53 @@ export default function Home() {
           <div className={styles.certCards}>
             <div className={styles.certCard}>
               <div className={styles.certLogoWrap}>
-                <img src="https://www.ultramaille.com/wp-content/uploads/2024/11/SMETA.png" alt="SMETA" loading="lazy" />
+                <Image
+                  src="https://www.ultramaille.com/wp-content/uploads/2024/11/SMETA.png"
+                  alt="SMETA"
+                  width={160}
+                  height={54}
+                />
               </div>
               <p className={styles.certCardText}>
-                {t(
-                  "Audit des conditions de travail, de la santé-sécurité, de l'environnement et de l'éthique, sur site.",
-                  "Audit of labour standards, health & safety, environment and business ethics, on site.",
-                )}
+                <T
+                  fr="Audit des conditions de travail, de la santé-sécurité, de l'environnement et de l'éthique, sur site."
+                  en="Audit of labour standards, health & safety, environment and business ethics, on site."
+                />
               </p>
             </div>
             <div className={styles.certCard}>
               <div className={styles.certLogoWrap}>
-                <img src="https://www.ultramaille.com/wp-content/uploads/2025/02/QIMA-logo.svg" alt="QIMA" loading="lazy" />
+                <img
+                  src="https://www.ultramaille.com/wp-content/uploads/2025/02/QIMA-logo.svg"
+                  alt="QIMA"
+                  width={160}
+                  height={54}
+                  loading="lazy"
+                />
               </div>
               <p className={styles.certCardText}>
-                {t(
-                  "Certification produit attestant qualité, gestion responsable des produits chimiques et approvisionnement durable.",
-                  "Product certification ensuring quality, responsible chemical management and sustainable sourcing.",
-                )}
+                <T
+                  fr="Certification produit attestant qualité, gestion responsable des produits chimiques et approvisionnement durable."
+                  en="Product certification ensuring quality, responsible chemical management and sustainable sourcing."
+                />
               </p>
             </div>
           </div>
           <div>
-            <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>{t("— Certifications", "— Certifications")}</div>
+            <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>
+              <T fr="— Certifications" en="— Certifications" />
+            </div>
             <h2 className={styles.certTitle}>
-              {t("Audités et certifiés aux standards internationaux.", "Audited and certified to international standards.")}
+              <T
+                fr="Audités et certifiés aux standards internationaux."
+                en="Audited and certified to international standards."
+              />
             </h2>
             <p className={styles.certText}>
-              {t(
-                "Nos certifications offrent aux marques européennes l'assurance d'une chaîne d'approvisionnement éthique, sûre et traçable.",
-                "Our certifications give European brands the assurance of an ethical, safe and traceable supply chain.",
-              )}
+              <T
+                fr="Nos certifications offrent aux marques européennes l'assurance d'une chaîne d'approvisionnement éthique, sûre et traçable."
+                en="Our certifications give European brands the assurance of an ethical, safe and traceable supply chain."
+              />
             </p>
           </div>
         </div>

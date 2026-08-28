@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
 import { slugify } from "@/lib/blog";
@@ -70,6 +71,9 @@ export async function POST(request: Request) {
     metaTitle: { fr: metaTitle?.fr ?? "", en: metaTitle?.en ?? "" },
     metaDescription: { fr: metaDescription?.fr ?? "", en: metaDescription?.en ?? "" },
   });
+
+  revalidatePath("/blog");
+  if (isPublished) revalidatePath(`/blog/${slug}`);
 
   return NextResponse.json({ success: true, article }, { status: 201 });
 }

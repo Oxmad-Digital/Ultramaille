@@ -61,4 +61,6 @@ const ArticleSchema = new Schema<IArticle>(
   { timestamps: true }
 );
 
+ArticleSchema.index({ status: 1, publishedAt: -1 });
+
 export default models.Article || model<IArticle>("Article", ArticleSchema);

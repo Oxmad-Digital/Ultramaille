@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
 import Article from "@/models/Article";
@@ -52,6 +53,7 @@ export async function PATCH(
   if (!article) {
     return NextResponse.json({ error: "Article introuvable" }, { status: 404 });
   }
+  const previousSlug = article.slug;
 
   if (title !== undefined) {
     if (title.fr !== undefined) article.title.fr = title.fr;
@@ -97,6 +99,11 @@ export async function PATCH(
   }
 
   await article.save();
+
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${article.slug}`);
+  if (article.slug !== previousSlug) revalidatePath(`/blog/${previousSlug}`);
+
   return NextResponse.json({ success: true, article });
 }
 
@@ -109,6 +116,10 @@ export async function DELETE(
   }
   const { id } = await params;
   await connectDB();
-  await Article.findByIdAndDelete(id);
+  const deleted = await Article.findByIdAndDelete(id).lean();
+
+  revalidatePath("/blog");
+  if (deleted) revalidatePath(`/blog/${deleted.slug}`);
+
   return NextResponse.json({ success: true });
 }
