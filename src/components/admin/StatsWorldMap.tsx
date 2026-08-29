@@ -45,37 +45,53 @@ export default function StatsWorldMap({ countries }: { countries: CountryPoint[]
       tooltip.className = styles.tooltip;
       host.appendChild(tooltip);
 
-      svg.querySelectorAll<SVGPathElement>("path[id]").forEach((p) => {
-        const views = byCountry.get(p.id);
-        p.style.stroke = "rgba(15, 30, 48, 0.18)";
-        p.style.strokeWidth = "0.35";
+      svg.querySelectorAll<SVGElement>("path[id], g[id]").forEach((el) => {
+        const views = byCountry.get(el.id);
+        const paths =
+          el.tagName.toLowerCase() === "g"
+            ? Array.from(el.querySelectorAll<SVGPathElement>("path"))
+            : [el as unknown as SVGPathElement];
+
+        paths.forEach((p) => {
+          p.style.stroke = "rgba(15, 30, 48, 0.18)";
+          p.style.strokeWidth = "0.35";
+        });
 
         if (!views) {
-          p.style.fill = "#ece4d5";
+          paths.forEach((p) => {
+            p.style.fill = "#ece4d5";
+          });
           return;
         }
 
         const intensity = 0.28 + 0.72 * Math.sqrt(views / max);
-        p.style.fill = `rgba(224, 163, 56, ${intensity.toFixed(2)})`;
-        p.style.cursor = "pointer";
+        const fill = `rgba(224, 163, 56, ${intensity.toFixed(2)})`;
+        paths.forEach((p) => {
+          p.style.fill = fill;
+          p.style.cursor = "pointer";
+        });
 
         const show = (e: PointerEvent) => {
           const hostRect = host.getBoundingClientRect();
           tooltip.innerHTML =
-            `<span class="${styles.tooltipLabel}">${countryLabel(p.id.toUpperCase())}</span>` +
+            `<span class="${styles.tooltipLabel}">${countryLabel(el.id.toUpperCase())}</span>` +
             `<span class="${styles.tooltipValue}">${views.toLocaleString("fr-FR")}</span>`;
           tooltip.style.left = `${e.clientX - hostRect.left}px`;
           tooltip.style.top = `${e.clientY - hostRect.top}px`;
           tooltip.classList.add(styles.tooltipVisible);
-          p.style.filter = "brightness(1.12)";
+          paths.forEach((p) => {
+            p.style.filter = "brightness(1.12)";
+          });
         };
         const hide = () => {
           tooltip.classList.remove(styles.tooltipVisible);
-          p.style.filter = "";
+          paths.forEach((p) => {
+            p.style.filter = "";
+          });
         };
-        p.addEventListener("pointerenter", show);
-        p.addEventListener("pointermove", show);
-        p.addEventListener("pointerleave", hide);
+        el.addEventListener("pointerenter", show);
+        el.addEventListener("pointermove", show);
+        el.addEventListener("pointerleave", hide);
       });
     })();
 
