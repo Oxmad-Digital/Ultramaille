@@ -21,6 +21,9 @@ export async function POST(request: NextRequest) {
   if (!path.startsWith("/")) {
     return NextResponse.json({ error: "Requête invalide" }, { status: 400 });
   }
+  if (path.startsWith("/admin")) {
+    return NextResponse.json({ ok: true });
+  }
 
   const host = request.headers.get("host");
   const origin = request.headers.get("origin");
