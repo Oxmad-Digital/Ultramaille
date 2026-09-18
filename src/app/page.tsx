@@ -5,6 +5,7 @@ import ContactCta from "@/components/ContactCta";
 import CountUp from "@/components/CountUp";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import T from "@/components/T";
+import LazyVideo from "@/components/LazyVideo";
 import styles from "./page.module.css";
 
 const CRAFT_CARDS = [
@@ -137,15 +138,13 @@ export default function Home() {
 
       <section className={styles.videoSection}>
         <div className={styles.videoWrap}>
-          <video
+          <LazyVideo
             className={styles.video}
-            src="https://res.cloudinary.com/wzetrnif/video/upload/v1789751897/Ultramaille-presentation_lcehb4.mp4"
-            preload="metadata"
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls
+            // Version 1280 px transcodée par Cloudinary (~37 Mo contre 76 Mo pour l'original)
+            // et image d'aperçu tirée de la vidéo (l'image à 0 s est noire).
+            src="https://res.cloudinary.com/wzetrnif/video/upload/w_1280,q_auto,f_mp4/v1789751897/Ultramaille-presentation_lcehb4.mp4"
+            poster="https://res.cloudinary.com/wzetrnif/video/upload/so_3,f_jpg,w_1280,q_auto/v1789751897/Ultramaille-presentation_lcehb4.jpg"
+            label="Présentation vidéo d'Ultramaille"
           />
         </div>
       </section>

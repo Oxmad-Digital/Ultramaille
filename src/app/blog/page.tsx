@@ -30,21 +30,49 @@ export const revalidate = 60;
 async function getPublishedArticles(): Promise<PublicArticle[]> {
   await connectDB();
   after(() => publishDueArticles());
+  // Sans `content` : le corps complet de chaque article n'est pas nécessaire pour la liste.
   const articles = await Article.find({ status: "published" })
+    .select("-content -metaTitle -metaDescription")
     .sort({ publishedAt: -1 })
     .lean();
 
-  return articles.map((a) => ({
-    slug: a.slug,
-    title: { fr: a.title?.fr ?? "", en: a.title?.en ?? "" },
-    excerpt: { fr: a.excerpt?.fr ?? "", en: a.excerpt?.en ?? "" },
-    category: a.category ?? "",
-    coverImageUrl: a.coverImageUrl,
-    publishedAt: a.publishedAt ? new Date(a.publishedAt).toISOString() : "",
-    readingMinutesFr: estimateReadingMinutes(a.content?.fr ?? ""),
-    readingMinutesEn: estimateReadingMinutes(a.content?.en ?? ""),
-    featured: Boolean(a.featured),
-  }));
+  // Articles antérieurs au champ readingMinutes : on le calcule une fois, puis on
+  // l'enregistre pour que les affichages suivants n'aient plus à charger le contenu.
+  const readingMinutes = new Map<string, { fr: number; en: number }>();
+  const missing = articles.filter((a) => !a.readingMinutes);
+  if (missing.length > 0) {
+    const bodies = await Article.find({ _id: { $in: missing.map((a) => a._id) } })
+      .select("content")
+      .lean();
+    for (const body of bodies) {
+      readingMinutes.set(String(body._id), {
+        fr: estimateReadingMinutes(body.content?.fr ?? ""),
+        en: estimateReadingMinutes(body.content?.en ?? ""),
+      });
+    }
+    if (readingMinutes.size > 0) {
+      await Article.bulkWrite(
+        [...readingMinutes].map(([id, minutes]) => ({
+          updateOne: { filter: { _id: id }, update: { $set: { readingMinutes: minutes } } },
+        }))
+      );
+    }
+  }
+
+  return articles.map((a) => {
+    const minutes = a.readingMinutes ?? readingMinutes.get(String(a._id));
+    return {
+      slug: a.slug,
+      title: { fr: a.title?.fr ?? "", en: a.title?.en ?? "" },
+      excerpt: { fr: a.excerpt?.fr ?? "", en: a.excerpt?.en ?? "" },
+      category: a.category ?? "",
+      coverImageUrl: a.coverImageUrl,
+      publishedAt: a.publishedAt ? new Date(a.publishedAt).toISOString() : "",
+      readingMinutesFr: minutes?.fr ?? 1,
+      readingMinutesEn: minutes?.en ?? 1,
+      featured: Boolean(a.featured),
+    };
+  });
 }
 
 export default async function BlogPage() {
