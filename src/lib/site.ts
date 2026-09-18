@@ -9,3 +9,19 @@ export const CONTACT = {
   telephoneDisplay: "+261 34 11 855 22",
   email: "contact@ultramaille.com",
 };
+
+// Pages publiques statiques (hors /blog/[slug]). Sert à n'enregistrer que des chemins
+// réels dans les stats. À garder alignée avec src/app/sitemap.ts.
+export const PUBLIC_PATHS = [
+  "/",
+  "/a-propos",
+  "/notre-expertise",
+  "/notre-engagement",
+  "/blog",
+  "/contact",
+  "/mentions-legales",
+];
+
+export function isTrackablePath(path: string) {
+  return PUBLIC_PATHS.includes(path) || /^\/blog\/[a-z0-9-]{1,200}$/.test(path);
+}

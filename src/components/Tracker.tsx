@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-function sendDuration(id: string, duration: number) {
-  const payload = JSON.stringify({ id, duration });
+function sendDuration(id: string, token: string, duration: number) {
+  const payload = JSON.stringify({ id, token, duration });
   if (navigator.sendBeacon) {
     navigator.sendBeacon("/api/track/duration", new Blob([payload], { type: "application/json" }));
   } else {
@@ -29,13 +29,13 @@ export default function Tracker() {
     });
 
     const startedAt = Date.now();
-    let viewId: string | null = null;
+    let view: { id: string; token: string } | null = null;
     let sent = false;
 
     const finalize = () => {
-      if (sent || !viewId) return;
+      if (sent || !view) return;
       sent = true;
-      sendDuration(viewId, Date.now() - startedAt);
+      sendDuration(view.id, view.token, Date.now() - startedAt);
     };
 
     const handleVisibility = () => {
@@ -49,8 +49,10 @@ export default function Tracker() {
       keepalive: true,
     })
       .then((res) => res.json())
-      .then((data: { id?: unknown }) => {
-        if (typeof data.id === "string") viewId = data.id;
+      .then((data: { id?: unknown; token?: unknown }) => {
+        if (typeof data.id === "string" && typeof data.token === "string") {
+          view = { id: data.id, token: data.token };
+        }
       })
       .catch(() => {});
 

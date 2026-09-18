@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import PageView from "@/models/PageView";
+import { verifyViewId } from "@/lib/trackingToken";
 import { getClientIp, memoryRateLimit, tooManyRequests } from "@/lib/rateLimit";
 
 const MAX_DURATION_MS = 30 * 60 * 1000;
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest) {
     return tooManyRequests();
   }
 
-  let body: { id?: unknown; duration?: unknown };
+  let body: { id?: unknown; token?: unknown; duration?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -22,7 +23,12 @@ export async function POST(request: NextRequest) {
   const id = typeof body.id === "string" ? body.id : "";
   const duration = typeof body.duration === "number" ? body.duration : NaN;
 
-  if (!mongoose.isValidObjectId(id) || !Number.isFinite(duration) || duration <= 0) {
+  if (
+    !mongoose.isValidObjectId(id) ||
+    !verifyViewId(id, body.token) ||
+    !Number.isFinite(duration) ||
+    duration <= 0
+  ) {
     return NextResponse.json({ error: "Requête invalide" }, { status: 400 });
   }
 

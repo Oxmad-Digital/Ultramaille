@@ -4,6 +4,8 @@ import crypto from "crypto";
 import { connectDB } from "@/lib/db";
 import PageView from "@/models/PageView";
 import { memoryRateLimit, tooManyRequests } from "@/lib/rateLimit";
+import { isTrackablePath } from "@/lib/site";
+import { signViewId, visitorPepper } from "@/lib/trackingToken";
 
 export async function POST(request: NextRequest) {
   const { isBot, device } = userAgent(request);
@@ -22,7 +24,8 @@ export async function POST(request: NextRequest) {
   if (!path.startsWith("/")) {
     return NextResponse.json({ error: "Requête invalide" }, { status: 400 });
   }
-  if (path.startsWith("/admin")) {
+  // Chemins inconnus (admin, 404, valeurs forgées) : ignorés sans erreur.
+  if (!isTrackablePath(path)) {
     return NextResponse.json({ ok: true });
   }
 
@@ -57,7 +60,7 @@ export async function POST(request: NextRequest) {
   }
 
   const day = new Date().toISOString().slice(0, 10);
-  const pepper = process.env.AUTH_SECRET ?? "";
+  const pepper = visitorPepper();
   const visitorHash = crypto
     .createHash("sha256")
     .update(`${ip}|${request.headers.get("user-agent") ?? ""}|${day}|${pepper}`)
@@ -76,5 +79,6 @@ export async function POST(request: NextRequest) {
     visitorHash,
   });
 
-  return NextResponse.json({ ok: true, id: doc._id.toString() });
+  const id = doc._id.toString();
+  return NextResponse.json({ ok: true, id, token: signViewId(id) });
 }
