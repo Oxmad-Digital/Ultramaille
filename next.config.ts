@@ -57,6 +57,21 @@ const LEGACY_REDIRECTS: Record<string, string[]> = {
   ],
 };
 
+// En-têtes de sécurité appliqués à toutes les routes.
+// Pas de CSP `script-src` : elle exige des nonces (donc des pages dynamiques via le proxy)
+// et ferait perdre le rendu statique du site. On garde les directives sans effet de bord.
+const SECURITY_HEADERS = [
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), interest-cohort=()" },
+  { key: "Strict-Transport-Security", value: "max-age=31536000" },
+  {
+    key: "Content-Security-Policy",
+    value: "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+  },
+];
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -66,6 +81,9 @@ const nextConfig: NextConfig = {
         pathname: "/wzetrnif/**",
       },
     ],
+  },
+  async headers() {
+    return [{ source: "/:path*", headers: SECURITY_HEADERS }];
   },
   async redirects() {
     return Object.entries(LEGACY_REDIRECTS).flatMap(([destination, sources]) =>
