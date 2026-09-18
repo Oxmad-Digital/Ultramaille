@@ -1,10 +1,8 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
 import { useLanguage } from "@/lib/language-context";
 import type { LocalizedText } from "@/lib/blog";
 import styles from "@/app/blog/[slug]/page.module.css";
@@ -12,16 +10,21 @@ import styles from "@/app/blog/[slug]/page.module.css";
 export type PublicArticleDetail = {
   title: LocalizedText;
   excerpt: LocalizedText;
-  content: LocalizedText;
   coverImageUrl: string | null;
   coverImageAlt: string;
   publishedAt: string;
 };
 
-export default function BlogArticleClient({ article }: { article: PublicArticleDetail }) {
+// `body` est rendu et filtré côté serveur (ArticleBody) : le client ne fait que
+// choisir la langue, sans embarquer le parseur Markdown.
+export default function BlogArticleClient({
+  article,
+  body,
+}: {
+  article: PublicArticleDetail;
+  body: Record<"fr" | "en", ReactNode>;
+}) {
   const { lang, t } = useLanguage();
-  const bodyContent = article.content[lang] || article.content.fr;
-  const isHtmlContent = /^\s*</.test(bodyContent);
   const publishedLabel = article.publishedAt
     ? new Date(article.publishedAt).toLocaleDateString(lang === "en" ? "en-US" : "fr-FR", {
         day: "numeric",
@@ -61,15 +64,7 @@ export default function BlogArticleClient({ article }: { article: PublicArticleD
         </div>
       )}
 
-      <article className={styles.content}>
-        {isHtmlContent ? (
-          <div dangerouslySetInnerHTML={{ __html: bodyContent }} />
-        ) : (
-          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-            {bodyContent}
-          </ReactMarkdown>
-        )}
-      </article>
+      <article className={styles.content}>{body[lang]}</article>
     </>
   );
 }

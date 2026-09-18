@@ -5,6 +5,8 @@ import { after } from "next/server";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogArticleClient from "@/components/blog/BlogArticleClient";
+import ArticleBody from "@/components/blog/ArticleBody";
+import { jsonLd } from "@/lib/jsonLd";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
 import { publishDueArticles } from "@/lib/publishDueArticles";
@@ -96,17 +98,20 @@ export default async function BlogArticlePage({
     <div className={styles.page}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(articleJsonLd) }}
       />
       <Header ctaHref="/contact#form" />
       <BlogArticleClient
         article={{
           title: { fr: article.title?.fr ?? "", en: article.title?.en ?? "" },
           excerpt: { fr: article.excerpt?.fr ?? "", en: article.excerpt?.en ?? "" },
-          content: { fr: article.content?.fr ?? "", en: article.content?.en ?? "" },
           coverImageUrl: article.coverImageUrl,
           coverImageAlt: article.coverImageAlt ?? "",
           publishedAt: article.publishedAt ? new Date(article.publishedAt).toISOString() : "",
+        }}
+        body={{
+          fr: <ArticleBody content={article.content?.fr ?? ""} />,
+          en: <ArticleBody content={article.content?.en || article.content?.fr || ""} />,
         }}
       />
       <Footer />

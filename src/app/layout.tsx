@@ -3,6 +3,7 @@ import { Montserrat, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import { LanguageProvider } from "@/lib/language-context";
 import Tracker from "@/components/Tracker";
 import { CONTACT, SITE_URL } from "@/lib/site";
+import { jsonLd } from "@/lib/jsonLd";
 import "./globals.css";
 
 const ORGANIZATION_JSON_LD = {
@@ -87,7 +88,7 @@ export default function RootLayout({
       <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd(ORGANIZATION_JSON_LD) }}
         />
         <Tracker />
         <LanguageProvider>{children}</LanguageProvider>
