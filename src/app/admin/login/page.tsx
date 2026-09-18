@@ -23,7 +23,11 @@ export default function AdminLoginPage() {
     setLoading(false);
 
     if (res?.error) {
-      setError("Identifiants invalides");
+      setError(
+        res.code === "rate_limited"
+          ? "Trop de tentatives. Réessayez dans quelques minutes."
+          : "Identifiants invalides"
+      );
       return;
     }
 

@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import crypto from "crypto";
 import { connectDB } from "@/lib/db";
 import PageView from "@/models/PageView";
+import { memoryRateLimit, tooManyRequests } from "@/lib/rateLimit";
 
 export async function POST(request: NextRequest) {
   const { isBot, device } = userAgent(request);
@@ -51,6 +52,10 @@ export async function POST(request: NextRequest) {
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     request.headers.get("x-real-ip") ||
     "unknown";
+  if (!memoryRateLimit("track", ip, { limit: 120, windowMs: 60 * 1000 })) {
+    return tooManyRequests();
+  }
+
   const day = new Date().toISOString().slice(0, 10);
   const pepper = process.env.AUTH_SECRET ?? "";
   const visitorHash = crypto

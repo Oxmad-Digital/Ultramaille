@@ -3,10 +3,15 @@ import type { NextRequest } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import PageView from "@/models/PageView";
+import { getClientIp, memoryRateLimit, tooManyRequests } from "@/lib/rateLimit";
 
 const MAX_DURATION_MS = 30 * 60 * 1000;
 
 export async function POST(request: NextRequest) {
+  if (!memoryRateLimit("track-duration", getClientIp(request.headers), { limit: 120, windowMs: 60 * 1000 })) {
+    return tooManyRequests();
+  }
+
   let body: { id?: unknown; duration?: unknown };
   try {
     body = await request.json();
