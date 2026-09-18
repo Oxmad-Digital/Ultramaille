@@ -139,7 +139,7 @@ export default function Home() {
         <div className={styles.videoWrap}>
           <video
             className={styles.video}
-            src="https://www.ultramaille.com/wp-content/uploads/video/video-utm.mp4"
+            src="https://res.cloudinary.com/wzetrnif/video/upload/v1789751897/Ultramaille-presentation_lcehb4.mp4"
             preload="metadata"
             autoPlay
             loop
@@ -388,10 +388,10 @@ export default function Home() {
             <div className={styles.certCard}>
               <div className={styles.certLogoWrap}>
                 <Image
-                  src="https://www.ultramaille.com/wp-content/uploads/2024/11/SMETA.png"
+                  src="https://res.cloudinary.com/wzetrnif/image/upload/v1789752135/ultramaille-smeta-logo_gpnbip.jpg"
                   alt="SMETA"
                   width={160}
-                  height={54}
+                  height={91}
                 />
               </div>
               <p className={styles.certCardText}>
@@ -404,10 +404,10 @@ export default function Home() {
             <div className={styles.certCard}>
               <div className={styles.certLogoWrap}>
                 <Image
-                  src="https://www.ultramaille.com/wp-content/uploads/2025/02/QIMA-logo.svg"
+                  src="https://res.cloudinary.com/wzetrnif/image/upload/v1789752134/ultramaille-QIMA-Logo_rysbbi.png"
                   alt="QIMA"
                   width={160}
-                  height={54}
+                  height={84}
                 />
               </div>
               <p className={styles.certCardText}>
