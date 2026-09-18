@@ -9,6 +9,10 @@ class RateLimitedSignin extends CredentialsSignin {
   code = "rate_limited";
 }
 
+// Hash factice : quand l'email est inconnu on fait quand même un bcrypt.compare,
+// pour que le temps de réponse ne révèle pas si le compte existe.
+const DUMMY_HASH = "$2b$12$gsgRhOl4eZZDpotM9CP2h.Lv375XFpIAPjNjDVzBv5CxaTwd1VOxG";
+
 const LOGIN_LIMIT = { limit: 10, windowMs: 15 * 60 * 1000 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -41,15 +45,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         await connectDB();
         const admin = await Admin.findOne({ email });
-        if (!admin) {
-          throw new CredentialsSignin();
-        }
+        const password = typeof credentials?.password === "string" ? credentials.password : "";
 
-        const ok = await bcrypt.compare(
-          (credentials?.password as string) ?? "",
-          admin.passwordHash
-        );
-        if (!ok) {
+        const ok = await bcrypt.compare(password, admin?.passwordHash ?? DUMMY_HASH);
+        if (!admin || !ok) {
           throw new CredentialsSignin();
         }
 

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import crypto from "crypto";
 import { connectDB } from "@/lib/db";
 import Admin from "@/models/Admin";
@@ -36,11 +36,15 @@ export async function POST(request: Request) {
     const origin = process.env.NEXTAUTH_URL || new URL(request.url).origin;
     const resetUrl = `${origin}/admin/reset-password?token=${rawToken}`;
 
-    try {
-      await sendPasswordResetEmail(admin.email, resetUrl);
-    } catch (err) {
-      console.error("Échec de l'envoi de l'email de réinitialisation", err);
-    }
+    // Après la réponse : l'appel à Resend (plusieurs centaines de ms) ne doit pas
+    // allonger le temps de réponse des seuls comptes existants.
+    after(async () => {
+      try {
+        await sendPasswordResetEmail(admin.email, resetUrl);
+      } catch (err) {
+        console.error("Échec de l'envoi de l'email de réinitialisation", err);
+      }
+    });
   }
 
   return NextResponse.json({ success: true, message: GENERIC_MESSAGE });
