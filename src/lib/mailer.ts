@@ -22,6 +22,52 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
   });
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export type ContactMessage = {
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+  message: string;
+};
+
+export async function sendContactEmail(to: string, contact: ContactMessage) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY manquant dans les variables d'environnement");
+  }
+
+  const resend = new Resend(apiKey);
+  const row = (label: string, value: string) =>
+    value ? `<p><strong>${label} :</strong> ${escapeHtml(value)}</p>` : "";
+
+  const { error } = await resend.emails.send({
+    from: `Ultramaille <${FROM_ADDRESS}>`,
+    to,
+    replyTo: contact.email,
+    subject: `Nouveau message via le site — ${contact.name}`,
+    html: `
+      ${row("Nom", contact.name)}
+      ${row("Société", contact.company)}
+      ${row("Email", contact.email)}
+      ${row("Téléphone", contact.phone)}
+      <p><strong>Message :</strong></p>
+      <p style="white-space: pre-wrap">${escapeHtml(contact.message)}</p>
+    `,
+  });
+  if (error) {
+    throw new Error(`Resend : ${error.message}`);
+  }
+}
+
 export async function sendInvitationEmail(to: string, inviteUrl: string, role: "admin" | "member") {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {

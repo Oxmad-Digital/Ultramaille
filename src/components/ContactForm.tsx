@@ -7,11 +7,56 @@ import styles from "@/app/contact/page.module.css";
 export default function ContactForm() {
   const { t } = useLanguage();
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (sending) return;
+    const data = new FormData(e.currentTarget);
+    setSending(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("nom"),
+          company: data.get("societe"),
+          email: data.get("email"),
+          phone: data.get("tel"),
+          message: data.get("message"),
+          consent: data.get("consent") === "on",
+          website: data.get("website"),
+        }),
+      });
+      if (!res.ok) {
+        setError(
+          res.status === 429
+            ? t(
+                "Trop de tentatives. Merci de réessayer un peu plus tard.",
+                "Too many attempts. Please try again later.",
+              )
+            : t(
+                "L'envoi a échoué. Réessayez ou écrivez-nous directement par email.",
+                "Sending failed. Please try again or email us directly.",
+              ),
+        );
+        return;
+      }
+      setSent(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      setError(
+        t(
+          "L'envoi a échoué. Vérifiez votre connexion et réessayez.",
+          "Sending failed. Check your connection and try again.",
+        ),
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -40,6 +85,14 @@ export default function ContactForm() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className={styles.form}>
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className={styles.honeypot}
+          />
           <div className={styles.formRow}>
             <label className={styles.field}>
               <span className={styles.fieldLabel}>{t("Nom complet", "Full name")}</span>
@@ -104,8 +157,13 @@ export default function ContactForm() {
               )}
             </span>
           </label>
-          <button type="submit" className={styles.submitButton}>
-            {t("Envoyer", "Send")}
+          {error && (
+            <p role="alert" className={styles.formError}>
+              {error}
+            </p>
+          )}
+          <button type="submit" className={styles.submitButton} disabled={sending}>
+            {sending ? t("Envoi…", "Sending…") : t("Envoyer", "Send")}
           </button>
         </form>
       )}

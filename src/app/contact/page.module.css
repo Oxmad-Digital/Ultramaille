@@ -123,6 +123,21 @@
   gap: 20px;
 }
 
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.formError {
+  font-family: var(--font-hanken-grotesk), sans-serif;
+  font-size: 14px;
+  color: #b3261e;
+  margin: 0;
+}
+
 .formRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -212,6 +227,12 @@ textarea.input {
 .submitButton:hover {
   background: var(--utm-navy-2);
   transform: translateY(-2px);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: progress;
+  transform: none;
 }
 
 .infoCard {
