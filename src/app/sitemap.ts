@@ -1,7 +1,13 @@
 import type { MetadataRoute } from "next";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
+import { publishDueArticles } from "@/lib/publishDueArticles";
 import { SITE_URL } from "@/lib/site";
+
+// Sans ceci le sitemap est généré une seule fois au build et les nouveaux articles
+// n'y apparaissent qu'au prochain déploiement. Les routes admin le rafraîchissent
+// aussi à la demande (revalidatePath) ; l'intervalle couvre les publications planifiées.
+export const revalidate = 3600;
 
 const STATIC_ROUTES: { path: string; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"]; priority: number }[] = [
   { path: "", changeFrequency: "monthly", priority: 1 },
@@ -15,13 +21,13 @@ const STATIC_ROUTES: { path: string; changeFrequency: MetadataRoute.Sitemap[numb
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   await connectDB();
+  await publishDueArticles();
   const articles = await Article.find({ status: "published" })
     .select("slug updatedAt publishedAt")
     .lean();
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
     url: `${SITE_URL}${route.path}`,
-    lastModified: new Date(),
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));

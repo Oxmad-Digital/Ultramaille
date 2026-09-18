@@ -73,6 +73,7 @@ export async function POST(request: Request) {
   });
 
   revalidatePath("/blog");
+  revalidatePath("/sitemap.xml");
   if (isPublished) revalidatePath(`/blog/${slug}`);
 
   return NextResponse.json({ success: true, article }, { status: 201 });

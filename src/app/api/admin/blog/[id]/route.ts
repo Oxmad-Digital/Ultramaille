@@ -101,6 +101,7 @@ export async function PATCH(
   await article.save();
 
   revalidatePath("/blog");
+  revalidatePath("/sitemap.xml");
   revalidatePath(`/blog/${article.slug}`);
   if (article.slug !== previousSlug) revalidatePath(`/blog/${previousSlug}`);
 
@@ -119,6 +120,7 @@ export async function DELETE(
   const deleted = await Article.findByIdAndDelete(id).lean();
 
   revalidatePath("/blog");
+  revalidatePath("/sitemap.xml");
   if (deleted) revalidatePath(`/blog/${deleted.slug}`);
 
   return NextResponse.json({ success: true });
