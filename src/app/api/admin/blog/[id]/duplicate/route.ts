@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
 import { slugify } from "@/lib/blog";
 import Article from "@/models/Article";
+import { invalidId, isValidId } from "@/lib/http";
 
 export async function POST(
   request: Request,
@@ -12,6 +13,7 @@ export async function POST(
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
   const { id } = await params;
+  if (!isValidId(id)) return invalidId();
   await connectDB();
 
   const source = await Article.findById(id).lean();

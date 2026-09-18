@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/requireAdmin";
 import { slugify } from "@/lib/blog";
 import Category from "@/models/Category";
 import Article from "@/models/Article";
+import { badRequest, readJson, str } from "@/lib/http";
 
 export async function GET() {
   if (!(await requireAdmin())) {
@@ -30,8 +31,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const name = (body.name || "").trim();
+  const body = await readJson(request);
+  if (!body) return badRequest();
+  const name = str(body.name, 100);
   if (!name) {
     return NextResponse.json({ error: "Nom requis" }, { status: 400 });
   }

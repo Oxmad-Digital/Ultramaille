@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
 import Category from "@/models/Category";
 import Article from "@/models/Article";
+import { badRequest, invalidId, isValidId, readJson, str } from "@/lib/http";
 
 export async function PATCH(
   request: Request,
@@ -13,8 +14,10 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const body = await request.json();
-  const name = (body.name || "").trim();
+  if (!isValidId(id)) return invalidId();
+  const body = await readJson(request);
+  if (!body) return badRequest();
+  const name = str(body.name, 100);
   if (!name) {
     return NextResponse.json({ error: "Nom requis" }, { status: 400 });
   }
@@ -51,6 +54,7 @@ export async function DELETE(
   }
 
   const { id } = await params;
+  if (!isValidId(id)) return invalidId();
   await connectDB();
 
   const category = await Category.findByIdAndDelete(id);

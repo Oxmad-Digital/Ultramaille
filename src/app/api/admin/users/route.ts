@@ -5,7 +5,9 @@ import { connectDB } from "@/lib/db";
 import { requireAdminRole } from "@/lib/requireAdmin";
 import Admin from "@/models/Admin";
 import { sendInvitationEmail } from "@/lib/mailer";
+import { badRequest, readJson, str } from "@/lib/http";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const INVITE_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 export async function GET() {
@@ -32,12 +34,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const email = (body.email || "").toLowerCase().trim();
+  const body = await readJson(request);
+  if (!body) return badRequest();
+  const email = str(body.email, 254).toLowerCase();
   const role = body.role === "member" ? "member" : "admin";
 
-  if (!email) {
-    return NextResponse.json({ error: "Email requis" }, { status: 400 });
+  if (!EMAIL_RE.test(email)) {
+    return NextResponse.json({ error: "Email invalide" }, { status: 400 });
   }
 
   await connectDB();

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
 import Media from "@/models/Media";
+import { badRequest, invalidId, isValidId, readJson, str } from "@/lib/http";
 
 export async function PATCH(
   request: Request,
@@ -12,7 +13,9 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const body = await request.json();
+  if (!isValidId(id)) return invalidId();
+  const body = await readJson(request);
+  if (!body) return badRequest();
 
   await connectDB();
 
@@ -21,7 +24,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Média introuvable" }, { status: 404 });
   }
 
-  media.alt = (body.alt ?? media.alt).trim();
+  if (body.alt !== undefined) media.alt = str(body.alt, 300);
   await media.save();
 
   return NextResponse.json({ success: true, media });
@@ -36,6 +39,7 @@ export async function DELETE(
   }
 
   const { id } = await params;
+  if (!isValidId(id)) return invalidId();
   await connectDB();
   await Media.findByIdAndDelete(id);
 

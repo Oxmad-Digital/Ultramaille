@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/db";
 import { requireAdminRole } from "@/lib/requireAdmin";
 import Admin from "@/models/Admin";
 import { sendInvitationEmail } from "@/lib/mailer";
+import { invalidId, isValidId } from "@/lib/http";
 
 const INVITE_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -17,6 +18,7 @@ export async function POST(
   }
 
   const { id } = await params;
+  if (!isValidId(id)) return invalidId();
 
   await connectDB();
 

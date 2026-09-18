@@ -26,6 +26,8 @@ export interface IArticle {
   metaTitle: ILocalizedText;
   metaDescription: ILocalizedText;
   views: number;
+  // Calculé à l'enregistrement pour ne pas charger tout le contenu sur la liste du blog.
+  readingMinutes?: { fr: number; en: number };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -57,6 +59,10 @@ const ArticleSchema = new Schema<IArticle>(
     metaTitle: { type: LocalizedTextSchema, default: () => ({ fr: "", en: "" }) },
     metaDescription: { type: LocalizedTextSchema, default: () => ({ fr: "", en: "" }) },
     views: { type: Number, default: 0 },
+    readingMinutes: {
+      type: new Schema({ fr: Number, en: Number }, { _id: false }),
+      default: undefined,
+    },
   },
   { timestamps: true }
 );

@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/db";
 import { requireAdminRole } from "@/lib/requireAdmin";
 import Admin from "@/models/Admin";
+import { badRequest, invalidId, isValidId, readJson } from "@/lib/http";
 
 export async function PATCH(
   request: Request,
@@ -14,7 +15,9 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const body = await request.json();
+  if (!isValidId(id)) return invalidId();
+  const body = await readJson(request);
+  if (!body) return badRequest();
 
   await connectDB();
 
@@ -46,8 +49,8 @@ export async function PATCH(
     user.role = role;
   }
 
-  if (body.password) {
-    if ((body.password as string).length < 8) {
+  if (body.password !== undefined) {
+    if (typeof body.password !== "string" || body.password.length < 8) {
       return NextResponse.json(
         { error: "Le mot de passe doit contenir au moins 8 caractères" },
         { status: 400 }
@@ -75,6 +78,7 @@ export async function DELETE(
   }
 
   const { id } = await params;
+  if (!isValidId(id)) return invalidId();
 
   if (id === session.user.id) {
     return NextResponse.json(
