@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { requirePageSession } from "@/lib/requireAdmin";
 import { connectDB } from "@/lib/db";
 import Admin from "@/models/Admin";
 import AdminShell from "@/components/admin/AdminShell";
@@ -21,8 +20,7 @@ async function getUsers(): Promise<AdminUserRow[]> {
 }
 
 export default async function AdminSettingsPage() {
-  const [settings, session] = await Promise.all([getSiteSettings(), auth()]);
-  if (!session) redirect("/admin/login");
+  const [settings, session] = await Promise.all([getSiteSettings(), requirePageSession()]);
   const isAdmin = session.user.role === "admin";
   const users = isAdmin ? await getUsers() : [];
 

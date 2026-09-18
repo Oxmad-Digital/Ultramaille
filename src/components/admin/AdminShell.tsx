@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { requirePageSession } from "@/lib/requireAdmin";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
 import Category from "@/models/Category";
@@ -26,8 +25,7 @@ export default async function AdminShell({
   children: ReactNode;
   showNewButton?: boolean;
 }) {
-  const session = await auth();
-  if (!session) redirect("/admin/login");
+  const session = await requirePageSession();
   await connectDB();
   const articleCount = await Article.countDocuments();
   const categoryCount = await Category.countDocuments();
@@ -40,9 +38,9 @@ export default async function AdminShell({
     Auteurs: authorCount,
   };
 
-  const email = session?.user?.email ?? "";
+  const email = session.user.email ?? "";
   const initials = email ? email.slice(0, 2).toUpperCase() : "?";
-  const role = session?.user?.role ?? "member";
+  const role = session.user.role;
 
   return (
     <AdminShellChrome
