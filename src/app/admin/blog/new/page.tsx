@@ -1,3 +1,4 @@
+import { requirePageSession } from "@/lib/requireAdmin";
 import { connectDB } from "@/lib/db";
 import Category from "@/models/Category";
 import Author from "@/models/Author";
@@ -7,6 +8,7 @@ import ArticleForm from "@/components/admin/ArticleForm";
 export const dynamic = "force-dynamic";
 
 export default async function NewArticlePage() {
+  await requirePageSession();
   await connectDB();
   const categories = await Category.find({}).sort({ name: 1 }).lean();
   const authors = await Author.find({}).sort({ name: 1 }).lean();

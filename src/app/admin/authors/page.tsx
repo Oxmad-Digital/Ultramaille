@@ -1,3 +1,4 @@
+import { requirePageSession } from "@/lib/requireAdmin";
 import { connectDB } from "@/lib/db";
 import Author from "@/models/Author";
 import AdminShell from "@/components/admin/AdminShell";
@@ -20,6 +21,7 @@ async function getAuthors(): Promise<AdminAuthorRow[]> {
 }
 
 export default async function AdminAuthorsPage() {
+  await requirePageSession();
   const authors = await getAuthors();
   return (
     <AdminShell crumb="Auteurs" showNewButton={false}>

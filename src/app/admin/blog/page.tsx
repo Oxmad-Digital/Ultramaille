@@ -1,3 +1,4 @@
+import { requirePageSession } from "@/lib/requireAdmin";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
 import AdminShell from "@/components/admin/AdminShell";
@@ -23,6 +24,7 @@ async function getArticles(): Promise<AdminArticleRow[]> {
 }
 
 export default async function AdminBlogListPage() {
+  await requirePageSession();
   const articles = await getArticles();
   return (
     <AdminShell crumb="Articles">

@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { connectDB } from "@/lib/db";
 import Admin from "@/models/Admin";
@@ -21,7 +22,8 @@ async function getUsers(): Promise<AdminUserRow[]> {
 
 export default async function AdminSettingsPage() {
   const [settings, session] = await Promise.all([getSiteSettings(), auth()]);
-  const isAdmin = session?.user?.role === "admin";
+  if (!session) redirect("/admin/login");
+  const isAdmin = session.user.role === "admin";
   const users = isAdmin ? await getUsers() : [];
 
   return (

@@ -1,3 +1,4 @@
+import { requirePageSession } from "@/lib/requireAdmin";
 import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
@@ -11,6 +12,7 @@ export default async function EditArticlePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requirePageSession();
   const { id } = await params;
   await connectDB();
   const article = await Article.findById(id).lean();

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { connectDB } from "@/lib/db";
 import Article from "@/models/Article";
@@ -26,6 +27,7 @@ export default async function AdminShell({
   showNewButton?: boolean;
 }) {
   const session = await auth();
+  if (!session) redirect("/admin/login");
   await connectDB();
   const articleCount = await Article.countDocuments();
   const categoryCount = await Category.countDocuments();

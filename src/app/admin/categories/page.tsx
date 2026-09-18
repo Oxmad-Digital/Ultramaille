@@ -1,3 +1,4 @@
+import { requirePageSession } from "@/lib/requireAdmin";
 import { connectDB } from "@/lib/db";
 import Category from "@/models/Category";
 import Article from "@/models/Article";
@@ -21,6 +22,7 @@ async function getCategories(): Promise<AdminCategoryRow[]> {
 }
 
 export default async function AdminCategoriesPage() {
+  await requirePageSession();
   const categories = await getCategories();
   return (
     <AdminShell crumb="Catégories" showNewButton={false}>

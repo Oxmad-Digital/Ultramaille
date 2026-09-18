@@ -1,3 +1,4 @@
+import { requirePageSession } from "@/lib/requireAdmin";
 import { connectDB } from "@/lib/db";
 import PageView from "@/models/PageView";
 import AdminShell from "@/components/admin/AdminShell";
@@ -92,6 +93,7 @@ async function getStats() {
 }
 
 export default async function AdminStatsPage() {
+  await requirePageSession();
   const stats = await getStats();
 
   return (

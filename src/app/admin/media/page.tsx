@@ -1,3 +1,4 @@
+import { requirePageSession } from "@/lib/requireAdmin";
 import { connectDB } from "@/lib/db";
 import Media from "@/models/Media";
 import AdminShell from "@/components/admin/AdminShell";
@@ -22,6 +23,7 @@ async function getMedia(): Promise<AdminMediaItem[]> {
 }
 
 export default async function AdminMediaPage() {
+  await requirePageSession();
   const media = await getMedia();
   return (
     <AdminShell crumb="Médias" showNewButton={false}>
