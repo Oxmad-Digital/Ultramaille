@@ -22,7 +22,12 @@ export async function connectDB() {
   }
 
   if (!cache.promise) {
-    cache.promise = mongoose.connect(MONGODB_URI);
+    // Si la connexion échoue, on oublie la promesse rejetée : sinon toutes les requêtes
+    // suivantes de cette instance échoueraient jusqu'au prochain démarrage à froid.
+    cache.promise = mongoose.connect(MONGODB_URI).catch((err) => {
+      cache.promise = null;
+      throw err;
+    });
   }
 
   cache.conn = await cache.promise;

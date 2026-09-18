@@ -48,7 +48,14 @@ export async function proxy(request: NextRequest) {
     return handleAdmin(request);
   }
 
-  if (pathname === "/maintenance" || pathname.startsWith("/api/auth")) {
+  // robots.txt et sitemap.xml restent servis normalement pendant la maintenance :
+  // les réécrire en page HTML brouillerait les robots d'indexation.
+  if (
+    pathname === "/maintenance" ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
+    pathname.startsWith("/api/auth")
+  ) {
     return NextResponse.next();
   }
 
@@ -56,7 +63,12 @@ export async function proxy(request: NextRequest) {
   if (settings.maintenanceMode) {
     const session = await auth();
     if (!session) {
-      return NextResponse.rewrite(new URL("/maintenance", request.url));
+      // 503 + Retry-After : indique aux moteurs que l'arrêt est temporaire
+      // (un 200 ferait indexer la page de maintenance à la place du contenu).
+      return NextResponse.rewrite(new URL("/maintenance", request.url), {
+        status: 503,
+        headers: { "Retry-After": "3600" },
+      });
     }
   }
 

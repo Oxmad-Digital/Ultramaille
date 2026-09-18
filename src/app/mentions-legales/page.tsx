@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import T from "@/components/T";
 import styles from "./page.module.css";
+
+export const metadata: Metadata = {
+  title: "Mentions légales — Ultramaille",
+  description:
+    "Mentions légales du site Ultramaille : éditeur, propriété intellectuelle, données personnelles et cookies.",
+  alternates: { canonical: "/mentions-legales" },
+};
 
 export default function MentionsLegalesPage() {
   return (
