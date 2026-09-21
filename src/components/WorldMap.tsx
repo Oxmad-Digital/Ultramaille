@@ -23,19 +23,17 @@ type Marker = {
   stats?: Stats;
 };
 
-// TODO: remplacer ces chiffres d'exemple par les valeurs réelles.
+// TODO: ajouter `stats` (volume exporté / clients) aux marqueurs Europe, États-Unis et
+// Afrique du Sud dès que les chiffres réels sont connus : l'info-bulle réapparaîtra.
 const MARKERS: Marker[] = [
   {
     id: "de", label: "EUROPE", sub: "Marché principal", subEn: "Principal market", type: "principal", side: "top",
-    stats: { volume: "1 200 t / an", volumeEn: "1,200 t / year", clients: "18 marques", clientsEn: "18 brands" },
   },
   {
     id: "us", label: "ÉTATS-UNIS", sub: "Secondaire", subEn: "Secondary", type: "sec", side: "top",
-    stats: { volume: "180 t / an", volumeEn: "180 t / year", clients: "5 marques", clientsEn: "5 brands" },
   },
   {
     id: "za", label: "AFRIQUE DU SUD", sub: "Secondaire", subEn: "Secondary", type: "sec", side: "left",
-    stats: { volume: "95 t / an", volumeEn: "95 t / year", clients: "3 marques", clientsEn: "3 brands" },
   },
   { id: "mg", label: "MADAGASCAR", sub: "Origine", subEn: "Origin", type: "origin", side: "right" },
 ];
