@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 // Anciennes URLs du site WordPress (FR + EN) -> pages équivalentes du nouveau site.
 // `/:path*` couvre aussi la racine de la section (ex. /visite-dusine et /visite-dusine/pressing).
+// Le site WordPress servait aussi l'anglais sous `/en/...` : chaque source est donc doublée
+// d'une variante préfixée (sauf les sitemaps Yoast, jamais préfixés), et `/en` mène à l'accueil.
 // Les pages WordPress techniques (connexion, inscription, tests, /documents) ne sont
 // volontairement pas redirigées : elles restent en 404.
 const LEGACY_REDIRECTS: Record<string, string[]> = {
@@ -86,9 +88,18 @@ const nextConfig: NextConfig = {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
   },
   async redirects() {
-    return Object.entries(LEGACY_REDIRECTS).flatMap(([destination, sources]) =>
-      sources.map((source) => ({ source, destination, permanent: true }))
+    const legacy = Object.entries(LEGACY_REDIRECTS).flatMap(([destination, sources]) =>
+      sources.flatMap((source) =>
+        destination === "/sitemap.xml" ? [{ source, destination }] : [
+          { source, destination },
+          { source: `/en${source}`, destination },
+        ]
+      )
     );
+    return [{ source: "/en", destination: "/" }, ...legacy].map((redirect) => ({
+      ...redirect,
+      permanent: true,
+    }));
   },
 };
 
