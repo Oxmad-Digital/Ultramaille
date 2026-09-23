@@ -20,7 +20,7 @@ const CRAFT_CARDS = [
   },
   {
     number: "02",
-    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787847770/Broderie-crochet-ultramaille_ah5g5h.webp",
+    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787846457/broderie1-1024x683-ultramaille_kaelf_vbywpe.webp",
     alt: "Crochet",
     titleFr: "Crochet main & macramé",
     titleEn: "Hand crochet & macramé",
@@ -29,7 +29,7 @@ const CRAFT_CARDS = [
   },
   {
     number: "03",
-    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787846457/broderie1-1024x683-ultramaille_kaelf_vbywpe.webp",
+    img: "https://res.cloudinary.com/wzetrnif/image/upload/v1787847770/Broderie-crochet-ultramaille_ah5g5h.webp",
     alt: "Broderie",
     titleFr: "Broderie d'exception",
     titleEn: "Fine embroidery",
