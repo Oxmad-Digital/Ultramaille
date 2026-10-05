@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContactCta from "@/components/ContactCta";
 import WorldMap from "@/components/WorldMap";
-import OrgChart from "@/components/OrgChart";
+// import OrgChart from "@/components/OrgChart";
 import T from "@/components/T";
 import styles from "./page.module.css";
 
@@ -180,6 +180,7 @@ export default function AProposPage() {
         </div>
       </section>
 
+      {/* Section « Notre équipe » masquée — décommenter (ainsi que l'import OrgChart) pour la réafficher.
       <section id="equipe" className={styles.equipe}>
         <div className={styles.sectionInner}>
           <div className={styles.equipeHead}>
@@ -194,6 +195,7 @@ export default function AProposPage() {
           <OrgChart />
         </div>
       </section>
+      */}
 
       <ContactCta />
       <Footer />

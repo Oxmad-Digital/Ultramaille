@@ -248,6 +248,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  order: -1; /* texte à gauche, titre à droite */
 }
 
 /* ---------- Équipe ---------- */
@@ -535,6 +536,9 @@
   .entrepriseGrid,
   .marchesGrid {
     grid-template-columns: 1fr;
+  }
+  .marchesTextCol {
+    order: 0;
   }
   .sticky {
     position: static;
