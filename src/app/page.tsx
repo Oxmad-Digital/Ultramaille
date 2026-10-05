@@ -5,7 +5,6 @@ import ContactCta from "@/components/ContactCta";
 import CountUp from "@/components/CountUp";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import T from "@/components/T";
-import LazyVideo from "@/components/LazyVideo";
 import styles from "./page.module.css";
 
 const CRAFT_CARDS = [
@@ -106,46 +105,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section id="metier" className={styles.metier}>
-        <div className={styles.metierGrid}>
-          <div>
-            <h2 className={styles.metierTitle}>
-              <T
-                fr="Une usine textile intégrée où la main de l'artisan "
-                en="An integrated textile factory where the artisan's hand "
-              />
-              <span className={styles.metierTitleDim}>
-                <T
-                  fr="rencontre la précision industrielle."
-                  en="meets industrial precision."
-                />
-              </span>
-            </h2>
-          </div>
-          <div>
-            <p className={styles.metierText}>
-              <T
-                fr="ULTRAMAILLE SA, spécialiste de la maille à Madagascar depuis 25 ans, conjugue passion et expertise pour créer des pièces uniques et sur-mesure en crochet et tricot. Alliant savoir-faire artisanal et mode haut de gamme, nous sublimons chaque création avec un engagement sans compromis envers l'excellence."
-                en="ULTRAMAILLE SA, a knitwear specialist in Madagascar for 25 years, combines passion and expertise to create unique, made-to-measure pieces in crochet and knit. Blending artisanal know-how with high-end fashion, we elevate every creation with an uncompromising commitment to excellence."
-              />
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.videoSection}>
-        <div className={styles.videoWrap}>
-          <LazyVideo
-            className={styles.video}
-            // Version 1280 px transcodée par Cloudinary (~37 Mo contre 76 Mo pour l'original)
-            // et image d'aperçu tirée de la vidéo (l'image à 0 s est noire).
-            src="https://res.cloudinary.com/wzetrnif/video/upload/w_1280,q_auto,f_mp4/v1789751897/Ultramaille-presentation_lcehb4.mp4"
-            poster="https://res.cloudinary.com/wzetrnif/video/upload/so_3,f_jpg,w_1280,q_auto/v1789751897/Ultramaille-presentation_lcehb4.jpg"
-            label="Présentation vidéo d'Ultramaille"
-          />
         </div>
       </section>
 

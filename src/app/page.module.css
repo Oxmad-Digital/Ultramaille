@@ -155,41 +155,6 @@
 }
 
 /* ---------- Métier ---------- */
-.metier {
-  background: var(--utm-navy);
-  padding: clamp(72px, 9vw, 128px) clamp(22px, 5vw, 64px);
-}
-
-.metierGrid {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: clamp(32px, 6vw, 90px);
-  align-items: end;
-}
-
-.metierTitle {
-  margin: 0;
-  font-family: var(--font-montserrat), sans-serif;
-  font-weight: 500;
-  font-size: clamp(28px, 3.6vw, 50px);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  color: var(--utm-cream-2);
-}
-
-.metierTitleDim {
-  color: rgba(244, 239, 230, 0.5);
-}
-
-.metierText {
-  margin: 0;
-  font-size: 17px;
-  line-height: 1.7;
-  color: rgba(244, 239, 230, 0.66);
-}
-
 /* ---------- Savoir-faire ---------- */
 .savoirFaire {
   background: var(--utm-cream);
@@ -375,29 +340,6 @@
 }
 
 /* ---------- Video ---------- */
-.videoSection {
-  background: var(--utm-navy);
-  padding: 0 clamp(22px, 5vw, 64px) clamp(72px, 9vw, 128px);
-}
-
-.videoWrap {
-  max-width: 1280px;
-  margin: 0 auto;
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden;
-  aspect-ratio: 16 / 9;
-  background: var(--utm-navy-2);
-}
-
-.video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 /* ---------- Héritage ---------- */
 .heritage {
   background: var(--utm-cream);
@@ -636,7 +578,6 @@
 
 /* ---------- Responsive ---------- */
 @media (max-width: 880px) {
-  .metierGrid,
   .heritageGrid,
   .capaciteGrid,
   .certGrid {
