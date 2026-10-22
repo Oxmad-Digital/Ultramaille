@@ -1,8 +1,7 @@
 import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { connectDB } from "@/lib/db";
-import Admin from "@/models/Admin";
+import { admins } from "@/lib/repositories/admins";
 import { getClientIp, rateLimit } from "@/lib/rateLimit";
 
 class RateLimitedSignin extends CredentialsSignin {
@@ -43,8 +42,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           throw new RateLimitedSignin();
         }
 
-        await connectDB();
-        const admin = await Admin.findOne({ email });
+        const admin = await admins.findByEmail(email);
         const password = typeof credentials?.password === "string" ? credentials.password : "";
 
         const ok = await bcrypt.compare(password, admin?.passwordHash ?? DUMMY_HASH);
@@ -53,7 +51,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         return {
-          id: admin._id.toString(),
+          id: admin.id,
           email: admin.email,
           name: "Admin",
           role: admin.role ?? "admin",

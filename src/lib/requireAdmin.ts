@@ -1,9 +1,8 @@
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import mongoose from "mongoose";
 import { auth } from "@/auth";
-import { connectDB } from "@/lib/db";
-import Admin from "@/models/Admin";
+import { isValidId } from "@/lib/http";
+import { admins } from "@/lib/repositories/admins";
 
 // Le JWT de session reste valide jusqu'à son expiration : un compte supprimé ou
 // rétrogradé garderait son accès. On revérifie donc l'utilisateur en base à chaque
@@ -14,13 +13,13 @@ const getSessionState = cache(async () => {
   if (!session) return { status: "anonymous" as const };
 
   const id = session.user?.id;
-  if (!id || !mongoose.isValidObjectId(id)) return { status: "stale" as const };
+  // Un ancien ObjectId Mongo (sessions d'avant la migration) n'est pas un uuid : session périmée.
+  if (!id || !isValidId(id)) return { status: "stale" as const };
 
-  await connectDB();
-  const admin = await Admin.findById(id).select("role").lean();
-  if (!admin) return { status: "stale" as const };
+  const role = await admins.findRoleById(id);
+  if (!role) return { status: "stale" as const };
 
-  session.user.role = admin.role ?? "admin";
+  session.user.role = role;
   return { status: "valid" as const, session };
 });
 

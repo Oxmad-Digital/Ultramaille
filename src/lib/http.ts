@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 
 // Corps JSON d'une requête, ou null s'il est absent, invalide ou n'est pas un objet.
@@ -23,15 +22,20 @@ export function str(value: unknown, max = 5000) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export function isValidId(id: string) {
-  return mongoose.isValidObjectId(id);
+  return UUID_RE.test(id);
 }
 
 export function invalidId() {
   return NextResponse.json({ error: "Introuvable" }, { status: 404 });
 }
 
-// Erreur Mongo "clé dupliquée" (index unique).
+// Violation de contrainte unique : 23505 (Postgres). 11000 (Mongo) n'est accepté que le
+// temps de la coexistence des deux bases, à retirer au nettoyage.
 export function isDuplicateKeyError(err: unknown) {
-  return typeof err === "object" && err !== null && (err as { code?: number }).code === 11000;
+  if (typeof err !== "object" || err === null) return false;
+  const code = (err as { code?: unknown }).code;
+  return code === "23505" || code === 11000;
 }

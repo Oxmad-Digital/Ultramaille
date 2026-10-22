@@ -1,17 +1,11 @@
 import { unstable_cache } from "next/cache";
-import { connectDB } from "@/lib/db";
-import Settings from "@/models/Settings";
+import { settings } from "@/lib/repositories/settings";
 
 export const SETTINGS_KEY = "site";
 export const SETTINGS_CACHE_TAG = "site-settings";
 
 async function readSiteSettings() {
-  await connectDB();
-  return Settings.findOneAndUpdate(
-    { key: SETTINGS_KEY },
-    { $setOnInsert: { key: SETTINGS_KEY } },
-    { upsert: true, returnDocument: "after" }
-  ).lean();
+  return settings.getOrCreate(SETTINGS_KEY);
 }
 
 // Cached because getSiteSettings() runs in the proxy on every public request

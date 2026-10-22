@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import RateLimit from "@/models/RateLimit";
+import { rateLimits } from "@/lib/repositories/rateLimits";
 
 type Limit = { limit: number; windowMs: number };
 
@@ -12,28 +11,11 @@ export function getClientIp(headers: Headers) {
   );
 }
 
-// Fenêtre fixe partagée entre instances (compteur stocké dans MongoDB).
+// Fenêtre fixe partagée entre instances (compteur stocké dans Postgres).
 // Renvoie true si la requête est autorisée.
 export async function rateLimit(bucket: string, id: string, { limit, windowMs }: Limit) {
-  await connectDB();
-  const key = `${bucket}:${id}`;
-  const now = new Date();
-
-  const current = await RateLimit.findOneAndUpdate(
-    { key, expiresAt: { $gt: now } },
-    { $inc: { count: 1 } },
-    { returnDocument: "after" }
-  ).lean();
-  if (current) return current.count <= limit;
-
-  // Aucune fenêtre active : on en ouvre une (ou on réinitialise une fenêtre expirée
-  // pas encore purgée par le TTL).
-  await RateLimit.findOneAndUpdate(
-    { key },
-    { $set: { count: 1, expiresAt: new Date(now.getTime() + windowMs) } },
-    { upsert: true }
-  );
-  return true;
+  const count = await rateLimits.hit(`${bucket}:${id}`, windowMs);
+  return count <= limit;
 }
 
 // Variante en mémoire, propre à chaque instance : sans coût base de données, donc

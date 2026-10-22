@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/requireAdmin";
-import { connectDB } from "@/lib/db";
-import Settings from "@/models/Settings";
+import { settings as settingsRepo } from "@/lib/repositories/settings";
 import { getSiteSettings, SETTINGS_CACHE_TAG, SETTINGS_KEY } from "@/lib/settings";
 
 export async function GET() {
@@ -24,7 +23,7 @@ export async function PATCH(request: Request) {
   }
 
   const body = await request.json().catch(() => ({}));
-  const update: Record<string, unknown> = {};
+  const update: { maintenanceMode?: boolean; maintenanceMessage?: string } = {};
   if (typeof body.maintenanceMode === "boolean") {
     update.maintenanceMode = body.maintenanceMode;
   }
@@ -32,12 +31,7 @@ export async function PATCH(request: Request) {
     update.maintenanceMessage = body.maintenanceMessage.trim();
   }
 
-  await connectDB();
-  const settings = await Settings.findOneAndUpdate(
-    { key: SETTINGS_KEY },
-    { $set: update, $setOnInsert: { key: SETTINGS_KEY } },
-    { upsert: true, returnDocument: "after" }
-  ).lean();
+  const settings = await settingsRepo.update(SETTINGS_KEY, update);
 
   revalidateTag(SETTINGS_CACHE_TAG, "max");
 
