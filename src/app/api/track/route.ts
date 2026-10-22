@@ -1,8 +1,7 @@
 import { NextResponse, userAgent } from "next/server";
 import type { NextRequest } from "next/server";
 import crypto from "crypto";
-import { connectDB } from "@/lib/db";
-import PageView from "@/models/PageView";
+import { pageViews } from "@/lib/repositories/pageViews";
 import { memoryRateLimit, tooManyRequests } from "@/lib/rateLimit";
 import { isTrackablePath } from "@/lib/site";
 import { signViewId, visitorPepper } from "@/lib/trackingToken";
@@ -69,8 +68,7 @@ export async function POST(request: NextRequest) {
 
   const country = request.headers.get("x-vercel-ip-country") ?? "";
 
-  await connectDB();
-  const doc = await PageView.create({
+  const { id } = await pageViews.create({
     day,
     path,
     referrer,
@@ -79,6 +77,5 @@ export async function POST(request: NextRequest) {
     visitorHash,
   });
 
-  const id = doc._id.toString();
   return NextResponse.json({ ok: true, id, token: signViewId(id) });
 }

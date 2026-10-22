@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { connectDB } from "@/lib/db";
 import { requireAdminRole } from "@/lib/requireAdmin";
-import Admin from "@/models/Admin";
+import { admins } from "@/lib/repositories/admins";
 import { sendInvitationEmail } from "@/lib/mailer";
 import { invalidId, isValidId } from "@/lib/http";
 
@@ -20,9 +19,7 @@ export async function POST(
   const { id } = await params;
   if (!isValidId(id)) return invalidId();
 
-  await connectDB();
-
-  const user = await Admin.findById(id);
+  const user = await admins.findById(id);
   if (!user) {
     return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 404 });
   }
@@ -38,7 +35,7 @@ export async function POST(
 
   user.resetTokenHash = tokenHash;
   user.resetTokenExpiry = new Date(Date.now() + INVITE_TOKEN_TTL_MS);
-  await user.save();
+  await admins.save(user);
 
   const origin = process.env.NEXTAUTH_URL || new URL(request.url).origin;
   const inviteUrl = `${origin}/admin/reset-password?token=${rawToken}&invite=1`;

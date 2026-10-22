@@ -1,6 +1,5 @@
 import { requirePageSession } from "@/lib/requireAdmin";
-import { connectDB } from "@/lib/db";
-import PageView from "@/models/PageView";
+import { pageViews } from "@/lib/repositories/pageViews";
 import AdminShell from "@/components/admin/AdminShell";
 import StatsView from "@/components/admin/StatsView";
 
@@ -15,80 +14,25 @@ function daysAgo(n: number) {
 }
 
 async function getStats() {
-  await connectDB();
   const startDay = daysAgo(RANGE_DAYS - 1);
-  const match = { day: { $gte: startDay } };
+  const stats = await pageViews.stats(startDay);
 
-  const [
-    [totals],
-    dailyRaw,
-    topPages,
-    topReferrers,
-    directViews,
-    deviceTypes,
-    topCountries,
-    [durationAgg],
-  ] = await Promise.all([
-    PageView.aggregate([
-      { $match: match },
-      { $group: { _id: null, views: { $sum: 1 }, visitors: { $addToSet: "$visitorHash" } } },
-      { $project: { _id: 0, views: 1, visitors: { $size: "$visitors" } } },
-    ]),
-    PageView.aggregate([
-      { $match: match },
-      { $group: { _id: "$day", views: { $sum: 1 }, visitors: { $addToSet: "$visitorHash" } } },
-      { $project: { _id: 0, day: "$_id", views: 1, visitors: { $size: "$visitors" } } },
-      { $sort: { day: 1 } },
-    ]),
-    PageView.aggregate([
-      { $match: match },
-      { $group: { _id: "$path", views: { $sum: 1 } } },
-      { $sort: { views: -1 } },
-      { $limit: 10 },
-      { $project: { _id: 0, path: "$_id", views: 1 } },
-    ]),
-    PageView.aggregate([
-      { $match: { ...match, referrer: { $ne: "" } } },
-      { $group: { _id: "$referrer", views: { $sum: 1 } } },
-      { $sort: { views: -1 } },
-      { $limit: 10 },
-      { $project: { _id: 0, referrer: "$_id", views: 1 } },
-    ]),
-    PageView.countDocuments({ ...match, referrer: "" }),
-    PageView.aggregate([
-      { $match: match },
-      { $group: { _id: "$deviceType", views: { $sum: 1 } } },
-      { $sort: { views: -1 } },
-      { $project: { _id: 0, deviceType: "$_id", views: 1 } },
-    ]),
-    PageView.aggregate([
-      { $match: { ...match, country: { $nin: ["", null] } } },
-      { $group: { _id: "$country", views: { $sum: 1 } } },
-      { $sort: { views: -1 } },
-      { $project: { _id: 0, country: "$_id", views: 1 } },
-    ]),
-    PageView.aggregate([
-      { $match: { ...match, duration: { $exists: true, $gt: 0 } } },
-      { $group: { _id: null, avgDuration: { $avg: "$duration" } } },
-    ]),
-  ]);
-
-  const dailyByDay = new Map(dailyRaw.map((d) => [d.day, d]));
+  const dailyByDay = new Map(stats.daily.map((d) => [d.day, d]));
   const daily = Array.from({ length: RANGE_DAYS }, (_, i) => {
     const day = daysAgo(RANGE_DAYS - 1 - i);
     return dailyByDay.get(day) ?? { day, views: 0, visitors: 0 };
   });
 
   return {
-    totalViews: totals?.views ?? 0,
-    totalVisitors: totals?.visitors ?? 0,
+    totalViews: stats.totalViews,
+    totalVisitors: stats.totalVisitors,
     daily,
-    topPages,
-    topReferrers,
-    directViews,
-    deviceTypes,
-    topCountries,
-    avgDurationMs: durationAgg?.avgDuration ?? null,
+    topPages: stats.topPages,
+    topReferrers: stats.topReferrers,
+    directViews: stats.directViews,
+    deviceTypes: stats.deviceTypes,
+    topCountries: stats.topCountries,
+    avgDurationMs: stats.avgDuration,
   };
 }
 

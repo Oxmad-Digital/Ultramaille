@@ -21,8 +21,12 @@ export const pageViews = {
     return { _id: id, id };
   },
 
+  // Écrite une seule fois : un jeton rejoué ne peut pas réécrire la durée.
   async setDuration(id: string, duration: number) {
-    await query("UPDATE page_views SET duration = $2 WHERE id = $1", [id, duration]);
+    await query("UPDATE page_views SET duration = $2 WHERE id = $1 AND duration IS NULL", [
+      id,
+      duration,
+    ]);
   },
 
   // Agrégats du tableau de bord sur les jours >= startDay ('YYYY-MM-DD').

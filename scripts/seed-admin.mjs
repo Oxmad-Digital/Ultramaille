@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { neon } from "@neondatabase/serverless";
 import bcrypt from "bcryptjs";
 
 const [email, password] = process.argv.slice(2);
@@ -8,37 +8,29 @@ if (!email || !password) {
   process.exit(1);
 }
 
-let uri = process.env.MONGODB_URI;
-if (uri) {
-  uri = uri.trim();
-  if ((uri.startsWith('"') && uri.endsWith('"')) || (uri.startsWith("'") && uri.endsWith("'"))) {
-    uri = uri.slice(1, -1);
+let url = process.env.DATABASE_URL;
+if (url) {
+  url = url.trim();
+  if ((url.startsWith('"') && url.endsWith('"')) || (url.startsWith("'") && url.endsWith("'"))) {
+    url = url.slice(1, -1);
   }
 }
-if (!uri) {
-  console.error("MONGODB_URI manquant (lance avec --env-file=.env.local)");
+if (!url) {
+  console.error("DATABASE_URL manquant (définis-le dans l'environnement ou lance avec --env-file)");
   process.exit(1);
 }
 
-const AdminSchema = new mongoose.Schema(
-  {
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    passwordHash: { type: String, required: true },
-    resetTokenHash: { type: String, default: null },
-    resetTokenExpiry: { type: Date, default: null },
-  },
-  { timestamps: true }
-);
-const Admin = mongoose.models.Admin || mongoose.model("Admin", AdminSchema);
-
-await mongoose.connect(uri);
-
+const sql = neon(url);
+const normalizedEmail = email.toLowerCase().trim();
 const passwordHash = await bcrypt.hash(password, 12);
-await Admin.findOneAndUpdate(
-  { email: email.toLowerCase().trim() },
-  { email: email.toLowerCase().trim(), passwordHash, resetTokenHash: null, resetTokenExpiry: null },
-  { upsert: true }
+
+// Upsert sur l'email : crée le compte, ou met à jour son mot de passe sans toucher à son rôle.
+const [row] = await sql.query(
+  "INSERT INTO admins (email, password_hash) VALUES ($1, $2) " +
+    "ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash, " +
+    "reset_token_hash = NULL, reset_token_expiry = NULL " +
+    "RETURNING (xmax = 0) AS inserted",
+  [normalizedEmail, passwordHash]
 );
 
-console.log(`Admin "${email}" créé/mis à jour dans MongoDB.`);
-await mongoose.disconnect();
+console.log(`Admin "${normalizedEmail}" ${row.inserted ? "créé" : "mis à jour"} dans Neon.`);

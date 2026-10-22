@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
-import { connectDB } from "@/lib/db";
-import Admin from "@/models/Admin";
+import { admins } from "@/lib/repositories/admins";
 import { getClientIp, rateLimit, tooManyRequests } from "@/lib/rateLimit";
 
 export async function POST(request: Request) {
@@ -27,13 +26,10 @@ export async function POST(request: Request) {
     );
   }
 
-  await connectDB();
   const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
-  const admin = await Admin.findOne({
-    resetTokenHash: tokenHash,
-    resetTokenExpiry: { $gt: new Date() },
-  });
+  // Expiration comparée côté Postgres (timestamptz > now()).
+  const admin = await admins.findByValidResetToken(tokenHash);
 
   if (!admin) {
     return NextResponse.json({ error: "Lien invalide ou expiré" }, { status: 400 });
@@ -43,7 +39,7 @@ export async function POST(request: Request) {
   admin.resetTokenHash = null;
   admin.resetTokenExpiry = null;
   admin.invitePending = false;
-  await admin.save();
+  await admins.save(admin);
 
   return NextResponse.json({ success: true });
 }

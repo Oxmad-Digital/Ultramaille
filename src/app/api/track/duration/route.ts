@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import mongoose from "mongoose";
-import { connectDB } from "@/lib/db";
-import PageView from "@/models/PageView";
+import { isValidId } from "@/lib/http";
+import { pageViews } from "@/lib/repositories/pageViews";
 import { verifyViewId } from "@/lib/trackingToken";
 import { getClientIp, memoryRateLimit, tooManyRequests } from "@/lib/rateLimit";
 
@@ -24,7 +23,7 @@ export async function POST(request: NextRequest) {
   const duration = typeof body.duration === "number" ? body.duration : NaN;
 
   if (
-    !mongoose.isValidObjectId(id) ||
+    !isValidId(id) ||
     !verifyViewId(id, body.token) ||
     !Number.isFinite(duration) ||
     duration <= 0
@@ -44,8 +43,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  await connectDB();
-  await PageView.findByIdAndUpdate(id, { duration: Math.min(duration, MAX_DURATION_MS) });
+  await pageViews.setDuration(id, Math.min(duration, MAX_DURATION_MS));
 
   return NextResponse.json({ ok: true });
 }

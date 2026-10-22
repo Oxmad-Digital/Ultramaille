@@ -1,7 +1,6 @@
 import { NextResponse, after } from "next/server";
 import crypto from "crypto";
-import { connectDB } from "@/lib/db";
-import Admin from "@/models/Admin";
+import { admins } from "@/lib/repositories/admins";
 import { sendPasswordResetEmail } from "@/lib/mailer";
 import { getClientIp, rateLimit, tooManyRequests } from "@/lib/rateLimit";
 
@@ -22,8 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Email requis" }, { status: 400 });
   }
 
-  await connectDB();
-  const admin = await Admin.findOne({ email: normalizedEmail });
+  const admin = await admins.findByEmail(normalizedEmail);
 
   if (admin) {
     const rawToken = crypto.randomBytes(32).toString("hex");
@@ -31,7 +29,7 @@ export async function POST(request: Request) {
 
     admin.resetTokenHash = tokenHash;
     admin.resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
-    await admin.save();
+    await admins.save(admin);
 
     const origin = process.env.NEXTAUTH_URL || new URL(request.url).origin;
     const resetUrl = `${origin}/admin/reset-password?token=${rawToken}`;

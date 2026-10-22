@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { connectDB } from "@/lib/db";
 import { requireAdminRole } from "@/lib/requireAdmin";
-import Admin from "@/models/Admin";
+import { admins } from "@/lib/repositories/admins";
 import { badRequest, invalidId, isValidId, readJson } from "@/lib/http";
 
 export async function PATCH(
@@ -19,9 +18,7 @@ export async function PATCH(
   const body = await readJson(request);
   if (!body) return badRequest();
 
-  await connectDB();
-
-  const user = await Admin.findById(id);
+  const user = await admins.findById(id);
   if (!user) {
     return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 404 });
   }
@@ -35,10 +32,7 @@ export async function PATCH(
       );
     }
     if (role !== "admin" && user.role === "admin") {
-      const remainingAdmins = await Admin.countDocuments({
-        _id: { $ne: id },
-        role: { $ne: "member" },
-      });
+      const remainingAdmins = await admins.countAdminsExcept(id);
       if (remainingAdmins === 0) {
         return NextResponse.json(
           { error: "Impossible de retirer le dernier administrateur" },
@@ -60,11 +54,11 @@ export async function PATCH(
     user.invitePending = false;
   }
 
-  await user.save();
+  const saved = await admins.save(user);
 
   return NextResponse.json({
     success: true,
-    user: { id: user._id.toString(), email: user.email, role: user.role },
+    user: { id: saved.id, email: saved.email, role: saved.role },
   });
 }
 
@@ -87,18 +81,13 @@ export async function DELETE(
     );
   }
 
-  await connectDB();
-
-  const user = await Admin.findById(id);
+  const user = await admins.findById(id);
   if (!user) {
     return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 404 });
   }
 
   if (user.role !== "member") {
-    const remainingAdmins = await Admin.countDocuments({
-      _id: { $ne: id },
-      role: { $ne: "member" },
-    });
+    const remainingAdmins = await admins.countAdminsExcept(id);
     if (remainingAdmins === 0) {
       return NextResponse.json(
         { error: "Impossible de supprimer le dernier administrateur" },
@@ -107,7 +96,7 @@ export async function DELETE(
     }
   }
 
-  await Admin.findByIdAndDelete(id);
+  await admins.deleteById(id);
 
   return NextResponse.json({ success: true });
 }

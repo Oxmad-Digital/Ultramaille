@@ -1,6 +1,5 @@
 import { requirePageSession } from "@/lib/requireAdmin";
-import { connectDB } from "@/lib/db";
-import Admin from "@/models/Admin";
+import { admins } from "@/lib/repositories/admins";
 import AdminShell from "@/components/admin/AdminShell";
 import SettingsForm from "@/components/admin/SettingsForm";
 import UserAdminList, { type AdminUserRow } from "@/components/admin/UserAdminList";
@@ -9,13 +8,12 @@ import { getSiteSettings } from "@/lib/settings";
 export const dynamic = "force-dynamic";
 
 async function getUsers(): Promise<AdminUserRow[]> {
-  await connectDB();
-  const users = await Admin.find({}).sort({ email: 1 }).lean();
+  const users = await admins.findAll();
   return users.map((u) => ({
-    id: u._id.toString(),
+    id: u.id,
     email: u.email,
-    role: u.role || "admin",
-    invitePending: !!u.invitePending,
+    role: u.role,
+    invitePending: u.invitePending,
   }));
 }
 
