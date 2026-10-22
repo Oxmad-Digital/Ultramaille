@@ -39,3 +39,8 @@ export function isDuplicateKeyError(err: unknown) {
   const code = (err as { code?: unknown }).code;
   return code === "23505" || code === 11000;
 }
+
+// Violation de clé étrangère Postgres (ex. auteur supprimé entre la vérification et l'écriture).
+export function isForeignKeyError(err: unknown) {
+  return typeof err === "object" && err !== null && (err as { code?: unknown }).code === "23503";
+}

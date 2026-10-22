@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
-import Article from "@/models/Article";
+import { articles, type ArticleStatus } from "@/lib/repositories/articles";
+import { authors } from "@/lib/repositories/authors";
 import {
   ARTICLE_STATUSES,
   slugify,
@@ -11,7 +11,15 @@ import {
   parseDate,
   estimateReadingMinutes,
 } from "@/lib/blog";
-import { badRequest, invalidId, isDuplicateKeyError, isValidId, readJson, str } from "@/lib/http";
+import {
+  badRequest,
+  invalidId,
+  isDuplicateKeyError,
+  isForeignKeyError,
+  isValidId,
+  readJson,
+  str,
+} from "@/lib/http";
 import { isCloudinaryUrl } from "@/lib/cloudinary";
 
 export async function GET(
@@ -23,8 +31,7 @@ export async function GET(
   }
   const { id } = await params;
   if (!isValidId(id)) return invalidId();
-  await connectDB();
-  const article = await Article.findById(id).lean();
+  const article = await articles.findById(id);
   if (!article) {
     return NextResponse.json({ error: "Article introuvable" }, { status: 404 });
   }
@@ -62,8 +69,7 @@ export async function PATCH(
     return badRequest("Slug invalide");
   }
 
-  await connectDB();
-  const article = await Article.findById(id);
+  const article = await articles.findById(id);
   if (!article) {
     return NextResponse.json({ error: "Article introuvable" }, { status: 404 });
   }
@@ -72,7 +78,7 @@ export async function PATCH(
   if (body.slug !== undefined) {
     const slug = slugify(body.slug as string);
     if (slug !== article.slug) {
-      if (await Article.exists({ slug, _id: { $ne: id } })) {
+      if (await articles.slugExists(slug, id)) {
         return NextResponse.json({ error: "Ce slug existe déjà" }, { status: 409 });
       }
       article.slug = slug;
@@ -91,12 +97,20 @@ export async function PATCH(
     };
   }
 
-  if (body.coverImageUrl !== undefined) article.coverImageUrl = body.coverImageUrl || null;
+  if (body.coverImageUrl !== undefined) {
+    article.coverImageUrl = (body.coverImageUrl || null) as string | null;
+  }
   if (body.coverImagePublicId !== undefined) {
     article.coverImagePublicId = str(body.coverImagePublicId, 300) || null;
   }
   if (body.coverImageAlt !== undefined) article.coverImageAlt = str(body.coverImageAlt, 300);
-  if (body.authorId !== undefined) article.authorId = body.authorId || null;
+  if (body.authorId !== undefined) {
+    const authorId = (body.authorId || null) as string | null;
+    if (authorId && authorId !== article.authorId && !(await authors.findById(authorId))) {
+      return badRequest("Auteur invalide");
+    }
+    article.authorId = authorId;
+  }
   if (body.category !== undefined) article.category = str(body.category, 100);
   if (body.tags !== undefined) article.tags = cleanTags(body.tags);
   if (body.featured !== undefined) article.featured = Boolean(body.featured);
@@ -105,7 +119,7 @@ export async function PATCH(
   const { status, publishedAt } = body;
   const scheduledAt = parseDate(publishedAt);
   if (status !== undefined && status !== article.status) {
-    article.status = status;
+    article.status = status as ArticleStatus;
     if (status === "published") {
       article.publishedAt = article.publishedAt ?? new Date();
     } else if (status === "scheduled") {
@@ -117,21 +131,23 @@ export async function PATCH(
     article.publishedAt = scheduledAt;
   }
 
+  let saved;
   try {
-    await article.save();
+    saved = await articles.save(article);
   } catch (err) {
     if (isDuplicateKeyError(err)) {
       return NextResponse.json({ error: "Ce slug existe déjà" }, { status: 409 });
     }
+    if (isForeignKeyError(err)) return badRequest("Auteur invalide");
     throw err;
   }
 
   revalidatePath("/blog");
   revalidatePath("/sitemap.xml");
-  revalidatePath(`/blog/${article.slug}`);
-  if (article.slug !== previousSlug) revalidatePath(`/blog/${previousSlug}`);
+  revalidatePath(`/blog/${saved.slug}`);
+  if (saved.slug !== previousSlug) revalidatePath(`/blog/${previousSlug}`);
 
-  return NextResponse.json({ success: true, article });
+  return NextResponse.json({ success: true, article: saved });
 }
 
 export async function DELETE(
@@ -143,8 +159,7 @@ export async function DELETE(
   }
   const { id } = await params;
   if (!isValidId(id)) return invalidId();
-  await connectDB();
-  const deleted = await Article.findByIdAndDelete(id).lean();
+  const deleted = await articles.deleteById(id);
 
   revalidatePath("/blog");
   revalidatePath("/sitemap.xml");

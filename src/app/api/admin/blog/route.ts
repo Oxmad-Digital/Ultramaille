@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
 import {
   slugify,
@@ -9,19 +8,26 @@ import {
   parseDate,
   estimateReadingMinutes,
 } from "@/lib/blog";
-import { badRequest, isDuplicateKeyError, isValidId, readJson, str } from "@/lib/http";
+import {
+  badRequest,
+  isDuplicateKeyError,
+  isForeignKeyError,
+  isValidId,
+  readJson,
+  str,
+} from "@/lib/http";
 import { isCloudinaryUrl } from "@/lib/cloudinary";
 import { publishDueArticles } from "@/lib/publishDueArticles";
-import Article from "@/models/Article";
+import { articles } from "@/lib/repositories/articles";
+import { authors } from "@/lib/repositories/authors";
 
 export async function GET() {
   if (!(await requireAdmin())) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
-  await connectDB();
   await publishDueArticles();
-  const articles = await Article.find({}).sort({ createdAt: -1 }).lean();
-  return NextResponse.json({ success: true, articles });
+  const list = await articles.findAll();
+  return NextResponse.json({ success: true, articles: list });
 }
 
 export async function POST(request: Request) {
@@ -38,11 +44,15 @@ export async function POST(request: Request) {
     return badRequest("Titre et contenu (FR) requis");
   }
 
-  const coverImageUrl = body.coverImageUrl || null;
+  const coverImageUrl = (body.coverImageUrl || null) as string | null;
   if (coverImageUrl !== null && !isCloudinaryUrl(coverImageUrl)) {
     return badRequest("URL de couverture invalide");
   }
-  if (body.authorId && (typeof body.authorId !== "string" || !isValidId(body.authorId))) {
+  const authorId = (body.authorId || null) as string | null;
+  if (authorId !== null && (typeof authorId !== "string" || !isValidId(authorId))) {
+    return badRequest("Auteur invalide");
+  }
+  if (authorId && !(await authors.findById(authorId))) {
     return badRequest("Auteur invalide");
   }
 
@@ -53,17 +63,14 @@ export async function POST(request: Request) {
     return badRequest("Date de publication invalide");
   }
 
-  await connectDB();
-
   let slug = slugify(str(body.slug, 200) || title.fr) || `article-${Date.now().toString(36)}`;
-  const existing = await Article.findOne({ slug });
-  if (existing) {
+  if (await articles.slugExists(slug)) {
     slug = `${slug}-${Date.now().toString(36)}`;
   }
 
   let article;
   try {
-    article = await Article.create({
+    article = await articles.create({
       title,
       slug,
       excerpt: toLocalized(body.excerpt),
@@ -71,11 +78,12 @@ export async function POST(request: Request) {
       coverImageUrl,
       coverImagePublicId: str(body.coverImagePublicId, 300) || null,
       coverImageAlt: str(body.coverImageAlt, 300),
-      authorId: body.authorId || null,
+      authorId,
       category: str(body.category, 100),
       tags: cleanTags(body.tags),
       status: isPublished ? "published" : isScheduled ? "scheduled" : "draft",
       featured: Boolean(body.featured),
+      favorite: false,
       publishedAt: isPublished ? new Date() : isScheduled ? scheduledAt : null,
       metaTitle: toLocalized(body.metaTitle),
       metaDescription: toLocalized(body.metaDescription),
@@ -88,6 +96,7 @@ export async function POST(request: Request) {
     if (isDuplicateKeyError(err)) {
       return NextResponse.json({ error: "Ce slug existe déjà" }, { status: 409 });
     }
+    if (isForeignKeyError(err)) return badRequest("Auteur invalide");
     throw err;
   }
 

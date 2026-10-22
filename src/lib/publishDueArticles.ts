@@ -1,5 +1,4 @@
-import { connectDB } from "@/lib/db";
-import Article from "@/models/Article";
+import { articles } from "@/lib/repositories/articles";
 
 const THROTTLE_MS = 60_000;
 
@@ -18,9 +17,5 @@ export async function publishDueArticles() {
   }
   global._lastPublishDueArticlesRun = now;
 
-  await connectDB();
-  await Article.updateMany(
-    { status: "scheduled", publishedAt: { $lte: new Date() } },
-    { $set: { status: "published" } }
-  );
+  await articles.publishDue();
 }
