@@ -81,7 +81,7 @@ export default function AdminShellChrome({
               <div className={styles.profileRole}>{roleLabel}</div>
             </div>
           </div>
-          <div className={styles.profileMeta}>next.js · mongodb atlas</div>
+          <div className={styles.profileMeta}>next.js · neon postgres</div>
         </div>
       </aside>
 
