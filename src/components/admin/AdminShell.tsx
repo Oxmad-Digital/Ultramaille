@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
 import { requirePageSession } from "@/lib/requireAdmin";
-import { connectDB } from "@/lib/db";
-import Article from "@/models/Article";
-import Category from "@/models/Category";
-import Media from "@/models/Media";
-import Author from "@/models/Author";
+import { articles } from "@/lib/repositories/articles";
+import { categories } from "@/lib/repositories/categories";
+import { media } from "@/lib/repositories/media";
+import { authors } from "@/lib/repositories/authors";
 import AdminShellChrome from "./AdminShellChrome";
 
 const NAV_ITEMS = [
@@ -26,11 +25,12 @@ export default async function AdminShell({
   showNewButton?: boolean;
 }) {
   const session = await requirePageSession();
-  await connectDB();
-  const articleCount = await Article.countDocuments();
-  const categoryCount = await Category.countDocuments();
-  const mediaCount = await Media.countDocuments();
-  const authorCount = await Author.countDocuments();
+  const [articleCount, categoryCount, mediaCount, authorCount] = await Promise.all([
+    articles.count(),
+    categories.count(),
+    media.count(),
+    authors.count(),
+  ]);
   const navCounts: Record<string, number> = {
     Articles: articleCount,
     Catégories: categoryCount,

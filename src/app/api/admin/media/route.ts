@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
-import Media from "@/models/Media";
+import { media as mediaRepo } from "@/lib/repositories/media";
 import { badRequest, isDuplicateKeyError, readJson, str } from "@/lib/http";
 import { isCloudinaryUrl } from "@/lib/cloudinary";
 
@@ -9,13 +8,12 @@ export async function GET() {
   if (!(await requireAdmin())) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
-  await connectDB();
-  const media = await Media.find({}).sort({ createdAt: -1 }).lean();
+  const media = await mediaRepo.findAll();
 
   return NextResponse.json({
     success: true,
     media: media.map((m) => ({
-      id: m._id.toString(),
+      id: m.id,
       url: m.url,
       publicId: m.publicId,
       filename: m.filename,
@@ -46,11 +44,9 @@ export async function POST(request: Request) {
   const num = (value: unknown) =>
     typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : 0;
 
-  await connectDB();
-
   let media;
   try {
-    media = await Media.create({
+    media = await mediaRepo.create({
       url,
       publicId,
       filename: str(body.filename, 300),

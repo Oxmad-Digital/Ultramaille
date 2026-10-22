@@ -1,16 +1,14 @@
 import { requirePageSession } from "@/lib/requireAdmin";
-import { connectDB } from "@/lib/db";
-import Media from "@/models/Media";
+import { media as mediaRepo } from "@/lib/repositories/media";
 import AdminShell from "@/components/admin/AdminShell";
 import MediaAdminGrid, { type AdminMediaItem } from "@/components/admin/MediaAdminGrid";
 
 export const dynamic = "force-dynamic";
 
 async function getMedia(): Promise<AdminMediaItem[]> {
-  await connectDB();
-  const media = await Media.find({}).sort({ createdAt: -1 }).lean();
+  const media = await mediaRepo.findAll();
   return media.map((m) => ({
-    id: m._id.toString(),
+    id: m.id,
     url: m.url,
     publicId: m.publicId,
     filename: m.filename,

@@ -1,16 +1,14 @@
 import { requirePageSession } from "@/lib/requireAdmin";
-import { connectDB } from "@/lib/db";
-import Author from "@/models/Author";
+import { authors } from "@/lib/repositories/authors";
 import AdminShell from "@/components/admin/AdminShell";
 import AuthorAdminList, { type AdminAuthorRow } from "@/components/admin/AuthorAdminList";
 
 export const dynamic = "force-dynamic";
 
 async function getAuthors(): Promise<AdminAuthorRow[]> {
-  await connectDB();
-  const authors = await Author.find({}).sort({ name: 1 }).lean();
-  return authors.map((a) => ({
-    id: a._id.toString(),
+  const list = await authors.findAll();
+  return list.map((a) => ({
+    id: a.id,
     name: a.name,
     slug: a.slug,
     email: a.email,

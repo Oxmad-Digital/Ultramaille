@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
-import Media from "@/models/Media";
+import { media as mediaRepo } from "@/lib/repositories/media";
 import { badRequest, invalidId, isValidId, readJson, str } from "@/lib/http";
 
 export async function PATCH(
@@ -17,17 +16,15 @@ export async function PATCH(
   const body = await readJson(request);
   if (!body) return badRequest();
 
-  await connectDB();
-
-  const media = await Media.findById(id);
+  const media = await mediaRepo.findById(id);
   if (!media) {
     return NextResponse.json({ error: "Média introuvable" }, { status: 404 });
   }
 
   if (body.alt !== undefined) media.alt = str(body.alt, 300);
-  await media.save();
+  const saved = await mediaRepo.save(media);
 
-  return NextResponse.json({ success: true, media });
+  return NextResponse.json({ success: true, media: saved });
 }
 
 export async function DELETE(
@@ -40,8 +37,7 @@ export async function DELETE(
 
   const { id } = await params;
   if (!isValidId(id)) return invalidId();
-  await connectDB();
-  await Media.findByIdAndDelete(id);
+  await mediaRepo.deleteById(id);
 
   return NextResponse.json({ success: true });
 }

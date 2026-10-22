@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
-import Author from "@/models/Author";
+import { authors } from "@/lib/repositories/authors";
 import { badRequest, invalidId, isValidId, readJson, str } from "@/lib/http";
 import { isCloudinaryUrl } from "@/lib/cloudinary";
 
@@ -25,14 +24,12 @@ export async function PATCH(
     return badRequest("URL d'avatar invalide");
   }
 
-  await connectDB();
-
-  const author = await Author.findById(id);
+  const author = await authors.findById(id);
   if (!author) {
     return NextResponse.json({ error: "Auteur introuvable" }, { status: 404 });
   }
 
-  const existing = await Author.findOne({ name, _id: { $ne: id } });
+  const existing = await authors.findByName(name, id);
   if (existing) {
     return NextResponse.json({ error: "Cet auteur existe déjà" }, { status: 409 });
   }
@@ -40,11 +37,11 @@ export async function PATCH(
   author.name = name;
   if (body.email !== undefined) author.email = str(body.email, 254);
   if (body.bio !== undefined) author.bio = str(body.bio, 2000);
-  if (body.avatarUrl !== undefined) author.avatarUrl = body.avatarUrl || null;
+  if (body.avatarUrl !== undefined) author.avatarUrl = (body.avatarUrl as string) || null;
   if (body.avatarPublicId !== undefined) author.avatarPublicId = str(body.avatarPublicId, 300) || null;
-  await author.save();
+  const saved = await authors.save(author);
 
-  return NextResponse.json({ success: true, author });
+  return NextResponse.json({ success: true, author: saved });
 }
 
 export async function DELETE(
@@ -57,8 +54,7 @@ export async function DELETE(
 
   const { id } = await params;
   if (!isValidId(id)) return invalidId();
-  await connectDB();
-  await Author.findByIdAndDelete(id);
+  await authors.deleteById(id);
 
   return NextResponse.json({ success: true });
 }

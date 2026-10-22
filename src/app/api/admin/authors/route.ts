@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
 import { requireAdmin } from "@/lib/requireAdmin";
 import { slugify } from "@/lib/blog";
-import Author from "@/models/Author";
+import { authors } from "@/lib/repositories/authors";
 import { badRequest, readJson, str } from "@/lib/http";
 import { isCloudinaryUrl } from "@/lib/cloudinary";
 
@@ -10,13 +9,12 @@ export async function GET() {
   if (!(await requireAdmin())) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
-  await connectDB();
-  const authors = await Author.find({}).sort({ name: 1 }).lean();
+  const list = await authors.findAll();
 
   return NextResponse.json({
     success: true,
-    authors: authors.map((a) => ({
-      id: a._id.toString(),
+    authors: list.map((a) => ({
+      id: a.id,
       name: a.name,
       slug: a.slug,
       email: a.email,
@@ -42,9 +40,7 @@ export async function POST(request: Request) {
     return badRequest("URL d'avatar invalide");
   }
 
-  await connectDB();
-
-  const existing = await Author.findOne({ name });
+  const existing = await authors.findByName(name);
   if (existing) {
     return NextResponse.json({ error: "Cet auteur existe déjà" }, { status: 409 });
   }
@@ -52,17 +48,17 @@ export async function POST(request: Request) {
   const base = slugify(name);
   let slug = base;
   let suffix = 1;
-  while (await Author.findOne({ slug })) {
+  while (await authors.slugExists(slug)) {
     suffix += 1;
     slug = `${base}-${suffix}`;
   }
 
-  const author = await Author.create({
+  const author = await authors.create({
     name,
     slug,
     email: str(body.email, 254),
     bio: str(body.bio, 2000),
-    avatarUrl: body.avatarUrl || null,
+    avatarUrl: (body.avatarUrl as string) || null,
     avatarPublicId: str(body.avatarPublicId, 300) || null,
   });
 
