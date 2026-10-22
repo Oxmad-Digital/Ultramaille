@@ -4,8 +4,7 @@ import { after } from "next/server";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogListClient, { type PublicArticle } from "@/components/blog/BlogListClient";
-import { connectDB } from "@/lib/db";
-import Article from "@/models/Article";
+import { articles as articlesRepo, type ReadingMinutes } from "@/lib/repositories/articles";
 import { estimateReadingMinutes } from "@/lib/blog";
 import { publishDueArticles } from "@/lib/publishDueArticles";
 import styles from "./page.module.css";
@@ -28,46 +27,36 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 async function getPublishedArticles(): Promise<PublicArticle[]> {
-  await connectDB();
   after(() => publishDueArticles());
   // Sans `content` : le corps complet de chaque article n'est pas nécessaire pour la liste.
-  const articles = await Article.find({ status: "published" })
-    .select("-content -metaTitle -metaDescription")
-    .sort({ publishedAt: -1 })
-    .lean();
+  const articles = await articlesRepo.findPublishedSummaries();
 
   // Articles antérieurs au champ readingMinutes : on le calcule une fois, puis on
   // l'enregistre pour que les affichages suivants n'aient plus à charger le contenu.
-  const readingMinutes = new Map<string, { fr: number; en: number }>();
+  const readingMinutes = new Map<string, ReadingMinutes>();
   const missing = articles.filter((a) => !a.readingMinutes);
   if (missing.length > 0) {
-    const bodies = await Article.find({ _id: { $in: missing.map((a) => a._id) } })
-      .select("content")
-      .lean();
+    const bodies = await articlesRepo.findContents(missing.map((a) => a._id));
     for (const body of bodies) {
-      readingMinutes.set(String(body._id), {
-        fr: estimateReadingMinutes(body.content?.fr ?? ""),
-        en: estimateReadingMinutes(body.content?.en ?? ""),
+      readingMinutes.set(body._id, {
+        fr: estimateReadingMinutes(body.content.fr),
+        en: estimateReadingMinutes(body.content.en),
       });
     }
     if (readingMinutes.size > 0) {
-      await Article.bulkWrite(
-        [...readingMinutes].map(([id, minutes]) => ({
-          updateOne: { filter: { _id: id }, update: { $set: { readingMinutes: minutes } } },
-        }))
-      );
+      await articlesRepo.setReadingMinutes([...readingMinutes]);
     }
   }
 
   return articles.map((a) => {
-    const minutes = a.readingMinutes ?? readingMinutes.get(String(a._id));
+    const minutes = a.readingMinutes ?? readingMinutes.get(a._id);
     return {
       slug: a.slug,
-      title: { fr: a.title?.fr ?? "", en: a.title?.en ?? "" },
-      excerpt: { fr: a.excerpt?.fr ?? "", en: a.excerpt?.en ?? "" },
-      category: a.category ?? "",
+      title: { fr: a.title.fr, en: a.title.en },
+      excerpt: { fr: a.excerpt.fr, en: a.excerpt.en },
+      category: a.category,
       coverImageUrl: a.coverImageUrl,
-      publishedAt: a.publishedAt ? new Date(a.publishedAt).toISOString() : "",
+      publishedAt: a.publishedAt ? a.publishedAt.toISOString() : "",
       readingMinutesFr: minutes?.fr ?? 1,
       readingMinutesEn: minutes?.en ?? 1,
       featured: Boolean(a.featured),

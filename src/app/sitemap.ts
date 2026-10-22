@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-import { connectDB } from "@/lib/db";
-import Article from "@/models/Article";
+import { articles as articlesRepo } from "@/lib/repositories/articles";
 import { publishDueArticles } from "@/lib/publishDueArticles";
 import { SITE_URL } from "@/lib/site";
 
@@ -20,11 +19,8 @@ const STATIC_ROUTES: { path: string; changeFrequency: MetadataRoute.Sitemap[numb
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  await connectDB();
   await publishDueArticles();
-  const articles = await Article.find({ status: "published" })
-    .select("slug updatedAt publishedAt")
-    .lean();
+  const articles = await articlesRepo.findPublishedForSitemap();
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
     url: `${SITE_URL}${route.path}`,

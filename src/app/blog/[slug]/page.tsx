@@ -7,8 +7,7 @@ import Footer from "@/components/Footer";
 import BlogArticleClient from "@/components/blog/BlogArticleClient";
 import ArticleBody from "@/components/blog/ArticleBody";
 import { jsonLd } from "@/lib/jsonLd";
-import { connectDB } from "@/lib/db";
-import Article from "@/models/Article";
+import { articles } from "@/lib/repositories/articles";
 import { publishDueArticles } from "@/lib/publishDueArticles";
 import { SITE_URL } from "@/lib/site";
 import styles from "./page.module.css";
@@ -21,10 +20,9 @@ export const revalidate = 60;
 // cache() dedupes this read within a single render pass so generateMetadata and
 // the page component share one DB call.
 const getArticle = cache(async (slug: string) => {
-  await connectDB();
   after(() => publishDueArticles());
-  const article = await Article.findOne({ slug, status: "published" }).lean();
-  return article;
+  // Brouillon, programmé ou slug inconnu : null, donc notFound().
+  return articles.findPublishedBySlug(slug);
 });
 
 export async function generateMetadata({
@@ -73,7 +71,7 @@ export default async function BlogArticlePage({
   // not blocking the response. Precise per-visit analytics already live in
   // the PageView-based stats dashboard; this counter is an approximate,
   // revalidation-cadence figure shown in the admin article list.
-  after(() => Article.updateOne({ _id: article._id }, { $inc: { views: 1 } }));
+  after(() => articles.incrementViews(article.id));
 
   const articleJsonLd = {
     "@context": "https://schema.org",
