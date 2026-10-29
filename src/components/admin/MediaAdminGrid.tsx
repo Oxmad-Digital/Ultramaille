@@ -4,8 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import listStyles from "./ArticleAdminList.module.css";
 import styles from "./MediaAdminGrid.module.css";
-
-const CLOUD_NAME = "wzetrnif";
+import { ACCEPTED_IMAGE_TYPES, uploadImage } from "@/lib/uploadImage";
 
 export type AdminMediaItem = {
   id: string;
@@ -18,14 +17,6 @@ export type AdminMediaItem = {
   width: number;
   height: number;
 };
-
-function uniqueFileForUpload(file: File): File {
-  const dot = file.name.lastIndexOf(".");
-  const base = dot > 0 ? file.name.slice(0, dot) : file.name;
-  const ext = dot > 0 ? file.name.slice(dot) : "";
-  const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  return new File([file], `${base}-${suffix}${ext}`, { type: file.type });
-}
 
 function formatBytes(bytes: number) {
   if (!bytes) return "—";
@@ -56,44 +47,16 @@ export default function MediaAdminGrid({ initialMedia }: { initialMedia: AdminMe
     e.target.value = "";
     if (!file) return;
 
-    const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-    if (!preset) {
-      setError("Upload preset Cloudinary manquant (NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET)");
-      return;
-    }
-
     setUploading(true);
     setError("");
 
     try {
-      const formData = new FormData();
-      formData.append("file", uniqueFileForUpload(file));
-      formData.append("upload_preset", preset);
-      formData.append("folder", "media");
-
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-
-      if (!data.secure_url) {
-        setError("Échec de l'upload de l'image");
-        return;
-      }
+      const uploaded = await uploadImage(file);
 
       const createRes = await fetch("/api/admin/media", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url: data.secure_url,
-          publicId: data.public_id,
-          filename: file.name,
-          format: data.format,
-          bytes: data.bytes,
-          width: data.width,
-          height: data.height,
-        }),
+        body: JSON.stringify({ ...uploaded, filename: file.name }),
       });
 
       if (!createRes.ok) {
@@ -102,8 +65,8 @@ export default function MediaAdminGrid({ initialMedia }: { initialMedia: AdminMe
       }
 
       router.refresh();
-    } catch {
-      setError("Échec de l'upload de l'image");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Échec de l'upload de l'image");
     } finally {
       setUploading(false);
     }
@@ -164,7 +127,7 @@ export default function MediaAdminGrid({ initialMedia }: { initialMedia: AdminMe
         <div>
           <h1 className={listStyles.pageTitle}>Médias</h1>
           <p className={listStyles.pageSubtitle}>
-            Collection <span>media</span> — bibliothèque des images hébergées sur Cloudinary.
+            Collection <span>media</span> — bibliothèque des images du site.
           </p>
         </div>
         <div className={styles.headerActions}>
@@ -187,7 +150,7 @@ export default function MediaAdminGrid({ initialMedia }: { initialMedia: AdminMe
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept={ACCEPTED_IMAGE_TYPES}
             className={styles.hiddenInput}
             onChange={handleUpload}
             disabled={uploading}

@@ -16,7 +16,7 @@ import {
   readJson,
   str,
 } from "@/lib/http";
-import { isCloudinaryUrl } from "@/lib/cloudinary";
+import { isAllowedImageUrl } from "@/lib/imageUrl";
 import { publishDueArticles } from "@/lib/publishDueArticles";
 import { articles } from "@/lib/repositories/articles";
 import { authors } from "@/lib/repositories/authors";
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   }
 
   const coverImageUrl = (body.coverImageUrl || null) as string | null;
-  if (coverImageUrl !== null && !isCloudinaryUrl(coverImageUrl)) {
+  if (coverImageUrl !== null && !isAllowedImageUrl(coverImageUrl)) {
     return badRequest("URL de couverture invalide");
   }
   const authorId = (body.authorId || null) as string | null;

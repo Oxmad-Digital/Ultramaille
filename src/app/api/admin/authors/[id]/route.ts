@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/requireAdmin";
 import { authors } from "@/lib/repositories/authors";
 import { badRequest, invalidId, isValidId, readJson, str } from "@/lib/http";
-import { isCloudinaryUrl } from "@/lib/cloudinary";
+import { isAllowedImageUrl } from "@/lib/imageUrl";
 
 export async function PATCH(
   request: Request,
@@ -20,7 +20,7 @@ export async function PATCH(
   if (!name) {
     return NextResponse.json({ error: "Nom requis" }, { status: 400 });
   }
-  if (body.avatarUrl && !isCloudinaryUrl(body.avatarUrl)) {
+  if (body.avatarUrl && !isAllowedImageUrl(body.avatarUrl)) {
     return badRequest("URL d'avatar invalide");
   }
 

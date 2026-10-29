@@ -12,11 +12,18 @@ import Youtube, { isValidYoutubeUrl } from "@tiptap/extension-youtube";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
 import { slugify, estimateReadingMinutes, type LocalizedText } from "@/lib/blog";
+import { isCloudinaryUrl } from "@/lib/cloudinary";
+import { ACCEPTED_IMAGE_TYPES, uploadImage } from "@/lib/uploadImage";
 import MediaLibraryModal, { type MediaSelection } from "./MediaLibraryModal";
 import styles from "./ArticleForm.module.css";
 
-const CLOUD_NAME = "wzetrnif";
 const EMPTY_LOCALIZED: LocalizedText = { fr: "", en: "" };
+
+// Image insérée dans le contenu : les URL Cloudinary reçoivent une transformation
+// (format auto, qualité auto, 1600 px). Les URL R2 sont servies telles quelles.
+function contentImageUrl(url: string) {
+  return isCloudinaryUrl(url) ? url.replace("/upload/", "/upload/f_auto,q_auto,w_1600/") : url;
+}
 
 type ArticleStatus = "draft" | "scheduled" | "published";
 
@@ -276,35 +283,15 @@ export default function ArticleForm({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-    if (!preset) {
-      setError("Upload preset Cloudinary manquant (NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET)");
-      return;
-    }
-
     setUploading(true);
     setError("");
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", preset);
-      formData.append("folder", "blog");
-
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-
-      if (data.secure_url) {
-        setCoverImageUrl(data.secure_url);
-        setCoverImagePublicId(data.public_id);
-      } else {
-        setError("Échec de l'upload de l'image");
-      }
-    } catch {
-      setError("Échec de l'upload de l'image");
+      const uploaded = await uploadImage(file);
+      setCoverImageUrl(uploaded.url);
+      setCoverImagePublicId(uploaded.publicId);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Échec de l'upload de l'image");
     } finally {
       setUploading(false);
     }
@@ -315,35 +302,14 @@ export default function ArticleForm({
     e.target.value = "";
     if (!file) return;
 
-    const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-    if (!preset) {
-      setError("Upload preset Cloudinary manquant (NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET)");
-      return;
-    }
-
     setContentImageUploading(true);
     setError("");
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", preset);
-      formData.append("folder", "blog");
-
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-
-      if (data.secure_url) {
-        const optimizedUrl = data.secure_url.replace("/upload/", "/upload/f_auto,q_auto,w_1600/");
-        editor?.chain().focus().setImage({ src: optimizedUrl }).run();
-      } else {
-        setError("Échec de l'upload de l'image");
-      }
-    } catch {
-      setError("Échec de l'upload de l'image");
+      const uploaded = await uploadImage(file);
+      editor?.chain().focus().setImage({ src: contentImageUrl(uploaded.url) }).run();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Échec de l'upload de l'image");
     } finally {
       setContentImageUploading(false);
     }
@@ -355,8 +321,7 @@ export default function ArticleForm({
       setCoverImagePublicId(item.publicId);
       if (item.alt) setCoverImageAlt(item.alt);
     } else if (mediaModalTarget === "content") {
-      const optimizedUrl = item.url.replace("/upload/", "/upload/f_auto,q_auto,w_1600/");
-      editor?.chain().focus().setImage({ src: optimizedUrl }).run();
+      editor?.chain().focus().setImage({ src: contentImageUrl(item.url) }).run();
     }
     setMediaModalTarget(null);
   }
@@ -940,7 +905,7 @@ export default function ArticleForm({
               <input
                 ref={contentImageInputRef}
                 type="file"
-                accept="image/*"
+                accept={ACCEPTED_IMAGE_TYPES}
                 hidden
                 onChange={handleContentImageUpload}
               />
@@ -1185,7 +1150,7 @@ export default function ArticleForm({
             <div className={styles.coverActions}>
               <label className={styles.coverUploadLabel}>
                 {uploading ? "Envoi…" : coverImageUrl ? "Remplacer" : "Ajouter"}
-                <input type="file" accept="image/*" onChange={handleCoverUpload} disabled={uploading} />
+                <input type="file" accept={ACCEPTED_IMAGE_TYPES} onChange={handleCoverUpload} disabled={uploading} />
               </label>
               <button
                 type="button"

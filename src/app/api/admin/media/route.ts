@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/requireAdmin";
 import { media as mediaRepo } from "@/lib/repositories/media";
 import { badRequest, isDuplicateKeyError, readJson, str } from "@/lib/http";
-import { isCloudinaryUrl } from "@/lib/cloudinary";
+import { isAllowedImageUrl } from "@/lib/imageUrl";
 
 export async function GET() {
   if (!(await requireAdmin())) {
@@ -37,8 +37,8 @@ export async function POST(request: Request) {
 
   const url = str(body.url, 1000);
   const publicId = str(body.publicId, 300);
-  if (!isCloudinaryUrl(url) || !publicId) {
-    return badRequest("url Cloudinary et publicId requis");
+  if (!isAllowedImageUrl(url) || !publicId) {
+    return badRequest("URL d'image invalide ou publicId manquant");
   }
 
   const num = (value: unknown) =>

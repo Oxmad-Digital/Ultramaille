@@ -3,7 +3,7 @@ import { requireAdmin } from "@/lib/requireAdmin";
 import { slugify } from "@/lib/blog";
 import { authors } from "@/lib/repositories/authors";
 import { badRequest, readJson, str } from "@/lib/http";
-import { isCloudinaryUrl } from "@/lib/cloudinary";
+import { isAllowedImageUrl } from "@/lib/imageUrl";
 
 export async function GET() {
   if (!(await requireAdmin())) {
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   if (!name) {
     return NextResponse.json({ error: "Nom requis" }, { status: 400 });
   }
-  if (body.avatarUrl && !isCloudinaryUrl(body.avatarUrl)) {
+  if (body.avatarUrl && !isAllowedImageUrl(body.avatarUrl)) {
     return badRequest("URL d'avatar invalide");
   }
 

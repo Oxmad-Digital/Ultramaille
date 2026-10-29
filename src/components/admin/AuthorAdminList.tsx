@@ -4,16 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import listStyles from "./ArticleAdminList.module.css";
 import styles from "./AuthorAdminList.module.css";
-
-const CLOUD_NAME = "wzetrnif";
-
-function uniqueFileForUpload(file: File): File {
-  const dot = file.name.lastIndexOf(".");
-  const base = dot > 0 ? file.name.slice(0, dot) : file.name;
-  const ext = dot > 0 ? file.name.slice(dot) : "";
-  const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  return new File([file], `${base}-${suffix}${ext}`, { type: file.type });
-}
+import { ACCEPTED_IMAGE_TYPES, uploadImage } from "@/lib/uploadImage";
 
 export type AdminAuthorRow = {
   id: string;
@@ -57,27 +48,13 @@ export default function AuthorAdminList({ initialAuthors }: { initialAuthors: Ad
   const editFileInputRef = useRef<HTMLInputElement>(null);
 
   async function uploadAvatar(file: File): Promise<{ url: string; publicId: string } | null> {
-    const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-    if (!preset) {
-      setError("Upload preset Cloudinary manquant (NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET)");
+    try {
+      const uploaded = await uploadImage(file);
+      return { url: uploaded.url, publicId: uploaded.publicId };
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Échec de l'upload de l'avatar");
       return null;
     }
-
-    const formData = new FormData();
-    formData.append("file", uniqueFileForUpload(file));
-    formData.append("upload_preset", preset);
-    formData.append("folder", "authors");
-
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-      method: "POST",
-      body: formData,
-    });
-    const data = await res.json();
-    if (!data.secure_url) {
-      setError("Échec de l'upload de l'avatar");
-      return null;
-    }
-    return { url: data.secure_url, publicId: data.public_id };
   }
 
   async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -221,7 +198,7 @@ export default function AuthorAdminList({ initialAuthors }: { initialAuthors: Ad
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept={ACCEPTED_IMAGE_TYPES}
               className={styles.hiddenInput}
               onChange={handleAvatarChange}
               disabled={uploading}
@@ -285,7 +262,7 @@ export default function AuthorAdminList({ initialAuthors }: { initialAuthors: Ad
                   <input
                     ref={editFileInputRef}
                     type="file"
-                    accept="image/*"
+                    accept={ACCEPTED_IMAGE_TYPES}
                     className={styles.hiddenInput}
                     onChange={handleEditAvatarChange}
                     disabled={uploading}

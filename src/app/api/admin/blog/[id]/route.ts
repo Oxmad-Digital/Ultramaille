@@ -20,7 +20,7 @@ import {
   readJson,
   str,
 } from "@/lib/http";
-import { isCloudinaryUrl } from "@/lib/cloudinary";
+import { isAllowedImageUrl } from "@/lib/imageUrl";
 
 export async function GET(
   request: Request,
@@ -56,7 +56,7 @@ export async function PATCH(
   ) {
     return badRequest("Statut invalide");
   }
-  if (body.coverImageUrl && !isCloudinaryUrl(body.coverImageUrl)) {
+  if (body.coverImageUrl && !isAllowedImageUrl(body.coverImageUrl)) {
     return badRequest("URL de couverture invalide");
   }
   if (body.authorId && (typeof body.authorId !== "string" || !isValidId(body.authorId))) {

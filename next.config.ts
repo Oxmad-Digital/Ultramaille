@@ -82,6 +82,11 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
         pathname: "/wzetrnif/**",
       },
+      {
+        protocol: "https",
+        hostname: "media.ultramaille.com",
+        pathname: "/uploads/**",
+      },
     ],
   },
   async headers() {
